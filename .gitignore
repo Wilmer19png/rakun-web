@@ -1,0 +1,14 @@
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editor
+.vscode/
+
+# Capturas de revisión de diseño (se regeneran; no son parte del sitio)
+.impeccable/review/
+
+# Videos pesados: súbelos aparte o con Git LFS si hace falta
+videos/*.mp4
+videos/*.mov

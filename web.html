@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web y apps — RAKÜN Visual Design</title>
+  <meta name="description" content="Sitios, landings, tiendas online y apps hechas a mano en Bogotá: rápidas, encontrables y diseñadas para convertir miradas en clientes.">
+  <meta name="theme-color" content="#010221">
+  <script>document.documentElement.classList.add('js');</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&family=Permanent+Marker&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="web/web.css">
+</head>
+
+<body data-theme="home" class="page-web">
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <polygon id="rk-burst" points="0,-50 4.4,-16.4 18,-31.2 12,-12 40.7,-23.5 16.4,-4.4 31,0 16.4,4.4 43.3,25 12,12 20,34.6 4.4,16.4 0,45 -4.4,16.4 -16.5,28.6 -12,12 -42.4,24.5 -16.4,4.4 -38,0 -16.4,-4.4 -39.8,-23 -12,-12 -17.5,-30.3 -4.4,-16.4"/>
+    <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-se" viewBox="0 0 24 24"><path d="M7 7l10 10M17 9v8H9" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-n" viewBox="0 0 24 24"><path d="M12 20V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <!-- el ojo de RAKÜN, abierto (viewBox 0 0 212 140); el iris se mueve con CSS (--ix) -->
+    <clipPath id="eye-clip-static"><path d="M36 12L100 12C146 12 174 36 194 123.83L32 24.69Q26 16 36 12Z"/></clipPath>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+<div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
+
+<!-- ================================================================
+     HEADER
+     ================================================================ -->
+<header class="hdr" data-header>
+  <a class="hdr__brand" href="index.html" aria-label="RAKÜN Visual Design, ir al inicio">
+    <span class="badge badge--sm" aria-hidden="true">
+      <span class="badge__word"><span>R</span><span>A</span><span>K</span><span class="badge__u">Ü<svg class="badge__burst" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg></span><span>N</span></span>
+      <span class="badge__bar"><span>VISUAL</span><span>DESIGN</span></span>
+    </span>
+  </a>
+  <svg class="hdr__eye" data-eye="eye-hdr"></svg>
+
+  <nav class="hdr__nav" id="menu" aria-label="Principal">
+    <ul>
+      <li><button class="hdr__mega-btn" type="button" aria-expanded="false" aria-controls="mega" data-mega-btn>Lo que hacemos <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></button></li>
+      <li><a href="index.html#estudio">Estudio</a></li>
+      <li><a href="produccion.html#crew">Equipo</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+
+    <div class="mega mega--3" id="mega" data-mega>
+      <section class="mega__world" aria-labelledby="mega-a">
+        <p class="mono mega__kicker">Mundo 01 · Marca personal</p>
+        <p class="mega__title" id="mega-a">Para quienes <em>viven</em> de su imagen.</p>
+        <ul class="mega__list">
+          <li><a href="planes.html#creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Marca · Contenido · Media kit</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="planes.html#medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Identidad · Confianza · Pacientes</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="planes.html#mentor"><span class="mega__sw" style="--sw: linear-gradient(135deg, var(--yellow) 50%, var(--blue) 50%)"></span><span><span class="mega__name">Mentores</span><span class="mono">Autoridad · Cursos · Lanzamientos</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </section>
+      <section class="mega__world mega__world--b" aria-labelledby="mega-b">
+        <p class="mono mega__kicker">Mundo 02 · Producción audiovisual</p>
+        <p class="mega__title" id="mega-b">Historias que se <em>ruedan.</em></p>
+        <ul class="mega__list">
+          <li><a href="produccion.html#preproduccion"><span class="mega__num">01</span><span><span class="mega__name">Preproducción</span><span class="mono">Idea · Guion · Storyboard</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="produccion.html#rodaje"><span class="mega__num">02</span><span><span class="mega__name">Rodaje</span><span class="mono">Dirección · Fotografía · Sonido</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="produccion.html#postproduccion"><span class="mega__num">03</span><span><span class="mega__name">Postproducción</span><span class="mono">Montaje · Color · VFX</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </section>
+      <section class="mega__world mega__world--c" aria-labelledby="mega-c">
+        <p class="mono mega__kicker">Mundo 03 · Web y apps</p>
+        <p class="mega__title" id="mega-c">Pantallas que no puedes dejar de <em>mirar.</em></p>
+        <ul class="mega__list">
+          <li><a href="#boceto"><span class="mega__num">01</span><span><span class="mega__name">Del boceto al píxel</span><span class="mono">Wireframe · Diseño UI</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="#proceso"><span class="mega__num">02</span><span><span class="mega__name">Cómo trabajamos</span><span class="mono">Proceso paso a paso</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="#planes"><span class="mega__num">03</span><span><span class="mega__name">Planes</span><span class="mono">Landing · Sitio · Tienda o app</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </section>
+      <p class="mono mega__fig" aria-hidden="true">fig. 00 — índice / elige tu camino</p>
+    </div>
+
+    <a class="btn btn--pink hdr__cta-mobile" href="#planes">Ver planes <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+  </nav>
+
+  <p class="hdr__clock mono"><span>BOGOTÁ</span> / <time data-clock>--:--</time> LOCAL</p>
+  <a class="btn btn--pink hdr__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20iniciar%20un%20proyecto" data-eye-target>Iniciar proyecto <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+  <button class="hdr__menu mono" type="button" aria-expanded="false" aria-controls="menu" data-menu>
+    <span class="hdr__menu-label">Menú</span><span class="hdr__menu-bars" aria-hidden="true"></span>
+  </button>
+</header>
+
+<main id="main">
+
+  <!-- ==============================================================
+       001 · REBELDES CON CÓDIGO
+       ============================================================== -->
+  <section class="sec sec--navy w-hero" id="inicio" aria-labelledby="w-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">001</span><span class="rail__label">Web y apps</span></div>
+    <div class="w-hero__body">
+      <nav class="p-subnav mono" aria-label="Secciones de Web y apps">
+        <span class="p-subnav__here">Web y apps</span>
+        <a href="#boceto">01 Del boceto al píxel</a>
+        <a href="#proceso">02 Proceso</a>
+        <a href="#pantallas">03 Pantallas</a>
+        <a href="#planes">04 Planes</a>
+        <span class="p-subnav__types">Sitios · Landings · Tiendas · Apps</span>
+      </nav>
+      <div class="w-hero__grid">
+        <div class="w-hero__copy">
+          <p class="mono p-kicker">Mundo 03 / Web y apps</p>
+          <h1 class="p-hero__title" id="w-title">Rebeldes<br>con<br><span class="tag-label">código.</span></h1>
+          <p class="p-hero__lede">Sitios, landings, tiendas y apps que no solo se ven bien: cargan rápido, se encuentran en Google y convierten miradas en clientes.</p>
+          <p class="w-actions">
+            <a class="w-btn" href="#planes" data-eye-target>Ver planes <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+            <a class="link" href="#proceso">Cómo trabajamos <svg class="ico" aria-hidden="true"><use href="#i-se"/></svg></a>
+          </p>
+        </div>
+
+        <figure class="term-wrap">
+          <div class="mini-browser" aria-hidden="true">
+            <p class="mini-browser__bar"><i></i><i></i><i></i><span class="mono">tumarca.com</span></p>
+            <span class="mini-browser__l mini-browser__l--1"></span><span class="mini-browser__l mini-browser__l--2"></span>
+            <span class="mini-browser__l mini-browser__l--3"></span><span class="mini-browser__l mini-browser__l--4"></span>
+            <span class="mini-browser__btn"></span>
+          </div>
+          <div class="term" role="img" aria-label="Terminal: rakun init tu-marca. Mirando tu negocio, arquitectura, wireframes, diseño UI sin plantillas, desarrollo con SEO y velocidad. En línea: te están mirando.">
+            <p class="term__bar"><i></i><i></i><i></i><span class="mono">rakun@bogota: ~/tu-marca</span></p>
+            <pre class="term__body" data-term aria-hidden="true"><span class="t-cmd">$ rakun init tu-marca</span>
+<span>› mirando tu negocio ........... ✔</span>
+<span>› arquitectura del sitio ....... ✔</span>
+<span>› wireframes ................... ✔</span>
+<span>› diseño UI (sin plantillas) ... ✔</span>
+<span>› desarrollo + SEO + velocidad . ✔</span>
+<span class="t-cmd">$ npm run que-te-vean</span>
+<span class="t-prog">▸ desplegando ██████████ 100%</span>
+<span class="t-ok">✔ en línea. te están mirando.</span></pre>
+          </div>
+          <figcaption class="sticker sticker--yellow mono">Hecho a mano · cero plantillas</figcaption>
+          <button class="term-replay mono" type="button" data-term-replay>↻ Volver a correr</button>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       002 · DEL GARABATO AL PÍXEL — el ojo es el divisor
+       ============================================================== -->
+  <section class="sec sec--cream w-sketch" id="boceto" aria-labelledby="sketch-title">
+    <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">002</span><span class="rail__label">Boceto</span></div>
+    <div class="sec__body">
+      <div class="p-head">
+        <h2 class="display reveal" id="sketch-title">Del garabato al <em>píxel.</em></h2>
+        <p class="p-head__aside">Todo empieza con un rayón en una servilleta y termina en una web que vende mientras duermes. Arrastra el ojo y mira el camino.</p>
+      </div>
+
+      <div class="bx" data-bx style="--split: 50%">
+        <p class="bx__bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">tumarca.com</span></p>
+        <div class="bx__stage">
+          <!-- después: el diseño final -->
+          <div class="bx__after" aria-hidden="true">
+            <span class="bx-logo">[Tu marca]</span>
+            <span class="bx-nav mono">Servicios · Casos <b>Agenda ↗</b></span>
+            <span class="bx-h">Tu marca, <em>imposible</em> de ignorar.</span>
+            <span class="bx-p">Una frase clara que dice qué haces, para quién y por qué te tienen que elegir hoy.</span>
+            <span class="bx-cta">Agenda tu cita ↗</span>
+            <span class="bx-img"><span class="mono">[foto real]</span></span>
+            <span class="bx-cards"><i></i><i></i><i></i></span>
+          </div>
+          <!-- antes: el wireframe con notas a mano -->
+          <div class="bx__before" aria-hidden="true">
+            <span class="wf wf--x" style="left: 3.7%; top: 4%; width: 14.5%; height: 6%"></span>
+            <span class="wf" style="left: 73.7%; top: 4%; width: 22.6%; height: 6%"></span>
+            <span class="wf" style="left: 3.7%; top: 16%; width: 47%; height: 25%"></span>
+            <span class="wf" style="left: 3.7%; top: 45%; width: 42%; height: 9%"></span>
+            <span class="wf wf--pink" style="left: 3.7%; top: 59%; width: 22%; height: 8%"></span>
+            <span class="wf wf--x" style="left: 56.8%; top: 14%; width: 39.5%; height: 48%"></span>
+            <span class="wf" style="left: 3.7%; top: 78%; width: 29%; height: 18%"></span>
+            <span class="wf" style="left: 35.5%; top: 78%; width: 29%; height: 18%"></span>
+            <span class="wf" style="left: 67.3%; top: 78%; width: 29%; height: 18%"></span>
+            <span class="note" style="left: 19.5%; top: 4.5%">logo aquí</span>
+            <span class="note note--big" style="left: 15%; top: 26%">titular que pegue</span>
+            <span class="note" style="left: 27.5%; top: 60%">¡CTA!</span>
+            <span class="note" style="left: 61%; top: 34%">foto real, no stock</span>
+            <span class="note" style="left: 39%; top: 70%">3 beneficios</span>
+          </div>
+          <span class="bx__tag bx__tag--before mono" aria-hidden="true">Antes · boceto</span>
+          <span class="bx__tag bx__tag--after mono" aria-hidden="true">Después · en línea</span>
+          <!-- divisor: el ojo de RAKÜN -->
+          <span class="bx__line" aria-hidden="true"></span>
+          <span class="bx__handle" aria-hidden="true">
+            <svg viewBox="0 0 212 140">
+              <path d="M10 5L100 4C152 4 182 34 204 134L8 14Q2 9 10 5Z" fill="#1B1A35"/>
+              <line x1="26" y1="23.02" x2="207" y2="133.79" stroke="#FF2C68" stroke-width="5" stroke-linecap="round"/>
+              <path d="M36 12L100 12C146 12 174 36 194 123.83L32 24.69Q26 16 36 12Z" fill="#2BCDFF"/>
+              <g clip-path="url(#eye-clip-static)"><g class="bx__iris"><circle r="58" fill="#FFF02B"/><circle r="40" fill="#FF2C68"/><circle r="24.5" fill="#fff"/><circle r="21" fill="#1B1A35"/></g></g>
+            </svg>
+          </span>
+          <input class="bx__range" type="range" min="2" max="98" value="50" aria-label="Compara el boceto con el diseño final" data-bx-range>
+        </div>
+      </div>
+      <p class="mono bx__hint" aria-hidden="true">↔ arrastra el ojo · <span data-bx-mode>el ojo barre solo</span></p>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       003 · CÓMO TRABAJAMOS — el historial de commits
+       ============================================================== -->
+  <section class="sec sec--navy w-process" id="proceso" aria-labelledby="process-title">
+    <span class="lip" aria-hidden="true" style="--lip: var(--ink-0)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">003</span><span class="rail__label">Proceso</span></div>
+    <div class="sec__body w-process__body">
+      <div class="w-process__copy">
+        <h2 class="display display--md reveal" id="process-title">Cada línea tiene una <em>razón.</em></h2>
+        <p class="w-process__lede">Así trabajamos: un historial claro, paso a paso. Pasa el cursor (o el foco) por cada commit y mira qué entregamos.</p>
+        <div class="tree" aria-label="Servicios">
+          <p class="mono tree__root">servicios/</p>
+          <ul>
+            <li><span aria-hidden="true">├─</span> <b style="color: var(--yellow)">landing-pages</b></li>
+            <li><span aria-hidden="true">├─</span> <b style="color: var(--blue)">sitios-web</b></li>
+            <li><span aria-hidden="true">├─</span> <b style="color: var(--pink)">tiendas-online</b></li>
+            <li><span aria-hidden="true">├─</span> <b style="color: var(--yellow)">apps-moviles</b></li>
+            <li><span aria-hidden="true">├─</span> <b style="color: var(--blue)">web-apps</b></li>
+            <li><span aria-hidden="true">└─</span> <b style="color: var(--pink)">soporte-y-mantenimiento</b></li>
+          </ul>
+        </div>
+      </div>
+      <ol class="commits" data-commits>
+        <li class="commit is-open" style="--c: var(--yellow)"><button class="commit__head" type="button" aria-expanded="true"><span class="commit__dot" aria-hidden="true"></span><span class="mono commit__meta"><b>a1f3c2e</b> main</span><span class="commit__msg">Descubrir</span></button><div class="commit__body"><p>Miramos tu negocio, tu público y a tu competencia antes de dibujar un píxel.</p><p class="mono">Entrega: brief y objetivos medibles</p></div></li>
+        <li class="commit" style="--c: var(--blue)"><button class="commit__head" type="button" aria-expanded="false"><span class="commit__dot" aria-hidden="true"></span><span class="mono commit__meta"><b>b7d09a1</b> main</span><span class="commit__msg">Arquitectura</span></button><div class="commit__body"><p>Qué páginas, en qué orden y qué tiene que hacer el visitante en cada una.</p><p class="mono">Entrega: mapa del sitio y flujos</p></div></li>
+        <li class="commit" style="--c: var(--pink)"><button class="commit__head" type="button" aria-expanded="false"><span class="commit__dot" aria-hidden="true"></span><span class="mono commit__meta"><b>c4e81f0</b> diseño</span><span class="commit__msg">Wireframes</span></button><div class="commit__body"><p>El esqueleto: contenido y jerarquía antes del color. (Sí, el garabato de arriba.)</p><p class="mono">Entrega: wireframes navegables</p></div></li>
+        <li class="commit" style="--c: var(--yellow)"><button class="commit__head" type="button" aria-expanded="false"><span class="commit__dot" aria-hidden="true"></span><span class="mono commit__meta"><b>d92bb37</b> diseño</span><span class="commit__msg">Diseño UI</span></button><div class="commit__body"><p>Tu identidad hecha interfaz, en escritorio y en celular. Nada de plantillas.</p><p class="mono">Entrega: diseño en escritorio y móvil</p></div></li>
+        <li class="commit" style="--c: var(--blue)"><button class="commit__head" type="button" aria-expanded="false"><span class="commit__dot" aria-hidden="true"></span><span class="mono commit__meta"><b>e05ac6d</b> código</span><span class="commit__msg">Desarrollo</span></button><div class="commit__body"><p>Rápido, accesible, bien indexado y fácil de editar por ti.</p><p class="mono">Entrega: sitio o app funcionando</p></div></li>
+        <li class="commit" style="--c: var(--pink)"><button class="commit__head" type="button" aria-expanded="false"><span class="commit__dot" aria-hidden="true"></span><span class="mono commit__meta"><b>f6a1e9b</b> main</span><span class="commit__msg">Lanzamiento</span></button><div class="commit__body"><p>Publicamos, medimos y ajustamos para que sigan mirando.</p><p class="mono">Entrega: dominio, analítica y reporte</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       004 · SE VE BIEN EN TODAS PARTES
+       ============================================================== -->
+  <section class="sec sec--cream w-resp" id="responsive" aria-labelledby="resp-title">
+    <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">004</span><span class="rail__label">Responsive</span></div>
+    <div class="sec__body w-resp__body">
+      <div class="w-resp__copy">
+        <h2 class="display reveal" id="resp-title">Se ve bien en <em>todas</em> partes.</h2>
+        <p class="p-head__aside">El mismo carácter en el celular, la tablet y el computador. Porque tu cliente te mira desde donde esté.</p>
+        <ul class="w-points">
+          <li class="sticker sticker--cream mono">Mismo carácter, 3 pantallas</li>
+          <li class="sticker sticker--pink mono">Pensada primero para el celular</li>
+          <li class="sticker sticker--blue mono">Lista para Google</li>
+        </ul>
+      </div>
+      <div class="devices" aria-hidden="true">
+        <div class="dev dev--laptop"><div class="dev__screen"><span class="ds-logo">[Tu marca]</span><span class="ds-h">Tu marca, <em>imposible</em> de ignorar.</span><span class="ds-btn"></span><span class="ds-img"></span><span class="ds-cards"></span></div></div>
+        <span class="dev__base"></span>
+        <div class="dev dev--tablet"><div class="dev__screen"><span class="ds-h">Tu marca, <em>imposible</em> de ignorar.</span><span class="ds-img"></span><span class="ds-btn"></span></div></div>
+        <div class="dev dev--phone"><div class="dev__screen"><span class="ds-h">Tu marca, <em>imposible</em> de ignorar.</span><span class="ds-img"></span><span class="ds-bar"></span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       005 · EL ESCRITORIO — ventanas, dock de servicios y el error 404
+       ============================================================== -->
+  <section class="sec w-desk" id="pantallas" aria-labelledby="desk-title">
+    <span class="lip" aria-hidden="true" style="--lip: #14132B"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Pantallas</span></div>
+    <div class="desk" data-desk>
+      <p class="desk__menubar mono" aria-hidden="true"><b>◉ RAKÜN OS</b><span>Archivo</span><span>Editar</span><span>Ver</span><span>Mirar</span><span class="desk__menubar-r">Mundo 03 · Web y apps</span><time data-clock>--:--</time></p>
+      <svg class="desk__wall" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg>
+
+      <div class="desk__copy">
+        <p class="mono p-kicker">Lo que construimos</p>
+        <h2 class="desk__title" id="desk-title">Pantallas que no puedes dejar de <em>mirar.</em></h2>
+        <p class="desk__lede">Rescatadas de la plantilla aburrida. Haz clic en las ventanas y pasa por el dock: todo esto lo hacemos.</p>
+      </div>
+
+      <!-- ventanas: clic = al frente -->
+      <div class="win win--web" data-win tabindex="0" aria-label="Ventana: una landing de ejemplo">
+        <span class="win__tape" aria-hidden="true"></span>
+        <p class="win__bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">tumarca.com — landing</span></p>
+        <div class="win__web" aria-hidden="true"><span class="ds-logo">[Tu marca]</span><span class="ds-h">Tu marca, <em>imposible</em> de ignorar.</span><span class="ds-btn"></span><span class="ds-img"></span></div>
+      </div>
+      <div class="win win--code" data-win tabindex="0" aria-label="Ventana: código de marca.js">
+        <span class="win__tape" aria-hidden="true"></span>
+        <p class="win__bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">marca.js</span></p>
+<pre class="win__code" aria-hidden="true"><b class="k">const</b> marca = <b class="k">new</b> <b class="f">Marca</b>({
+  actitud: <b class="s">'punk'</b>,
+  método: <b class="f">true</b>,
+  plantillas: <b class="f">null</b>,
+});
+marca.<b class="f">lanzar</b>().<b class="f">then</b>(() =&gt; <b class="s">mirar</b>());</pre>
+      </div>
+      <div class="win win--app" data-win tabindex="0" aria-label="Ventana: una app de ejemplo">
+        <span class="win__tape" aria-hidden="true"></span>
+        <p class="win__bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">App · [Tu marca]</span></p>
+        <div class="win__app" aria-hidden="true"><span class="win__hi">Hola,<br>[Nombre]</span><i></i><i></i><i></i><span class="win__tabs"><b></b><b></b><b></b></span></div>
+      </div>
+
+      <!-- el error 404 que te lleva a los planes -->
+      <div class="win win--404" data-win data-404 role="alertdialog" aria-labelledby="e404-title" aria-describedby="e404-text">
+        <span class="win__tape" aria-hidden="true"></span>
+        <p class="win__bar"><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i><span class="mono">Error del sistema</span></p>
+        <div class="e404">
+          <svg class="e404__eye" viewBox="0 0 212 140" aria-hidden="true">
+            <path d="M10 5L100 4C152 4 182 34 204 134L8 14Q2 9 10 5Z" fill="#010221"/>
+            <line x1="26" y1="23.02" x2="207" y2="133.79" stroke="#010221" stroke-width="4" stroke-linecap="round"/>
+            <path d="M36 12L100 12C146 12 174 36 194 123.83L32 24.69Q26 16 36 12Z" fill="#2BCDFF"/>
+            <g clip-path="url(#eye-clip-static)"><g class="e404__iris"><circle r="58" fill="#FFF02B"/><circle r="40" fill="#FF2C68"/><circle r="24.5" fill="#fff"/><circle r="21" fill="#1B1A35"/></g></g>
+          </svg>
+          <div class="e404__copy">
+            <p class="e404__code" id="e404-title">Error 404</p>
+            <p class="e404__title">Conversiones no encontradas.</p>
+            <p class="e404__text" id="e404-text" data-404-text>Tu web actual no está convirtiendo.</p>
+            <p class="e404__actions">
+              <a class="e404__go" href="#planes" data-eye-target>Ver planes <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+              <button class="e404__no mono" type="button" data-404-ignore>Ignorar</button>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- dock de servicios -->
+      <div class="dock" role="list" aria-label="Servicios">
+        <button class="dock__ic" type="button" role="listitem" style="--ic: var(--yellow)" data-tip="Landing pages · una página, un objetivo."><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h4"/></svg></span><b class="mono">Landing</b></button>
+        <button class="dock__ic" type="button" role="listitem" style="--ic: var(--blue)" data-tip="Sitios web · tu casa en internet."><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span><b class="mono">Sitio web</b></button>
+        <button class="dock__ic" type="button" role="listitem" style="--ic: var(--pink)" data-tip="Tiendas online · vende sin abrir la puerta."><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg></span><b class="mono">Tienda</b></button>
+        <button class="dock__ic" type="button" role="listitem" style="--ic: var(--yellow)" data-tip="Apps móviles · en el bolsillo de tu cliente."><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10v20H7zM11 18h2"/></svg></span><b class="mono">App</b></button>
+        <button class="dock__ic" type="button" role="listitem" style="--ic: var(--blue)" data-tip="Web apps · herramientas a tu medida."><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v16H3zM3 9h18M9 9v11"/></svg></span><b class="mono">Web app</b></button>
+        <button class="dock__ic" type="button" role="listitem" style="--ic: var(--cream)" data-tip="Soporte · no te dejamos solo."><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4a4 4 0 0 0-5 5L3 15l3 3 6-6a4 4 0 0 0 5-5l-3 3-3-3z"/></svg></span><b class="mono">Soporte</b></button>
+      </div>
+      <p class="desk__tip mono" aria-live="polite" data-dock-tip>Pasa por el dock: estos son nuestros servicios.</p>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       006 · PLANES
+       ============================================================== -->
+  <section class="sec sec--cream w-plans" id="planes" aria-labelledby="plans-title">
+    <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Planes</span></div>
+    <div class="sec__body">
+      <div class="p-head">
+        <h2 class="display reveal" id="plans-title">Elige tu <em>plan.</em></h2>
+        <p class="p-head__aside">Tres puntos de partida. Si tu proyecto no cabe en ninguno, lo armamos a tu medida.</p>
+      </div>
+      <!-- TODO: precios y alcances reales -->
+      <ul class="plans">
+        <li class="plan" style="--c: var(--yellow)">
+          <p class="mono plan__n">Plan 01</p>
+          <h3 class="plan__name">Landing</h3>
+          <p class="plan__for">Para lanzar algo ya: un producto, un curso, una campaña.</p>
+          <p class="plan__price"><span class="mono">desde</span> [precio]</p>
+          <ul class="plan__list"><li>Una página, un objetivo</li><li>Diseño a medida (cero plantillas)</li><li>Formulario o WhatsApp</li><li>Lista para Google y redes</li></ul>
+          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Landing">Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </li>
+        <li class="plan plan--hot" style="--c: var(--pink)">
+          <span class="plan__badge sticker sticker--pink mono">Recomendado</span>
+          <p class="mono plan__n">Plan 02</p>
+          <h3 class="plan__name">Sitio web</h3>
+          <p class="plan__for">Para tener tu casa en internet, completa y fácil de editar.</p>
+          <p class="plan__price"><span class="mono">desde</span> [precio]</p>
+          <ul class="plan__list"><li>Varias páginas y blog</li><li>Diseño a medida en todas las pantallas</li><li>Editable por ti</li><li>SEO base y analítica</li></ul>
+          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Sitio%20web">Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </li>
+        <li class="plan" style="--c: var(--blue)">
+          <p class="mono plan__n">Plan 03</p>
+          <h3 class="plan__name">Tienda o app</h3>
+          <p class="plan__for">Para vender en línea o darle a tus clientes una herramienta propia.</p>
+          <p class="plan__price"><span class="mono">desde</span> [precio]</p>
+          <ul class="plan__list"><li>Tienda online o app a medida</li><li>Pagos y cuentas de usuario</li><li>Panel para administrar</li><li>Soporte después del lanzamiento</li></ul>
+          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Tienda%20o%20app">Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="sec sec--navy p-ftr" id="contacto">
+  <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Contacto</span></div>
+  <div class="sec__body">
+    <div class="p-ftr__cols">
+      <div class="ftr__col">
+        <h2 class="mono">Contacto</h2>
+        <a class="link" href="mailto:rakundesigns@gmail.com">rakundesigns@gmail.com <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <!-- TODO: número real de WhatsApp -->
+        <a class="link" href="https://wa.me/" rel="noopener">WhatsApp <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </div>
+      <div class="ftr__col">
+        <h2 class="mono">Mundos</h2>
+        <a class="link" href="index.html">Marca personal <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="link" href="produccion.html">Producción audiovisual <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="link" href="#inicio">Web y apps <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </div>
+      <div class="ftr__col">
+        <h2 class="mono">Estudio</h2>
+        <p>Bogotá / Colombia</p>
+        <p class="mono">4.7110° N · 74.0721° W</p>
+        <p class="mono"><time data-clock>--:--</time> hora local</p>
+      </div>
+    </div>
+    <p class="ftr__giant" aria-hidden="true">RAK<span class="pink">Ü</span>N</p>
+    <div class="ftr__bottom mono">
+      <span>© 2026 RAKÜN Visual Design</span>
+      <span>Rebeldes con código</span>
+      <a href="#inicio" class="ftr__top-link">Volver arriba <svg class="ico" aria-hidden="true"><use href="#i-n"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script type="module" src="web/web.js"></script>
+</body>
+</html>

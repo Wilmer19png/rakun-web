@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.2" fill="#FF2C68"/></pattern>
+    <pattern id="dotsB" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="2.4" fill="#2BCDFF"/></pattern>
+    <clipPath id="almond"><path d="M330 620 Q1000 70 1680 470 Q1180 1010 330 620Z"/></clipPath>
+    <polygon id="burst" points="0,-50 4.4,-16.4 18,-31.2 12,-12 40.7,-23.5 16.4,-4.4 31,0 16.4,4.4 43.3,25 12,12 20,34.6 4.4,16.4 0,45 -4.4,16.4 -16.5,28.6 -12,12 -42.4,24.5 -16.4,4.4 -38,0 -16.4,-4.4 -39.8,-23 -12,-12 -17.5,-30.3 -4.4,-16.4"/>
+  </defs>
+  <rect width="1920" height="1080" fill="#1B1A35"/>
+  <!-- haces diagonales -->
+  <polygon points="0,0 520,0 1180,1080 520,1080" fill="#24234B"/>
+  <polygon points="1240,0 1460,0 1920,760 1920,1080" fill="#22214A"/>
+  <!-- semitonos -->
+  <rect x="0" y="640" width="620" height="440" fill="url(#dots)" opacity=".55"/>
+  <rect x="1440" y="0" width="480" height="380" fill="url(#dotsB)" opacity=".5"/>
+  <!-- ojo gigante -->
+  <path d="M300 640 Q1000 30 1720 460 Q1190 1050 300 640Z" fill="#010221"/>
+  <g clip-path="url(#almond)">
+    <rect x="300" y="60" width="1420" height="980" fill="#2BCDFF"/>
+    <circle cx="1060" cy="560" r="330" fill="#FFF02B"/>
+    <circle cx="1060" cy="560" r="255" fill="#FF2C68"/>
+    <circle cx="1060" cy="560" r="190" fill="#FFFFFF"/>
+    <circle cx="1060" cy="560" r="168" fill="#010221"/>
+    <circle cx="1000" cy="495" r="38" fill="#FFFFFF"/>
+    <polygon points="300,700 1720,520 1720,1080 300,1080" fill="#010221"/>
+  </g>
+  <line x1="330" y1="690" x2="1700" y2="515" stroke="#FF2C68" stroke-width="16"/>
+  <!-- estallidos -->
+  <use href="#burst" transform="translate(1610 210) scale(2.6)" fill="#FF2C68"/>
+  <use href="#burst" transform="translate(260 260) scale(1.4) rotate(18)" fill="#FFF02B"/>
+  <use href="#burst" transform="translate(1500 900) scale(1.1) rotate(-12)" fill="#2BCDFF"/>
+  <use href="#burst" transform="translate(720 930) scale(.8)" fill="#FF2C68"/>
+  <!-- bloques de color -->
+  <rect x="120" y="760" width="200" height="200" fill="#FFF02B" transform="rotate(-6 220 860)"/>
+  <rect x="1700" y="620" width="160" height="260" fill="#FF2C68" transform="rotate(5 1780 750)"/>
+  <!-- cruces -->
+  <path d="M640 150v40M620 170h40M1340 960v40M1320 980h40M1820 420v40M1800 440h40M120 520v40M100 540h40" stroke="#FFFFFF" stroke-width="3" opacity=".7"/>
+  <!-- líneas de escaneo -->
+  <rect x="0" y="0" width="1920" height="1080" fill="none"/>
+</svg>

@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Producción audiovisual — RAKÜN Visual Design</title>
+  <meta name="description" content="Videoclips, cortos, largometrajes y comerciales. Preproducción, rodaje y postproducción con método, desde Bogotá.">
+  <meta name="theme-color" content="#010221">
+  <script>document.documentElement.classList.add('js');</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&family=Permanent+Marker&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="produccion/produccion.css">
+</head>
+
+<body data-theme="home" class="page-prod">
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <polygon id="rk-burst" points="0,-50 4.4,-16.4 18,-31.2 12,-12 40.7,-23.5 16.4,-4.4 31,0 16.4,4.4 43.3,25 12,12 20,34.6 4.4,16.4 0,45 -4.4,16.4 -16.5,28.6 -12,12 -42.4,24.5 -16.4,4.4 -38,0 -16.4,-4.4 -39.8,-23 -12,-12 -17.5,-30.3 -4.4,-16.4"/>
+    <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-e" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-n" viewBox="0 0 24 24"><path d="M12 20V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+<div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
+
+<!-- ================================================================
+     HEADER
+     ================================================================ -->
+<header class="hdr" data-header>
+  <a class="hdr__brand" href="index.html" aria-label="RAKÜN Visual Design, ir al inicio">
+    <span class="badge badge--sm" aria-hidden="true">
+      <span class="badge__word"><span>R</span><span>A</span><span>K</span><span class="badge__u">Ü<svg class="badge__burst" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg></span><span>N</span></span>
+      <span class="badge__bar"><span>VISUAL</span><span>DESIGN</span></span>
+    </span>
+  </a>
+  <svg class="hdr__eye" data-eye="eye-hdr"></svg>
+
+  <nav class="hdr__nav" id="menu" aria-label="Principal">
+    <ul>
+      <li><button class="hdr__mega-btn" type="button" aria-expanded="false" aria-controls="mega" data-mega-btn>Lo que hacemos <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></button></li>
+      <li><a href="index.html#estudio">Estudio</a></li>
+      <li><a href="#crew">Equipo</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+
+    <div class="mega mega--3" id="mega" data-mega>
+      <section class="mega__world" aria-labelledby="mega-a">
+        <p class="mono mega__kicker">Mundo 01 · Marca personal</p>
+        <p class="mega__title" id="mega-a">Para quienes <em>viven</em> de su imagen.</p>
+        <ul class="mega__list">
+          <li><a href="planes.html#creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Marca · Contenido · Media kit</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="planes.html#medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Identidad · Confianza · Pacientes</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="planes.html#mentor"><span class="mega__sw" style="--sw: linear-gradient(135deg, var(--yellow) 50%, var(--blue) 50%)"></span><span><span class="mega__name">Mentores</span><span class="mono">Autoridad · Cursos · Lanzamientos</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </section>
+      <section class="mega__world mega__world--b" aria-labelledby="mega-b">
+        <p class="mono mega__kicker">Mundo 02 · Producción audiovisual</p>
+        <p class="mega__title" id="mega-b">Historias que se <em>ruedan.</em></p>
+        <ul class="mega__list">
+          <li><a href="#preproduccion"><span class="mega__num">01</span><span><span class="mega__name">Preproducción</span><span class="mono">Idea · Guion · Storyboard · Casting</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="#rodaje"><span class="mega__num">02</span><span><span class="mega__name">Rodaje</span><span class="mono">Dirección · Fotografía · Sonido · Arte</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="#postproduccion"><span class="mega__num">03</span><span><span class="mega__name">Postproducción</span><span class="mono">Montaje · Color · VFX · Mezcla</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+        <p class="mega__tags"><span class="mono">Rodamos:</span>
+          <a class="sticker sticker--cream mono" href="#proyectos">Videoclips</a>
+          <a class="sticker sticker--pink mono" href="#proyectos">Cortos</a>
+          <a class="sticker sticker--yellow mono" href="#proyectos">Largometrajes</a>
+          <a class="sticker sticker--blue mono" href="#proyectos">Comerciales</a>
+        </p>
+        <a class="link mega__all" href="#inicio">Ver toda la producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </section>
+      <section class="mega__world mega__world--c" aria-labelledby="mega-c">
+        <p class="mono mega__kicker">Mundo 03 · Web y apps</p>
+        <p class="mega__title" id="mega-c">Pantallas que no puedes dejar de <em>mirar.</em></p>
+        <ul class="mega__list">
+          <li><a href="web.html#boceto"><span class="mega__num">01</span><span><span class="mega__name">Del boceto al píxel</span><span class="mono">Wireframe · Diseño UI</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="web.html#proceso"><span class="mega__num">02</span><span><span class="mega__name">Cómo trabajamos</span><span class="mono">Proceso paso a paso</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="web.html#planes"><span class="mega__num">03</span><span><span class="mega__name">Planes</span><span class="mono">Landing · Sitio · Tienda o app</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </section>
+      <p class="mono mega__fig" aria-hidden="true">fig. 00 — índice / elige tu camino</p>
+    </div>
+
+    <a class="btn btn--pink hdr__cta-mobile" href="mailto:rakundesigns@gmail.com?subject=Quiero%20cotizar%20una%20producci%C3%B3n">Cotizar producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+  </nav>
+
+  <p class="hdr__clock mono"><span>BOGOTÁ</span> / <time data-clock>--:--</time> LOCAL</p>
+  <a class="btn btn--pink hdr__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20iniciar%20un%20proyecto" data-eye-target>Iniciar proyecto <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+  <button class="hdr__menu mono" type="button" aria-expanded="false" aria-controls="menu" data-menu>
+    <span class="hdr__menu-label">Menú</span><span class="hdr__menu-bars" aria-hidden="true"></span>
+  </button>
+</header>
+
+<main id="main">
+
+  <!-- ==============================================================
+       001 · PRODUCCIÓN
+       ============================================================== -->
+  <section class="sec sec--navy p-hero" id="inicio" aria-labelledby="p-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">001</span><span class="rail__label">Producción</span></div>
+    <div class="p-hero__body">
+      <nav class="p-subnav mono" aria-label="Etapas de producción">
+        <span class="p-subnav__here">Producción</span>
+        <a href="#preproduccion">01 Preproducción</a>
+        <a href="#rodaje">02 Rodaje</a>
+        <a href="#postproduccion">03 Postproducción</a>
+        <a href="#proyectos">Proyectos</a>
+        <span class="p-subnav__types">Videoclips · Cortos · Largos · Comerciales</span>
+      </nav>
+
+      <div class="p-hero__grid">
+        <div class="p-hero__copy">
+          <p class="mono p-kicker">Mundo 02 / Producción audiovisual</p>
+          <h1 class="p-hero__title" id="p-title">Rodamos<br>historias<br>que nadie<br><span class="tag-label">ignora.</span></h1>
+          <p class="p-hero__lede">Videoclips, cortos, largometrajes y comerciales. Del primer garabato al último render: miramos, contamos y rodamos con método.</p>
+          <p class="p-types">
+            <a class="sticker sticker--cream mono" href="#proyectos">Videoclips</a>
+            <a class="sticker sticker--pink mono" href="#proyectos">Cortos</a>
+            <a class="sticker sticker--yellow mono" href="#proyectos">Largometrajes</a>
+            <a class="sticker sticker--blue mono" href="#proyectos">Comerciales</a>
+          </p>
+        </div>
+
+        <figure class="p-slate">
+          <svg class="p-slate__art" viewBox="0 0 540 480" role="img" aria-label="Claqueta de RAKÜN: escena 001, toma 01">
+            <g transform="rotate(-11 20 120)">
+              <rect x="20" y="70" width="500" height="54" fill="#F3F0EA"/>
+              <polygon points="40,70 100,70 70,124 10,124" fill="#010221"/><polygon points="160,70 220,70 190,124 130,124" fill="#010221"/><polygon points="280,70 340,70 310,124 250,124" fill="#010221"/><polygon points="400,70 460,70 430,124 370,124" fill="#010221"/>
+            </g>
+            <rect x="20" y="132" width="500" height="54" fill="#F3F0EA"/>
+            <polygon points="40,132 100,132 70,186 10,186" fill="#FF2C68"/><polygon points="160,132 220,132 190,186 130,186" fill="#FF2C68"/><polygon points="280,132 340,132 310,186 250,186" fill="#FF2C68"/><polygon points="400,132 460,132 430,186 370,186" fill="#FF2C68"/>
+            <rect x="20" y="186" width="500" height="280" fill="#1B1A35"/>
+            <g stroke="#F3F0EA" stroke-width="2" opacity=".85"><line x1="20" y1="256" x2="520" y2="256"/><line x1="20" y1="326" x2="520" y2="326"/><line x1="20" y1="396" x2="520" y2="396"/><line x1="270" y1="256" x2="270" y2="396"/></g>
+            <g font-family="JetBrains Mono, monospace" font-size="13" letter-spacing="2" fill="#C3C0DD">
+              <text x="40" y="226">PROD.</text><text x="40" y="282">ESCENA</text><text x="290" y="282">TOMA</text>
+              <text x="40" y="352">DIRECCIÓN</text><text x="290" y="352">D. FOTOGRAFÍA</text><text x="40" y="440">BOGOTÁ · 4.7110° N · 74.0721° W</text>
+            </g>
+            <g font-family="Permanent Marker, cursive" fill="#F3F0EA">
+              <text x="120" y="232" font-size="30">RAKÜN</text><text x="40" y="314" font-size="28">001</text>
+              <text x="290" y="314" font-size="28" fill="#FFF02B">01</text>
+              <text x="40" y="384" font-size="22">[Nombre]</text><text x="290" y="384" font-size="22">[Nombre]</text>
+              <text x="420" y="440" font-size="22" fill="#FF2C68">2026</text>
+            </g>
+          </svg>
+          <svg class="p-slate__burst" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg>
+          <figcaption class="sticker sticker--cream mono">fig. 01 — toma uno, siempre</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       002 · TRES ETAPAS — se despliega la elegida; las otras quedan en pestañas
+       ============================================================== -->
+  <section class="sec sec--cream p-stages" id="etapas" aria-labelledby="stages-title">
+    <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">002</span><span class="rail__label">Etapas</span></div>
+    <div class="sec__body">
+      <div class="p-head">
+        <h2 class="display reveal" id="stages-title">Tres etapas.<br><em>Cero</em> improvisación.</h2>
+        <p class="p-head__aside">Primero miramos, después rodamos, al final pulimos. Abre una etapa y mira, paso a paso, todo lo que trae.</p>
+      </div>
+
+      <div class="stages" data-stages>
+        <!-- 01 · Preproducción -->
+        <article class="stage" id="preproduccion" style="--c: var(--pink); --cn: var(--pink)" data-stage>
+          <button class="stage__tab" type="button" data-stage-open aria-controls="detail-pre" hidden>
+            <span class="stage__tab-num">01</span><span class="stage__tab-name">Preproducción</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg>
+          </button>
+          <div class="stage__card">
+            <p class="stage__top"><span class="stage__num">01</span><span class="mono">Antes de rodar</span></p>
+            <h3 class="stage__name">Preproducción</h3>
+            <p class="stage__lede">Aquí se gana la película. Miramos, escribimos y planeamos cada plano antes de encender una luz.</p>
+            <p class="stage__sum mono">Ideación · Investigación · Guion literario · Guion técnico · Storyboard · Casting · Scouting · Plan de rodaje · Presupuesto</p>
+            <button class="stage__open" type="button" data-stage-open aria-expanded="false" aria-controls="detail-pre">Ver etapa <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></button>
+          </div>
+          <div class="stage__detail" id="detail-pre" hidden>
+            <div class="stage__bar"><span class="stage__num">01</span><h3 class="stage__name">Preproducción</h3><span class="mono">Antes de rodar</span><button class="stage__close mono" type="button" data-stage-close>Cerrar <svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+            <ul class="svcs">
+              <li class="svc"><div class="svc__anim" data-anim="bulb" aria-hidden="true"></div><h4 class="svc__name">Ideación <span class="mono">01</span></h4><p>De mil ocurrencias a un concepto que se sostiene.</p><p class="svc__out mono">Entrega: concepto + moodboard</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="lens" aria-hidden="true"></div><h4 class="svc__name">Investigación <span class="mono">02</span></h4><p>Miramos tu mundo y tu público para no repetir a nadie.</p><p class="svc__out mono">Entrega: brief creativo</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="type" aria-hidden="true"></div><h4 class="svc__name">Guion literario <span class="mono">03</span></h4><p>La historia escrita: escenas, diálogos y ritmo.</p><p class="svc__out mono">Entrega: guion literario</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="table" aria-hidden="true"></div><h4 class="svc__name">Guion técnico <span class="mono">04</span></h4><p>Cada plano con su valor, lente y movimiento.</p><p class="svc__out mono">Entrega: desglose técnico</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="panels" aria-hidden="true"></div><h4 class="svc__name">Storyboard <span class="mono">05</span></h4><p>La película dibujada antes de rodarla.</p><p class="svc__out mono">Entrega: storyboard</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="photos" aria-hidden="true"></div><h4 class="svc__name">Casting <span class="mono">06</span></h4><p>Buscamos las caras que cuentan la historia.</p><p class="svc__out mono">Entrega: selección de talento</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="pin" aria-hidden="true"></div><h4 class="svc__name">Scouting <span class="mono">07</span></h4><p>Locaciones reales, con luz y sonido medidos.</p><p class="svc__out mono">Entrega: reporte de locaciones</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="cal" aria-hidden="true"></div><h4 class="svc__name">Plan de rodaje <span class="mono">08</span></h4><p>Días, horas y orden de cada toma.</p><p class="svc__out mono">Entrega: plan y llamados</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="count" aria-hidden="true"></div><h4 class="svc__name">Presupuesto <span class="mono">09</span></h4><p>Números claros antes de prender una luz.</p><p class="svc__out mono">Entrega: presupuesto detallado</p></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- 02 · Rodaje -->
+        <article class="stage" id="rodaje" style="--c: var(--yellow); --cn: var(--navy)" data-stage>
+          <button class="stage__tab" type="button" data-stage-open aria-controls="detail-rod" hidden>
+            <span class="stage__tab-num">02</span><span class="stage__tab-name">Rodaje</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg>
+          </button>
+          <div class="stage__card">
+            <p class="stage__top"><span class="stage__num">02</span><span class="mono">Luces, cámara, calle</span></p>
+            <h3 class="stage__name">Rodaje</h3>
+            <p class="stage__lede">El caos controlado del set. Un equipo completo para que cada toma cuente algo.</p>
+            <p class="stage__sum mono">Dirección · Fotografía · Cámara · Iluminación · Sonido directo · Arte · Vestuario · Maquillaje · Making of</p>
+            <button class="stage__open" type="button" data-stage-open aria-expanded="false" aria-controls="detail-rod">Ver etapa <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></button>
+          </div>
+          <div class="stage__detail" id="detail-rod" hidden>
+            <div class="stage__bar"><span class="stage__num">02</span><h3 class="stage__name">Rodaje</h3><span class="mono">Luces, cámara, calle</span><button class="stage__close mono" type="button" data-stage-close>Cerrar <svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+            <ul class="svcs">
+              <li class="svc"><div class="svc__anim" data-anim="clap" aria-hidden="true"></div><h4 class="svc__name">Dirección <span class="mono">01</span></h4><p>Alguien mira todo, todo el tiempo.</p><p class="svc__out mono">En set: dirección y asistencia</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="iris" aria-hidden="true"></div><h4 class="svc__name">Fotografía <span class="mono">02</span></h4><p>Luz, encuadre y lente al servicio de la historia.</p><p class="svc__out mono">En set: dirección de fotografía</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="rec" aria-hidden="true"></div><h4 class="svc__name">Cámara <span class="mono">03</span></h4><p>Cine digital, 28–70, 50 y anamórficos.</p><p class="svc__out mono">En set: cámara y foco</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="bulb" aria-hidden="true"></div><h4 class="svc__name">Iluminación <span class="mono">04</span></h4><p>Dos luces que saben dónde caer.</p><p class="svc__out mono">En set: gaffer y eléctricos</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="wave" aria-hidden="true"></div><h4 class="svc__name">Sonido directo <span class="mono">05</span></h4><p>Lo que se oye también se mira.</p><p class="svc__out mono">En set: sonidista y boom</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="panels" aria-hidden="true"></div><h4 class="svc__name">Dirección de arte <span class="mono">06</span></h4><p>Cada objeto en cuadro dice algo.</p><p class="svc__out mono">En set: arte y utilería</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="photos" aria-hidden="true"></div><h4 class="svc__name">Vestuario y maquillaje <span class="mono">07</span></h4><p>El personaje empieza por fuera.</p><p class="svc__out mono">En set: vestuario y maquillaje</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="rec" aria-hidden="true"></div><h4 class="svc__name">Making of <span class="mono">08</span></h4><p>La historia detrás de la historia.</p><p class="svc__out mono">Entrega: fotos y video BTS</p></li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- 03 · Postproducción -->
+        <article class="stage" id="postproduccion" style="--c: var(--blue); --cn: var(--navy)" data-stage>
+          <button class="stage__tab" type="button" data-stage-open aria-controls="detail-post" hidden>
+            <span class="stage__tab-num">03</span><span class="stage__tab-name">Postproducción</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg>
+          </button>
+          <div class="stage__card">
+            <p class="stage__top"><span class="stage__num">03</span><span class="mono">Donde se arma</span></p>
+            <h3 class="stage__name">Postproducción</h3>
+            <p class="stage__lede">El material se vuelve historia. Cortamos, coloreamos y mezclamos hasta que no puedan dejar de mirar.</p>
+            <p class="stage__sum mono">Montaje · Color · VFX · Motion · Diseño sonoro · Mezcla · Música · Subtítulos · Entregables</p>
+            <button class="stage__open" type="button" data-stage-open aria-expanded="false" aria-controls="detail-post">Ver etapa <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></button>
+          </div>
+          <div class="stage__detail" id="detail-post" hidden>
+            <div class="stage__bar"><span class="stage__num">03</span><h3 class="stage__name">Postproducción</h3><span class="mono">Donde se arma</span><button class="stage__close mono" type="button" data-stage-close>Cerrar <svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+            <ul class="svcs">
+              <li class="svc"><div class="svc__anim" data-anim="cut" aria-hidden="true"></div><h4 class="svc__name">Montaje <span class="mono">01</span></h4><p>El ritmo que no te deja parpadear.</p><p class="svc__out mono">Entrega: corte final</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="color" aria-hidden="true"></div><h4 class="svc__name">Color <span class="mono">02</span></h4><p>La atmósfera exacta, plano por plano.</p><p class="svc__out mono">Entrega: master etalonado</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="burst" aria-hidden="true"></div><h4 class="svc__name">VFX <span class="mono">03</span></h4><p>Lo que la cámara no alcanzó, lo creamos.</p><p class="svc__out mono">Entrega: planos compuestos</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="type" aria-hidden="true"></div><h4 class="svc__name">Motion graphics <span class="mono">04</span></h4><p>Títulos y gráficos con actitud.</p><p class="svc__out mono">Entrega: gráficos animados</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="wave" aria-hidden="true"></div><h4 class="svc__name">Diseño sonoro <span class="mono">05</span></h4><p>Capas de sonido que cuentan.</p><p class="svc__out mono">Entrega: diseño sonoro</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="wave" aria-hidden="true"></div><h4 class="svc__name">Mezcla <span class="mono">06</span></h4><p>Todo en su lugar, a buen volumen.</p><p class="svc__out mono">Entrega: mezcla estéreo / 5.1</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="wave" aria-hidden="true"></div><h4 class="svc__name">Música <span class="mono">07</span></h4><p>Original o licenciada, pero con intención.</p><p class="svc__out mono">Entrega: banda sonora</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="type" aria-hidden="true"></div><h4 class="svc__name">Subtítulos <span class="mono">08</span></h4><p>Que te entiendan en cualquier idioma.</p><p class="svc__out mono">Entrega: SRT y quemados</p></li>
+              <li class="svc"><div class="svc__anim" data-anim="table" aria-hidden="true"></div><h4 class="svc__name">Entregables <span class="mono">09</span></h4><p>Cada red y cada pantalla, en su formato.</p><p class="svc__out mono">Entrega: masters por plataforma</p></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       003 · EL SET — equipos sobre el plano, con HUD de grabación
+       ============================================================== -->
+  <section class="sec p-set" id="equipos" aria-labelledby="set-title">
+    <span class="lip" aria-hidden="true" style="--lip: #060833"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">003</span><span class="rail__label">El set</span></div>
+    <div class="sec__body p-set__body">
+      <div class="p-set__copy">
+        <p class="mono p-kicker p-kicker--blue">Los equipos · el set</p>
+        <h2 class="display display--md reveal" id="set-title">Todo lo que usamos para que te <em>vean.</em></h2>
+        <p class="p-set__lede">Pasa por el plano. Cada marca es un equipo que llevamos al rodaje.</p>
+        <ol class="gear" data-gear>
+          <li><button type="button" class="gear__item is-active" data-gear-i="0"><span class="mono">01</span><span><span class="gear__name">Cámara de cine</span><span class="mono gear__model">[Marca · modelo] · [resolución / RAW]</span></span></button></li>
+          <li><button type="button" class="gear__item" data-gear-i="1"><span class="mono">02</span><span><span class="gear__name">Lentes</span><span class="mono gear__model">28–70 mm · 50 mm · anamórficos [series]</span></span></button></li>
+          <li><button type="button" class="gear__item" data-gear-i="2"><span class="mono">03</span><span><span class="gear__name">Luz 1 · principal</span><span class="mono gear__model">[Marca · modelo] · [potencia]</span></span></button></li>
+          <li><button type="button" class="gear__item" data-gear-i="3"><span class="mono">04</span><span><span class="gear__name">Luz 2 · contraluz</span><span class="mono gear__model">[Marca · modelo]</span></span></button></li>
+          <li><button type="button" class="gear__item" data-gear-i="4"><span class="mono">05</span><span><span class="gear__name">Sonido directo</span><span class="mono gear__model">[Boom · inalámbricos · grabadora]</span></span></button></li>
+          <li><button type="button" class="gear__item" data-gear-i="5"><span class="mono">06</span><span><span class="gear__name">Monitor de dirección</span><span class="mono gear__model">[Village · monitor · transmisión]</span></span></button></li>
+          <li><button type="button" class="gear__item" data-gear-i="6"><span class="mono">07</span><span><span class="gear__name">Gimbal</span><span class="mono gear__model">[Marca · modelo]</span></span></button></li>
+          <li><button type="button" class="gear__item" data-gear-i="7"><span class="mono">08</span><span><span class="gear__name">Dron</span><span class="mono gear__model">[Marca · modelo] · [licencia]</span></span></button></li>
+        </ol>
+        <button class="p-rec mono" type="button" data-rec-again>● Grabar de nuevo</button>
+      </div>
+
+      <figure class="plan" data-plan>
+        <svg class="plan__svg" viewBox="0 0 780 680" role="img" aria-label="Plano cenital del set: dos talentos, cámara, lentes, dos luces, sonido, monitor de dirección, gimbal y dron">
+          <rect x="40" y="40" width="700" height="580" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.5" stroke-dasharray="8 6"/>
+          <g stroke="rgba(255,255,255,.5)" stroke-width="1"><line x1="40" y1="644" x2="740" y2="644"/><line x1="40" y1="638" x2="40" y2="650"/><line x1="740" y1="638" x2="740" y2="650"/></g>
+          <text x="390" y="666" text-anchor="middle" fill="#C3C0DD" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">14.0 M</text>
+          <rect x="430" y="200" width="180" height="60" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.4)"/>
+          <text x="520" y="235" text-anchor="middle" fill="#C3C0DD" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">MESA / ARTE</text>
+          <polygon points="300,430 455,280 585,350" fill="rgba(43,205,255,.14)"/>
+          <polygon points="620,130 470,300 560,330" fill="rgba(255,240,43,.13)"/>
+          <polygon points="680,450 520,320 570,300" fill="rgba(255,44,104,.13)"/>
+          <g transform="translate(490 312) rotate(-30)"><ellipse rx="22" ry="12" fill="#FF2C68"/><circle r="10" fill="#F3F0EA"/><path d="M-4 -9 L0 -15 L4 -9" fill="#F3F0EA"/></g>
+          <g transform="translate(552 334) rotate(-60)"><ellipse rx="22" ry="12" fill="#FF2C68"/><circle r="10" fill="#F3F0EA"/><path d="M-4 -9 L0 -15 L4 -9" fill="#F3F0EA"/></g>
+          <text x="450" y="290" fill="#FF2C68" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">TALENTO 1</text>
+          <text x="566" y="372" fill="#FF2C68" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">TALENTO 2</text>
+          <g transform="rotate(-38 300 430)"><rect x="276" y="414" width="48" height="32" fill="#F3F0EA"/><rect x="324" y="420" width="18" height="20" fill="#2BCDFF"/></g>
+          <rect x="300" y="508" width="92" height="40" fill="none" stroke="#F3F0EA" stroke-width="2"/><circle cx="320" cy="528" r="10" fill="none" stroke="#2BCDFF" stroke-width="3"/><circle cx="346" cy="528" r="10" fill="none" stroke="#2BCDFF" stroke-width="3"/><ellipse cx="373" cy="528" rx="12" ry="8" fill="none" stroke="#FFF02B" stroke-width="3"/>
+          <circle cx="620" cy="130" r="16" fill="#FFF02B"/><circle cx="680" cy="450" r="14" fill="#FF2C68"/>
+          <line x1="560" y1="480" x2="525" y2="372" stroke="#F3F0EA" stroke-width="3"/><rect x="515" y="358" width="20" height="10" rx="5" fill="#F3F0EA"/><circle cx="560" cy="480" r="8" fill="#F3F0EA"/>
+          <rect x="110" y="520" width="70" height="44" fill="none" stroke="#F3F0EA" stroke-width="2"/><rect x="118" y="528" width="54" height="28" fill="rgba(43,205,255,.35)"/><text x="145" y="586" text-anchor="middle" fill="#C3C0DD" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">VILLAGE</text>
+          <g transform="translate(200 320)" stroke="#F3F0EA" stroke-width="2.5" fill="none"><circle r="16"/><path d="M-16 0 H-28 M16 0 H28 M0 16 V30"/><rect x="-8" y="-6" width="16" height="12" fill="#F3F0EA"/></g>
+          <g stroke="#F3F0EA" stroke-width="2" fill="none"><line x1="660" y1="70" x2="700" y2="110"/><line x1="700" y1="70" x2="660" y2="110"/><circle cx="660" cy="70" r="9"/><circle cx="700" cy="70" r="9"/><circle cx="660" cy="110" r="9"/><circle cx="700" cy="110" r="9"/></g>
+          <g transform="translate(80 90)"><polygon points="0,-22 8,8 0,2 -8,8" fill="#F3F0EA"/><text x="0" y="26" text-anchor="middle" fill="#C3C0DD" font-family="JetBrains Mono, monospace" font-size="11">N</text></g>
+        </svg>
+        <!-- marcadores: posición en % del plano (780 × 680) -->
+        <button type="button" class="mk is-active" data-gear-i="0" style="left: 38.46%; top: 63.24%" aria-label="Cámara de cine">01</button>
+        <button type="button" class="mk" data-gear-i="1" style="left: 44.36%; top: 77.65%" aria-label="Lentes">02</button>
+        <button type="button" class="mk" data-gear-i="2" style="left: 79.49%; top: 19.12%" aria-label="Luz 1">03</button>
+        <button type="button" class="mk" data-gear-i="3" style="left: 87.18%; top: 66.18%" aria-label="Luz 2">04</button>
+        <button type="button" class="mk" data-gear-i="4" style="left: 71.79%; top: 70.59%" aria-label="Sonido directo">05</button>
+        <button type="button" class="mk" data-gear-i="5" style="left: 18.59%; top: 73.53%" aria-label="Monitor de dirección">06</button>
+        <button type="button" class="mk" data-gear-i="6" style="left: 25.64%; top: 47.06%" aria-label="Gimbal">07</button>
+        <button type="button" class="mk" data-gear-i="7" style="left: 87.18%; top: 20.59%" aria-label="Dron">08</button>
+
+        <div class="hud" data-hud aria-hidden="true">
+          <span class="hud__shade"></span>
+          <span class="hud__noise"></span>
+          <span class="hud__frame"><i></i><i></i><i></i><i></i></span>
+          <span class="hud__rec mono"><b></b>REC</span>
+          <span class="hud__tc mono" data-hud-tc>00:00:00:00</span>
+          <span class="hud__info mono">ISO 800 · 1/48 · T2.8 · 4K 24P · 50mm</span>
+          <span class="hud__bat mono">BAT <span><i></i><i></i><i></i><i></i></span></span>
+          <span class="hud__af"><span class="mono">AF · TALENTO 1</span></span>
+        </div>
+        <figcaption class="mono plan__cap">fig. 04 — plano de set · escala 1:50</figcaption>
+        <p class="plan__active sticker sticker--cream mono" data-gear-label aria-live="polite">01 · Cámara de cine</p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       004 · LA CREW — a oscuras; la linterna es el cursor
+       ============================================================== -->
+  <section class="sec p-crew" id="crew" aria-labelledby="crew-title">
+    <span class="lip" aria-hidden="true" style="--lip: #04051A"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">004</span><span class="rail__label">La crew</span></div>
+    <div class="wall" data-wall>
+      <div class="p-head p-head--wall">
+        <h2 class="display" id="crew-title">La gente detrás de la <em>mirada.</em></h2>
+        <p class="p-head__aside">Apagamos la luz para que los encuentres tú. Mueve la linterna: así trabajamos en el set.</p>
+      </div>
+      <ul class="crew">
+        <!-- TODO: nombres y fotos reales de la crew -->
+        <li class="pola" style="--x: 6.5%; --y: 330px; --r: -4deg; --tone: var(--pink)"><span class="pola__photo"><span>DR</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Dirección</span></li>
+        <li class="pola" style="--x: 25.4%; --y: 450px; --r: 3deg; --tone: var(--blue)"><span class="pola__photo"><span>DF</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Dirección de fotografía</span></li>
+        <li class="pola" style="--x: 44.3%; --y: 320px; --r: -2deg; --tone: var(--yellow)"><span class="pola__photo"><span>MC</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Montaje y color</span></li>
+        <li class="pola" style="--x: 63.2%; --y: 440px; --r: 4deg; --tone: var(--blue)"><span class="pola__photo"><span>SD</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Sonido</span></li>
+        <li class="pola" style="--x: 81.4%; --y: 300px; --r: -3deg; --tone: var(--pink)"><span class="pola__photo"><span>DA</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Dirección de arte</span></li>
+      </ul>
+      <!-- el ojo de RAKÜN escondido en la oscuridad: solo se ve si lo alumbras -->
+      <svg class="wall__eye" data-crew-eye aria-label="El ojo de RAKÜN vigila escondido en la oscuridad" role="img"></svg>
+      <div class="wall__dark" aria-hidden="true"></div>
+      <button class="wall__lights mono" type="button" aria-pressed="false" data-lights><span aria-hidden="true"></span><span data-lights-label>Encender la luz</span></button>
+      <p class="wall__cap mono" aria-hidden="true">fig. 05 — la crew · <span data-light-mode>la linterna busca sola</span></p>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       005 · PROYECTOS — la videoteca
+       ============================================================== -->
+  <section class="sec sec--cream p-tapes" id="proyectos" aria-labelledby="tapes-title">
+    <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Proyectos</span></div>
+    <div class="sec__body p-tapes__body">
+      <div class="p-tapes__copy">
+        <p class="mono p-kicker p-kicker--dark">Proyectos · la videoteca</p>
+        <h2 class="display reveal" id="tapes-title">Lo que ya <em>rodamos.</em></h2>
+        <p class="p-head__aside">Saca un casete de la estantería y dale play. Cada uno guarda una historia que hicimos para que la miraran.</p>
+        <!-- TODO: proyectos reales. Para cada casete: data-name, data-kind, data-client, data-year, data-did y data-src (ruta del video) -->
+        <div class="shelf">
+          <ul class="shelf__row" data-shelf>
+            <li><button class="spine is-out" type="button" aria-pressed="true" style="--body: #1B1A35; --label: var(--pink)" data-name="[Proyecto 01]" data-kind="Videoclip" data-client="[Cliente]" data-year="[Año]" data-did="Dirección · Foto · Post" data-src=""><span class="mono spine__code">RK-01</span><span class="spine__label"><span>[Proyecto 01]</span></span><span class="mono spine__kind">Videoclip</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--yellow)" data-name="[Proyecto 02]" data-kind="Comercial" data-client="[Cliente]" data-year="[Año]" data-did="Producción completa" data-src=""><span class="mono spine__code">RK-02</span><span class="spine__label"><span>[Proyecto 02]</span></span><span class="mono spine__kind">Comercial</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--blue)" data-name="[Proyecto 03]" data-kind="Cortometraje" data-client="[Cliente]" data-year="[Año]" data-did="Guion · Rodaje · Color" data-src=""><span class="mono spine__code">RK-03</span><span class="spine__label"><span>[Proyecto 03]</span></span><span class="mono spine__kind">Cortometraje</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--cream)" data-name="[Proyecto 04]" data-kind="Videoclip" data-client="[Cliente]" data-year="[Año]" data-did="Rodaje · Montaje" data-src=""><span class="mono spine__code">RK-04</span><span class="spine__label"><span>[Proyecto 04]</span></span><span class="mono spine__kind">Videoclip</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--pink)" data-name="[Proyecto 05]" data-kind="Largometraje" data-client="[Cliente]" data-year="[Año]" data-did="Postproducción" data-src=""><span class="mono spine__code">RK-05</span><span class="spine__label"><span>[Proyecto 05]</span></span><span class="mono spine__kind">Largometraje</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--blue)" data-name="[Proyecto 06]" data-kind="Comercial" data-client="[Cliente]" data-year="[Año]" data-did="Dirección · Foto" data-src=""><span class="mono spine__code">RK-06</span><span class="spine__label"><span>[Proyecto 06]</span></span><span class="mono spine__kind">Comercial</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--yellow)" data-name="[Proyecto 07]" data-kind="Videoclip" data-client="[Cliente]" data-year="[Año]" data-did="Producción completa" data-src=""><span class="mono spine__code">RK-07</span><span class="spine__label"><span>[Proyecto 07]</span></span><span class="mono spine__kind">Videoclip</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--cream)" data-name="[Proyecto 08]" data-kind="Cortometraje" data-client="[Cliente]" data-year="[Año]" data-did="Guion · Rodaje" data-src=""><span class="mono spine__code">RK-08</span><span class="spine__label"><span>[Proyecto 08]</span></span><span class="mono spine__kind">Cortometraje</span></button></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="player" data-player>
+        <div class="player__tv">
+          <div class="player__screen">
+            <video class="player__video" playsinline preload="none" data-player-video></video>
+            <span class="player__scan" aria-hidden="true"></span>
+            <span class="player__play mono" aria-hidden="true">PLAY ▶</span>
+            <span class="player__tc mono" aria-hidden="true" data-player-tc>00:00:00:00</span>
+            <button class="player__btn" type="button" data-player-btn aria-label="Reproducir [Proyecto 01]"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg></button>
+            <p class="player__name" data-player-name>[Proyecto 01]</p>
+            <p class="player__ph mono" data-player-ph>[video del proyecto]</p>
+            <span class="player__noise" aria-hidden="true"></span>
+            <span class="player__black" aria-hidden="true"></span>
+          </div>
+          <p class="player__brand mono"><span>RAKÜN · VHS</span><span class="player__leds" aria-hidden="true"><i></i><i></i></span></p>
+        </div>
+        <dl class="player__info">
+          <div><dt class="mono">Tipo</dt><dd data-player-kind>Videoclip</dd></div>
+          <div><dt class="mono">Cliente</dt><dd data-player-client>[Cliente]</dd></div>
+          <div><dt class="mono">Año</dt><dd data-player-year>[Año]</dd></div>
+          <div><dt class="mono">Hicimos</dt><dd data-player-did>Dirección · Foto · Post</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       006 · CTA — el ojo estalla sobre "Cotizar producción"
+       ============================================================== -->
+  <section class="sec sec--pink p-cta" id="cotizar" aria-labelledby="pcta-title">
+    <span class="lip" aria-hidden="true" style="--lip: var(--pink)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Cotizar</span></div>
+    <div class="sec__body p-cta__body">
+      <h2 class="p-cta__title" id="pcta-title">¿Listo para<br>rodar?</h2>
+      <div class="p-cta__eye" data-cta-eye aria-hidden="true">
+        <svg class="p-cta__calm" data-eye="eye-cta-prod"></svg>
+        <img class="p-cta__boom" src="assets/ojo-estallando.svg" alt="" width="1355" height="1205">
+      </div>
+      <div class="p-cta__action">
+        <a class="p-cta__btn" href="mailto:rakundesigns@gmail.com?subject=Quiero%20cotizar%20una%20producci%C3%B3n" data-cta-btn data-eye-target>Cotizar producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <p class="mono">Cuéntanos la idea. Nosotros la miramos.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="sec sec--navy p-ftr" id="contacto">
+  <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Contacto</span></div>
+  <div class="sec__body">
+    <div class="p-ftr__cols">
+      <div class="ftr__col">
+        <h2 class="mono">Contacto</h2>
+        <a class="link" href="mailto:rakundesigns@gmail.com">rakundesigns@gmail.com <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <!-- TODO: número real de WhatsApp -->
+        <a class="link" href="https://wa.me/" rel="noopener">WhatsApp <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </div>
+      <div class="ftr__col">
+        <h2 class="mono">Mundos</h2>
+        <a class="link" href="index.html">Marca personal <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="link" href="#inicio">Producción audiovisual <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </div>
+      <div class="ftr__col">
+        <h2 class="mono">Estudio</h2>
+        <p>Bogotá / Colombia</p>
+        <p class="mono">4.7110° N · 74.0721° W</p>
+        <p class="mono"><time data-clock>--:--</time> hora local</p>
+      </div>
+    </div>
+    <p class="ftr__giant" aria-hidden="true">RAK<span class="pink">Ü</span>N</p>
+    <div class="ftr__bottom mono">
+      <span>© 2026 RAKÜN Visual Design</span>
+      <span>Hecho para ser visto</span>
+      <a href="#inicio" class="ftr__top-link">Volver arriba <svg class="ico" aria-hidden="true"><use href="#i-n"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script type="module" src="produccion/produccion.js"></script>
+</body>
+</html>

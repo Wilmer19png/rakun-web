@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAKÜN Visual Design — Diseño que te hace mirar</title>
+  <meta name="description" content="Estudio de diseño visual y estrategia digital en Bogotá. Identidades, contenido y experiencias digitales para influencers, médicos y mentores que viven de su imagen.">
+  <meta name="theme-color" content="#010221">
+
+  <!-- La intro solo se reproduce en la primera visita de la sesión. Se decide antes de pintar para evitar parpadeos. -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.add('js');
+      var seen = false;
+      try { seen = sessionStorage.getItem('rakun:intro') === '1'; } catch (e) {}
+      if (!seen) d.classList.add('intro-on');
+      // La puerta ("¿Qué buscas?") también se muestra una vez por sesión, hasta que eliges mundo.
+      var chose = false;
+      try { chose = sessionStorage.getItem('rakun:door') === '1'; } catch (e) {}
+      if (!chose) d.classList.add('door-on');
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<!-- data-theme: home | influencers | medicos | mentores — solo cambia --accent y detalles menores -->
+<body data-theme="home">
+
+<!-- ================================================================
+     SPRITE: isotipo oficial (vectorizado), estallidos e iconos
+     ================================================================ -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Isotipo RAKÜN completo (viewBox 0 0 1080 1080), del SVG oficial assets/rakun-isotipo.svg.
+         Sin las capas del ojo: el ojo vivo se monta encima en x=515.5 y=499.2 w=211.2 h=133.7. -->
+    <g id="rk-iso">
+        <circle class="iso-ring" fill="#2BCDFF" cx="497.27" cy="559.43" r="392.73"/>
+        <circle class="iso-disc" fill="#FFFFFF" cx="497.27" cy="556.74" r="336.27"/>
+        <path class="iso-crest" fill="#FF2C68" d="M936.71,284.42l-184.13,209.92,161.67-.21-94.84,91.75,52.11,22.52,83.96,36.33,93.64,40.43-125.09,9.62-130.55,10.01-48.7,3.76,15.1,28.03,42.27,78.6-89.8-39.77-26.3-11.68c-126.08,104.8-310.17,91.26-411.18-30.26-101.01-121.53-80.66-304.99,45.41-409.79l-.53-35.7-1.74-121.92-1.62-111.32,49.7,81.97,48.47,79.9,53.27,87.77,86.57-108.2,52.11,126.9,184.29-166.77,30.94-28.03-14.98,30.28-120.92,244.41,250.92-118.54Z"/>
+        <path class="iso-fur" fill="#010221" d="M879,689.59c-12.52,50.97-112.61,49.37-162.46,44.77-49.35-12.78-110.3,40.53-127.63,76.42-6.03,15.25-7.7,32.49-8.17,48.83-.05,1.9-2.41,2.79-3.67,1.36-11.11-12.7-6.58-47.41-7.31-52.59-18.67,14.8-14.58,55.27-12.32,70.25.47,3.14-2.67,5.7-5.58,4.42-11.3-4.97-18.46-45.14-20.77-46.43-10.45,29.29-8.04,49.8-3.59,62.51.53,1.5.45,3.18-.33,4.57-4.17,7.4-14.76-16.45-17.89-22.1-10.95-23.44-3.78-35.58-5.72-35.32-20.72,40.16-21.53,134.49,22.17,153.15,3.35,1.43,2.71,6.36-.91,6.85C251.21,1043.19,4.47,793.37,45.18,519.63c1.41-9.47,9.06-16.77,18.57-17.79,8.36-.89,17.34-1.76,21.820-2.16,65.21,7.67-21.94-39.49,32.21-51.64,40.9-2.22,141.22,13.91,170.39,1.34,3.55-46.79,42.56,10.27,41.44-14.72-50.54-139.870,59.47-84.48,132.36-36.95-20.44-62.74,21.45-64.34,47.73-26.29,3.7,5.36,6.49,11.27,8.61,17.42,16.74,48.65,160.8,62.13,206.54,113.18,29.93,30.59,29.25,85.89,72.19,113.49,41.38,16.8,58.52,27.56,64.67,35.34h0c1.97,2.49,2.82,4.68,2.97,6.67.86,11.12-20,15.85,14.3,32.07Z"/>
+        <path class="iso-mask" fill="#FFFFFF" d="M788.28,627.18c-10.92-1.44-19.97,63.61-59.08,57.630-107.91-.02-166.04-60.33-213.18,53.790-3.64,8.81-7.86,17.4-12.76,25.64-3.68,6.17-7.81,12.16-12.79,13.9-1.41.5-2.670-.98-1.98-2.26,7.78-14.26-6.68-38.78,1.39-50.33,1.93-3.49-2.88-6.87-5.78-4.05-19.81,24.66-25.46,52.36-43.54,78.16-5.05,9.88-41.59,48.77-17.98,12.19,12.27-20.18-5.7-48.94,6.12-65.51,1.72-6.45-6.16-5.18-8.48-1.05-33.03,31.17-23.58,92.92-73.01,107.45-2.33.69-4.2-1.83-2.76-3.7,22.43-29,17.91-74.6,13.25-113.03,0-75.7,67.54-90.74,85.35-129.09,24.68-53.13,16.82-115.04,75.09-120.14,81.09-15.28-38.56-71.02,38.46-48.76,233.92,67.59,131.55,91.15,231.68,189.15Z"/>
+        <path class="iso-nose" fill="#FFFFFF" d="M878.98,689.56c-34.3-16.22-13.44-20.95-14.3-32.07-.15-1.980-1-4.17-2.97-6.66.47.29,29.33,18.29,17.27,38.74Z"/>
+    </g>
+
+    <!-- Estallido de picos (viewBox -50 -50 100 100) -->
+    <polygon id="rk-burst" points="0,-50 4.4,-16.4 18,-31.2 12,-12 40.7,-23.5 16.4,-4.4 31,0 16.4,4.4 43.3,25 12,12 20,34.6 4.4,16.4 0,45 -4.4,16.4 -16.5,28.6 -12,12 -42.4,24.5 -16.4,4.4 -38,0 -16.4,-4.4 -39.8,-23 -12,-12 -17.5,-30.3 -4.4,-16.4"/>
+
+    <!-- Iconos (viewBox 0 0 24 24, trazo 1.75) -->
+    <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-se" viewBox="0 0 24 24"><path d="M7 7l10 10M17 9v8H9" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-e" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-w" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-n" viewBox="0 0 24 24"><path d="M12 20V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" fill="none" stroke="currentColor" stroke-width="1.25"/></symbol>
+    <!-- Iconos de estrategia (viewBox 0 0 64 64): trazo en currentColor + un acento de marca -->
+    <symbol id="ic-diag" viewBox="0 0 64 64"><circle cx="27" cy="27" r="17" fill="none" stroke="currentColor" stroke-width="3"/><path d="M40 40l14 14" stroke="#FF2C68" stroke-width="7" stroke-linecap="round"/><path d="M15 27c4-6 8-8 12-8s8 2 12 8c-4 4-8 6-12 6s-8-2-12-6z" fill="#2BCDFF"/><circle cx="27" cy="26" r="4" fill="#1B1A35"/></symbol>
+    <symbol id="ic-target" viewBox="0 0 64 64"><circle cx="30" cy="34" r="22" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="30" cy="34" r="12" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="30" cy="34" r="5" fill="#FF2C68"/><path d="M31 33L54 10M45 9h10v10" fill="none" stroke="#FFF02B" stroke-width="3.5" stroke-linecap="square"/></symbol>
+    <symbol id="ic-plan" viewBox="0 0 64 64"><rect x="9" y="13" width="46" height="42" fill="none" stroke="currentColor" stroke-width="3"/><path d="M9 24h46M21 7v12M43 7v12" stroke="currentColor" stroke-width="3"/><rect x="16" y="31" width="9" height="8" fill="#FF2C68"/><rect x="28" y="31" width="9" height="8" fill="#2BCDFF"/><rect x="40" y="43" width="9" height="7" fill="#FFF02B"/><path d="M16 46h9M28 46h9" stroke="currentColor" stroke-width="3"/></symbol>
+    <symbol id="ic-funnel" viewBox="0 0 64 64"><path d="M8 10h48L39 32v16l-14 8V32z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M12 14h40l-6 7H18z" fill="#FF2C68"/><circle cx="32" cy="27" r="3" fill="#FFF02B"/></symbol>
+    <symbol id="ic-chart" viewBox="0 0 64 64"><path d="M8 8v48h48" fill="none" stroke="currentColor" stroke-width="3"/><rect x="15" y="38" width="8" height="18" fill="#2BCDFF"/><rect x="28" y="30" width="8" height="26" fill="#FFF02B"/><rect x="41" y="20" width="8" height="36" fill="#FF2C68"/><path d="M14 30l14-10 12 5 16-15" fill="none" stroke="currentColor" stroke-width="3"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<!-- ================================================================
+     000 · INTRO — la pantalla es el ojo; al alejarse, el mapache ya estaba ahí
+     ================================================================ -->
+<!-- Intro "sucia": isotipo en punteado de imprenta, animado cuadro a cuadro (main.js → runIntro).
+     Fondo navy por defecto; añade la clase intro--paper para la versión en papel claro. -->
+<div class="intro" data-intro>
+  <div class="intro__cut" aria-hidden="true"></div>
+  <div class="intro__panel">
+    <!-- polvo y manchas: cambian en cada cuadro -->
+    <svg class="intro__dust" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <filter id="ri-fk" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" seed="14" data-boil="11" result="n"/>
+          <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="9" result="l"/>
+          <feComposite in="n" in2="l" operator="arithmetic" k1="0" k2="0.6" k3="0.5" k4="0" result="c"/>
+          <feColorMatrix in="c" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  40 0 0 0 -28"/>
+        </filter>
+      </defs>
+      <rect class="ri-speck" width="1440" height="900" filter="url(#ri-fk)"/>
+    </svg>
+
+    <div class="intro__stage" aria-hidden="true">
+      <div class="intro__plate">
+        <svg class="intro__art" viewBox="0 0 1080 1080" overflow="visible">
+          <defs>
+            <!-- Punteado: bordes temblorosos + puntos que se disuelven en los bordes + rayones -->
+            <filter id="ri-fs" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="3" data-boil="0" result="warp"/>
+              <feDisplacementMap in="SourceGraphic" in2="warp" scale="7" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+              <feGaussianBlur in="rough" stdDeviation="7" result="soft"/>
+              <feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="1" seed="14" data-boil="11" result="fine"/>
+              <feColorMatrix in="fine" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" result="fineA"/>
+              <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="5" result="low"/>
+              <feColorMatrix in="low" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" result="lowA"/>
+              <feComposite in="fineA" in2="soft" operator="arithmetic" k1="0" k2="0.5" k3="0.45" k4="0" result="m1"/>
+              <feComposite in="m1" in2="lowA" operator="arithmetic" k1="0" k2="1" k3="0.25" k4="-0.12" result="m2"/>
+              <feComponentTransfer in="m2" result="dots"><feFuncA type="linear" slope="60" intercept="-72" data-thr="0"/></feComponentTransfer>
+              <feTurbulence type="fractalNoise" baseFrequency="0.004 0.06" numOctaves="2" seed="6" data-boil="3" result="scr"/>
+              <feColorMatrix in="scr" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  40 0 0 0 -30.5" result="scrA"/>
+              <feComposite in="dots" in2="scrA" operator="out" result="mask"/>
+              <feComponentTransfer in="soft" result="softSolid"><feFuncA type="linear" slope="30" intercept="0"/></feComponentTransfer>
+              <feMerge result="col"><feMergeNode in="softSolid"/><feMergeNode in="rough"/></feMerge>
+              <feComposite in="col" in2="mask" operator="in"/>
+            </filter>
+            <!-- El ojo: mismo punteado pero más fino y legible -->
+            <filter id="ri-fe" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" data-boil="0" result="warp"/>
+              <feDisplacementMap in="SourceGraphic" in2="warp" scale="4" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+              <feGaussianBlur in="rough" stdDeviation="2.5" result="soft"/>
+              <feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="1" seed="14" data-boil="11" result="fine"/>
+              <feColorMatrix in="fine" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 0" result="fineA"/>
+              <feComposite in="fineA" in2="soft" operator="arithmetic" k1="0" k2="0.5" k3="0.5" k4="0" result="m1"/>
+              <feComponentTransfer in="m1" result="mask"><feFuncA type="linear" slope="60" intercept="-72" data-thr="-0.06"/></feComponentTransfer>
+              <feComponentTransfer in="soft" result="softSolid"><feFuncA type="linear" slope="30" intercept="0"/></feComponentTransfer>
+              <feMerge result="col"><feMergeNode in="softSolid"/><feMergeNode in="rough"/></feMerge>
+              <feComposite in="col" in2="mask" operator="in"/>
+            </filter>
+            <!-- Logo: borde gastado con pequeños huecos de tinta -->
+            <filter id="ri-fb" x="-5%" y="-10%" width="110%" height="120%" color-interpolation-filters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="3" data-boil="0" result="warp"/>
+              <feDisplacementMap in="SourceGraphic" in2="warp" scale="3" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+              <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" seed="14" data-boil="11" result="fine"/>
+              <feColorMatrix in="fine" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  30 0 0 0 -21" result="holes"/>
+              <feComposite in="rough" in2="holes" operator="out"/>
+            </filter>
+          </defs>
+
+          <g filter="url(#ri-fs)">
+            <circle fill="#2BCDFF" cx="497.27" cy="559.43" r="392.73"/>
+            <circle class="ri-disc" cx="497.27" cy="556.74" r="336.27"/>
+          </g>
+          <g class="i-head">
+            <g filter="url(#ri-fs)">
+              <path fill="#FF2C68" d="M936.71,284.42l-184.13,209.92,161.67-.21-94.84,91.75,52.11,22.52,83.96,36.33,93.64,40.43-125.09,9.62-130.55,10.01-48.7,3.76,15.1,28.03,42.27,78.6-89.8-39.77-26.3-11.68c-126.08,104.8-310.17,91.26-411.18-30.26-101.01-121.53-80.66-304.99,45.41-409.79l-.53-35.7-1.74-121.92-1.62-111.32,49.7,81.97,48.47,79.9,53.27,87.77,86.57-108.2,52.11,126.9,184.29-166.77,30.94-28.03-14.98,30.28-120.92,244.41,250.92-118.54Z"/>
+              <path class="ri-fur" d="M879,689.59c-12.52,50.97-112.61,49.37-162.46,44.77-49.35-12.78-110.3,40.53-127.63,76.42-6.03,15.25-7.7,32.49-8.17,48.83-.05,1.9-2.41,2.79-3.67,1.36-11.11-12.7-6.58-47.41-7.31-52.59-18.67,14.8-14.58,55.27-12.32,70.25.47,3.14-2.67,5.7-5.58,4.42-11.3-4.97-18.46-45.14-20.77-46.43-10.45,29.29-8.04,49.8-3.59,62.51.53,1.5.45,3.18-.33,4.57-4.17,7.4-14.76-16.45-17.89-22.1-10.95-23.44-3.78-35.58-5.72-35.32-20.72,40.16-21.53,134.49,22.17,153.15,3.35,1.43,2.71,6.36-.91,6.85C251.21,1043.19,4.47,793.37,45.18,519.63c1.41-9.47,9.06-16.77,18.57-17.79,8.36-.89,17.34-1.76,21.820-2.16,65.21,7.67-21.94-39.49,32.21-51.64,40.9-2.22,141.22,13.91,170.39,1.34,3.55-46.79,42.56,10.27,41.44-14.72-50.54-139.870,59.47-84.48,132.36-36.95-20.44-62.74,21.45-64.34,47.73-26.29,3.7,5.36,6.49,11.27,8.61,17.42,16.74,48.65,160.8,62.13,206.54,113.18,29.93,30.59,29.25,85.89,72.19,113.49,41.38,16.8,58.52,27.56,64.67,35.34h0c1.97,2.49,2.82,4.68,2.97,6.67.86,11.12-20,15.85,14.3,32.07Z"/>
+              <path fill="#FFFFFF" d="M788.28,627.18c-10.92-1.44-19.97,63.61-59.08,57.630-107.91-.02-166.04-60.33-213.18,53.790-3.64,8.81-7.86,17.4-12.76,25.64-3.68,6.17-7.81,12.16-12.79,13.9-1.41.5-2.670-.98-1.98-2.26,7.78-14.26-6.68-38.78,1.39-50.33,1.93-3.49-2.88-6.87-5.78-4.05-19.81,24.66-25.46,52.36-43.54,78.16-5.05,9.88-41.59,48.77-17.98,12.19,12.27-20.18-5.7-48.94,6.12-65.51,1.72-6.45-6.16-5.18-8.48-1.05-33.03,31.17-23.58,92.92-73.01,107.45-2.33.69-4.2-1.83-2.76-3.7,22.43-29,17.91-74.6,13.25-113.03,0-75.7,67.54-90.74,85.35-129.09,24.68-53.13,16.82-115.04,75.09-120.14,81.09-15.28-38.56-71.02,38.46-48.76,233.92,67.59,131.55,91.15,231.68,189.15Z"/>
+              <path fill="#FFFFFF" d="M878.98,689.56c-34.3-16.22-13.44-20.95-14.3-32.07-.15-1.980-1-4.17-2.97-6.66.47.29,29.33,18.29,17.27,38.74Z"/>
+            </g>
+            <g filter="url(#ri-fe)">
+              <svg x="515.5" y="499.2" width="211.2" height="133.7" preserveAspectRatio="none" overflow="visible" data-intro-eye></svg>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <span class="badge badge--intro">
+        <span class="badge__word">
+          <span class="badge__l">R</span><span class="badge__l">A</span><span class="badge__l">K</span><span class="badge__l badge__u">Ü<svg class="badge__burst" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg></span><span class="badge__l">N</span>
+        </span>
+        <span class="badge__bar"><span>VISUAL</span><span>DESIGN</span></span>
+      </span>
+    </div>
+    <p class="intro__meta mono" aria-hidden="true"><span>RAKÜN / 000</span><span>4.7110° N · 74.0721° W</span></p>
+    <button class="intro__skip mono" type="button" data-intro-skip>Saltar intro <svg class="ico" aria-hidden="true"><use href="#i-e"/></svg></button>
+  </div>
+</div>
+
+<!-- ================================================================
+     000 · LA PUERTA — "¿Qué buscas?": se abre la mirilla, el ojo te mira y eliges mundo
+     ================================================================ -->
+<div class="door" data-door role="dialog" aria-modal="true" aria-labelledby="door-q">
+  <p class="door__neon" aria-hidden="true">RAK<span>Ü</span>N <small>club</small></p>
+
+  <div class="door__frame" aria-hidden="true">
+    <span class="door__inside"></span>
+    <div class="door__leaf" data-door-leaf>
+      <div class="door__hatch">
+        <div class="door__peek"><svg class="door__eye" data-door-eye></svg></div>
+        <span class="door__grille"></span>
+        <span class="door__slide"></span>
+      </div>
+      <span class="door__bolt door__bolt--1"></span><span class="door__bolt door__bolt--2"></span>
+      <span class="door__bolt door__bolt--3"></span><span class="door__bolt door__bolt--4"></span>
+      <span class="door__sticker sticker sticker--pink mono">Te estamos viendo.</span>
+      <p class="door__plate mono">Nº 001 · Solo con mirada</p>
+      <span class="door__handle"></span>
+    </div>
+  </div>
+
+  <div class="door__ask">
+    <p class="mono door__kicker">Antes de entrar</p>
+    <h2 class="door__q" id="door-q">¿Qué <em>buscas?</em></h2>
+    <div class="door__picks">
+      <button class="ticket" type="button" data-door-pick="marca" data-eye-target style="--t: var(--yellow)">
+        <span class="mono ticket__n">Mundo 01</span>
+        <span class="ticket__name">Marca personal</span>
+        <span class="ticket__line">Para quienes viven de su imagen.</span>
+        <span class="mono ticket__tags">Influencers · Médicos · Mentores</span>
+        <svg class="ico ticket__ico" aria-hidden="true"><use href="#i-ne"/></svg>
+      </button>
+      <a class="ticket ticket--b" href="produccion.html" data-door-pick="prod" data-eye-target style="--t: var(--blue)">
+        <span class="mono ticket__n">Mundo 02</span>
+        <span class="ticket__name">Producción audiovisual</span>
+        <span class="ticket__line">Historias que se ruedan.</span>
+        <span class="mono ticket__tags">Videoclips · Cortos · Largos · Comerciales</span>
+        <svg class="ico ticket__ico" aria-hidden="true"><use href="#i-ne"/></svg>
+      </a>
+      <a class="ticket ticket--c" href="web.html" data-door-pick="web" data-eye-target style="--t: var(--pink)">
+        <span class="mono ticket__n">Mundo 03</span>
+        <span class="ticket__name">Web y apps</span>
+        <span class="ticket__line">Pantallas que no puedes dejar de mirar.</span>
+        <span class="mono ticket__tags">Sitios · Landings · Tiendas · Apps</span>
+        <svg class="ico ticket__ico" aria-hidden="true"><use href="#i-ne"/></svg>
+      </a>
+    </div>
+    <p class="mono door__fine" aria-hidden="true">fig. 000 — la puerta · 4.7110° N · 74.0721° W</p>
+  </div>
+  <span class="door__cut" aria-hidden="true"></span>
+</div>
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
+
+<!-- ================================================================
+     HEADER
+     ================================================================ -->
+<header class="hdr" data-header>
+  <a class="hdr__brand" href="#inicio" aria-label="RAKÜN Visual Design, ir al inicio">
+    <span class="badge badge--sm" aria-hidden="true">
+      <span class="badge__word"><span>R</span><span>A</span><span>K</span><span class="badge__u">Ü<svg class="badge__burst" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg></span><span>N</span></span>
+      <span class="badge__bar"><span>VISUAL</span><span>DESIGN</span></span>
+    </span>
+  </a>
+  <svg class="hdr__eye" data-eye="eye-hdr"></svg>
+
+  <nav class="hdr__nav" id="menu" aria-label="Principal">
+    <ul>
+      <li><button class="hdr__mega-btn" type="button" aria-expanded="false" aria-controls="mega" data-mega-btn>Lo que hacemos <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></button></li>
+      <li><a href="#estudio">Estudio</a></li>
+      <li><a href="produccion.html#crew">Equipo</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+
+    <!-- Lo que hacemos: los dos mundos de RAKÜN -->
+    <div class="mega mega--3" id="mega" data-mega>
+      <section class="mega__world" aria-labelledby="mega-a">
+        <p class="mono mega__kicker">Mundo 01 · Marca personal</p>
+        <p class="mega__title" id="mega-a">Para quienes <em>viven</em> de su imagen.</p>
+        <ul class="mega__list">
+          <li><a href="planes.html#creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Marca · Contenido · Media kit</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="planes.html#medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Identidad · Confianza · Pacientes</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="planes.html#mentor"><span class="mega__sw" style="--sw: linear-gradient(135deg, var(--yellow) 50%, var(--blue) 50%)"></span><span><span class="mega__name">Mentores</span><span class="mono">Autoridad · Cursos · Lanzamientos</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </section>
+      <section class="mega__world mega__world--b" aria-labelledby="mega-b">
+        <p class="mono mega__kicker">Mundo 02 · Producción audiovisual</p>
+        <p class="mega__title" id="mega-b">Historias que se <em>ruedan.</em></p>
+        <ul class="mega__list">
+          <li><a href="produccion.html#preproduccion"><span class="mega__num">01</span><span><span class="mega__name">Preproducción</span><span class="mono">Idea · Guion · Storyboard · Casting</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="produccion.html#rodaje"><span class="mega__num">02</span><span><span class="mega__name">Rodaje</span><span class="mono">Dirección · Fotografía · Sonido · Arte</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="produccion.html#postproduccion"><span class="mega__num">03</span><span><span class="mega__name">Postproducción</span><span class="mono">Montaje · Color · VFX · Mezcla</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+        <p class="mega__tags"><span class="mono">Rodamos:</span>
+          <a class="sticker sticker--cream mono" href="produccion.html#proyectos">Videoclips</a>
+          <a class="sticker sticker--pink mono" href="produccion.html#proyectos">Cortos</a>
+          <a class="sticker sticker--yellow mono" href="produccion.html#proyectos">Largometrajes</a>
+          <a class="sticker sticker--blue mono" href="produccion.html#proyectos">Comerciales</a>
+        </p>
+        <a class="link mega__all" href="produccion.html">Ver toda la producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </section>
+      <section class="mega__world mega__world--c" aria-labelledby="mega-c">
+        <p class="mono mega__kicker">Mundo 03 · Web y apps</p>
+        <p class="mega__title" id="mega-c">Pantallas que no puedes dejar de <em>mirar.</em></p>
+        <ul class="mega__list">
+          <li><a href="web.html#boceto"><span class="mega__num">01</span><span><span class="mega__name">Del boceto al píxel</span><span class="mono">Wireframe · Diseño UI</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="web.html#proceso"><span class="mega__num">02</span><span><span class="mega__name">Cómo trabajamos</span><span class="mono">Proceso paso a paso</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="web.html#planes"><span class="mega__num">03</span><span><span class="mega__name">Planes</span><span class="mono">Landing · Sitio · Tienda o app</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </section>
+      <p class="mono mega__fig" aria-hidden="true">fig. 00 — índice / elige tu camino</p>
+    </div>
+    <a class="btn btn--pink hdr__cta-mobile" href="mailto:rakundesigns@gmail.com?subject=Quiero%20iniciar%20un%20proyecto">Iniciar proyecto <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+  </nav>
+
+  <p class="hdr__clock mono"><span>BOGOTÁ</span> / <time data-clock>--:--</time> LOCAL</p>
+  <a class="btn btn--pink hdr__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20iniciar%20un%20proyecto" data-eye-target>Iniciar proyecto <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+  <button class="hdr__menu mono" type="button" aria-expanded="false" aria-controls="menu" data-menu>
+    <span class="hdr__menu-label">Menú</span><span class="hdr__menu-bars" aria-hidden="true"></span>
+  </button>
+</header>
+
+<main id="main">
+
+  <!-- ==============================================================
+       001 · HERO
+       ============================================================== -->
+  <section class="sec sec--navy hero" id="inicio" aria-labelledby="hero-title">
+    <!-- Video de portada: se funde hacia el fondo. Mientras no haya video, se ve el poster (ilustración).
+         Para activarlo: pon el archivo en videos/ y descomenta el <source>. -->
+    <div class="hero__bg" aria-hidden="true">
+      <video class="hero__video" muted loop playsinline autoplay preload="metadata" poster="assets/hero-ilustracion.svg" data-hero-video>
+        <!-- <source src="videos/portada.mp4" type="video/mp4"> -->
+      </video>
+    </div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">001</span><span class="rail__label">Inicio</span></div>
+
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <h1 class="hero__title" id="hero-title">
+          <span class="line"><span>Diseño que</span></span>
+          <span class="line"><span>te hace</span></span>
+          <span class="line line--pink"><span>mirar.</span></span>
+        </h1>
+        <div class="hero__foot">
+          <p class="hero__lede">Estudio de diseño visual y estrategia digital que construye identidades, contenido y experiencias para quienes viven de su imagen.</p>
+          <div class="hero__meta mono">
+            <span>Estudio / Bogotá 2026</span>
+            <span>Identidad · Estrategia · Contenido</span>
+          </div>
+          <a class="link" href="#enfoque">¿Para quién diseñamos? <svg class="ico" aria-hidden="true"><use href="#i-se"/></svg></a>
+        </div>
+      </div>
+
+      <div class="collage">
+        <span class="collage__blk collage__blk--blue" aria-hidden="true"></span>
+        <span class="collage__blk collage__blk--yellow" aria-hidden="true"></span>
+        <span class="collage__tape collage__tape--1" aria-hidden="true"></span>
+        <span class="collage__tape collage__tape--2" aria-hidden="true"></span>
+        <svg class="collage__burst" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg>
+
+        <figure class="collage__logo">
+          <svg class="collage__art" viewBox="0 0 1080 1080" role="img" aria-label="Isotipo RAKÜN: mapache punk con cresta rosa; su ojo sigue tu cursor">
+            <use href="#rk-iso"/>
+            <svg x="515.5" y="499.2" width="211.2" height="133.7" preserveAspectRatio="none" data-eye="eye-hero"></svg>
+          </svg>
+          <figcaption class="collage__cap mono" aria-hidden="true"><span>fig. 01 — isotipo</span><span>el ojo te sigue</span></figcaption>
+        </figure>
+
+        <p class="collage__tag collage__tag--geo mono" aria-hidden="true">4.7110° N<br>74.0721° W</p>
+        <p class="collage__tag collage__tag--ref mono" aria-hidden="true">AW / 26<br>Studio ©</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       002 · EN QUÉ NOS ENFOCAMOS
+       ============================================================== -->
+  <section class="sec sec--cream focus" id="enfoque" aria-labelledby="focus-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">002</span><span class="rail__label">Enfoque</span></div>
+
+    <div class="sec__body">
+      <div class="focus__head">
+        <h2 class="display reveal" id="focus-title">Nos enfocamos en quienes quieren ser <em class="scribbled">vistos.<svg class="scribble" viewBox="0 0 260 96" preserveAspectRatio="none" aria-hidden="true"><path d="M30 60 C 10 30, 80 6, 150 8 C 220 10, 262 32, 246 60 C 230 86, 120 94, 60 82 C 20 74, 14 50, 44 32"/></svg></em></h2>
+        <p class="focus__aside">Tres perfiles, tres maneras de llamar la atención. Elige el tuyo y entra a una página pensada solo para ti.</p>
+      </div>
+
+      <div class="cards">
+        <article class="card" style="--c: var(--yellow); --c-ink: var(--navy)">
+          <a class="card__link" href="planes.html#creador" data-eye-target>
+            <span class="card__top">
+              <span class="card__num">01</span>
+              <svg class="ico card__arrow" aria-hidden="true"><use href="#i-e"/></svg>
+            </span>
+            <span class="card__media" aria-hidden="true">
+              <svg class="card__spikes" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
+              <span class="card__tag mono">Reels · Marca · Media kit</span>
+            </span>
+            <h3 class="card__title">Influencers</h3>
+            <span class="card__desc">Marca personal, contenido y media kit para que las marcas te busquen a ti.</span>
+            <span class="card__tags mono">Marca personal · Contenido · Media kit</span>
+          </a>
+        </article>
+
+        <article class="card" style="--c: var(--blue); --c-ink: var(--navy)">
+          <a class="card__link" href="planes.html#medico" data-eye-target>
+            <span class="card__top">
+              <span class="card__num">02</span>
+              <svg class="ico card__arrow" aria-hidden="true"><use href="#i-e"/></svg>
+            </span>
+            <span class="card__media" aria-hidden="true">
+              <svg class="card__spikes" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
+              <span class="card__tag mono">Consulta · Confianza · Pacientes</span>
+            </span>
+            <h3 class="card__title">Médicos</h3>
+            <span class="card__desc">Identidad profesional que transmite confianza y convierte seguidores en pacientes.</span>
+            <span class="card__tags mono">Identidad · Confianza · Captación</span>
+          </a>
+        </article>
+
+        <article class="card card--mentor" style="--c: var(--navy); --c-ink: var(--white)">
+          <a class="card__link" href="planes.html#mentor" data-eye-target>
+            <span class="card__top">
+              <span class="card__num">03</span>
+              <svg class="ico card__arrow" aria-hidden="true"><use href="#i-e"/></svg>
+            </span>
+            <span class="card__media" aria-hidden="true">
+              <svg class="card__spikes" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
+              <span class="card__tag mono">Cursos · Programas · Lanzamientos</span>
+            </span>
+            <h3 class="card__title">Mentores</h3>
+            <span class="card__desc">Autoridad visual para lanzamientos, cursos y programas que se venden solos.</span>
+            <span class="card__tags mono">Autoridad · Lanzamientos · Cursos</span>
+          </a>
+        </article>
+      </div>
+
+      <ol class="services" aria-label="Servicios">
+        <li><span class="mono">01</span> Estrategia</li>
+        <li><span class="mono">02</span> Identidad</li>
+        <li><span class="mono">03</span> Digital</li>
+        <li><span class="mono">04</span> Contenido <svg class="ico" aria-hidden="true"><use href="#i-e"/></svg></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       003 · MANIFIESTO
+       ============================================================== -->
+  <section class="sec sec--pink manifesto" id="manifiesto" aria-labelledby="mf-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">003</span><span class="rail__label">Manifiesto</span></div>
+    <div class="manifesto__sticky">
+      <h2 class="manifesto__text" id="mf-title" aria-label="No hacemos que te veas bien. Hacemos que no puedan dejar de mirarte.">
+        <span aria-hidden="true" data-words>No hacemos que te veas bien. Hacemos que no puedan dejar de <strong>mirarte</strong></span>
+      </h2>
+      <span class="manifesto__eye" aria-hidden="true"><svg data-eye="eye-mf"></svg></span>
+      <p class="manifesto__sign mono" aria-hidden="true"><span>— RAKÜN</span><span>fig. 03 / te estamos mirando</span><span class="sticker sticker--cream">Manifiesto · 003</span></p>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       004 · MARQUEE
+       ============================================================== -->
+  <section class="sec--navy marquee" aria-label="Mirar, crear, destacar">
+    <div class="marquee__rail mono" aria-hidden="true">004</div>
+    <div class="marquee__track" aria-hidden="true" data-marquee>
+      <div class="marquee__group">
+        <span class="mq mq--white">Mirar</span><svg class="mq__burst" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
+        <span class="mq mq--pink">Crear</span><svg class="mq__burst" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
+        <span class="mq mq--yellow">Destacar</span><svg class="mq__burst" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       005 · ESTRATEGIA DIGITAL
+       ============================================================== -->
+  <section class="sec sec--navy strategy" id="estrategia" aria-labelledby="strategy-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Estrategia</span></div>
+    <div class="sec__body">
+      <div class="strategy__head">
+        <h2 class="display reveal" id="strategy-title">Estrategia <em>digital</em></h2>
+        <div class="strategy__aside">
+          <p class="strategy__lede">Diseño bonito sin estrategia es ruido. Antes de dibujar definimos a quién le hablas, dónde te van a ver y qué tienen que hacer cuando te vean.</p>
+          <a class="link" href="mailto:rakundesigns@gmail.com?subject=Quiero%20una%20estrategia%20digital" data-eye-target>Pide tu diagnóstico <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </div>
+      </div>
+
+      <ol class="pillars" data-pillars>
+        <li class="pillar" style="--pc: var(--pink)">
+          <div class="pillar__row">
+            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-diag"/></svg></span>
+            <span class="pillar__n mono">01</span>
+            <h3 class="pillar__title">Diagnóstico</h3>
+            <p class="pillar__short">Qué comunica hoy tu imagen.</p>
+            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-1">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="pillar__detail" id="pillar-1" hidden>
+            <div class="pillar__inner">
+              <p>Auditamos tu perfil, tu competencia y lo que hoy comunica tu imagen para saber desde dónde partimos.</p>
+              <ul class="pillar__list">
+                <li>Auditoría de perfil y redes</li>
+                <li>Análisis de competencia y referentes</li>
+                <li>Mapa de tu audiencia</li>
+                <li>Informe con prioridades</li>
+              </ul>
+              <span class="pillar__out mono">Entrega: auditoría de marca y perfil</span>
+            </div>
+          </div>
+        </li>
+        <li class="pillar" style="--pc: var(--yellow)">
+          <div class="pillar__row">
+            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-target"/></svg></span>
+            <span class="pillar__n mono">02</span>
+            <h3 class="pillar__title">Posicionamiento</h3>
+            <p class="pillar__short">El lugar que vas a ocupar.</p>
+            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-2">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="pillar__detail" id="pillar-2" hidden>
+            <div class="pillar__inner">
+              <p>Definimos tu territorio, tu mensaje y el tono con el que te van a recordar.</p>
+              <ul class="pillar__list">
+                <li>Propuesta de valor</li>
+                <li>Mensajes clave y tono de voz</li>
+                <li>Territorio visual</li>
+                <li>Bio y pitch de presentación</li>
+              </ul>
+              <span class="pillar__out mono">Entrega: plataforma de marca</span>
+            </div>
+          </div>
+        </li>
+        <li class="pillar" style="--pc: var(--blue)">
+          <div class="pillar__row">
+            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-plan"/></svg></span>
+            <span class="pillar__n mono">03</span>
+            <h3 class="pillar__title">Plan de contenido</h3>
+            <p class="pillar__short">Publicar con intención.</p>
+            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-3">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="pillar__detail" id="pillar-3" hidden>
+            <div class="pillar__inner">
+              <p>Pilares, formatos y calendario para publicar con intención, no por obligación.</p>
+              <ul class="pillar__list">
+                <li>Pilares de contenido</li>
+                <li>Formatos por red social</li>
+                <li>Calendario mensual</li>
+                <li>Guiones y copys</li>
+              </ul>
+              <span class="pillar__out mono">Entrega: calendario y guiones</span>
+            </div>
+          </div>
+        </li>
+        <li class="pillar" style="--pc: var(--pink)">
+          <div class="pillar__row">
+            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-funnel"/></svg></span>
+            <span class="pillar__n mono">04</span>
+            <h3 class="pillar__title">Embudo y conversión</h3>
+            <p class="pillar__short">De seguidor a cliente.</p>
+            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-4">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="pillar__detail" id="pillar-4" hidden>
+            <div class="pillar__inner">
+              <p>Convertimos la atención en contactos y los contactos en clientes.</p>
+              <ul class="pillar__list">
+                <li>Bio y enlaces que convierten</li>
+                <li>Landing de captación</li>
+                <li>Lead magnet</li>
+                <li>Secuencia de seguimiento</li>
+              </ul>
+              <span class="pillar__out mono">Entrega: funnel y landing</span>
+            </div>
+          </div>
+        </li>
+        <li class="pillar" style="--pc: var(--yellow)">
+          <div class="pillar__row">
+            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-chart"/></svg></span>
+            <span class="pillar__n mono">05</span>
+            <h3 class="pillar__title">Medición</h3>
+            <p class="pillar__short">Lo que importa, cada mes.</p>
+            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-5">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
+          </div>
+          <div class="pillar__detail" id="pillar-5" hidden>
+            <div class="pillar__inner">
+              <p>Las métricas que importan y ajustes cada mes para que todos sigan mirando.</p>
+              <ul class="pillar__list">
+                <li>KPIs según tu objetivo</li>
+                <li>Tablero mensual</li>
+                <li>Reunión de ajustes</li>
+                <li>Recomendaciones accionables</li>
+              </ul>
+              <span class="pillar__out mono">Entrega: reporte mensual</span>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       006 · ESTUDIO: proceso, videos, cifras, testimonios
+       ============================================================== -->
+  <section class="sec sec--cream studio" id="estudio" aria-label="Estudio">
+    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Estudio</span></div>
+
+    <div class="sec__body">
+
+      <!-- Proceso -->
+      <div class="block process" aria-labelledby="process-title">
+        <div class="block__head">
+          <h2 class="display display--md reveal" id="process-title">Cómo <em>trabajamos</em></h2>
+          <p class="block__aside">Cuatro pasos, cero relleno. Cada fase termina con algo que puedes ver y aprobar.</p>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
+              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
+            </svg>
+            <span class="step__num mono">01</span>
+            <h3 class="step__title">Descubrir</h3>
+            <p>Entendemos quién eres, a quién le hablas y qué te hace distinto.</p>
+          </li>
+          <li class="step">
+            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
+              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
+            </svg>
+            <span class="step__num mono">02</span>
+            <h3 class="step__title">Definir</h3>
+            <p>Convertimos eso en una estrategia y un concepto visual claro.</p>
+          </li>
+          <li class="step">
+            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
+              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
+            </svg>
+            <span class="step__num mono">03</span>
+            <h3 class="step__title">Diseñar</h3>
+            <p>Identidad, piezas y pantallas con actitud, listas para usar.</p>
+          </li>
+          <li class="step">
+            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
+              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
+            </svg>
+            <span class="step__num mono">04</span>
+            <h3 class="step__title">Lanzar</h3>
+            <p>Salimos al mundo contigo y medimos que todos estén mirando.</p>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Videos de referencia.
+           Para cada video: pon el archivo en videos/ y escribe su ruta en data-src
+           (p. ej. data-src="videos/ref-01.mp4"). Opcional: data-poster="videos/ref-01.webp".
+           Los videos se cargan solo al acercarse, se reproducen en silencio y en bucle. -->
+      <div class="block reels" aria-labelledby="reels-title">
+        <div class="block__head">
+          <h2 class="display display--md reveal" id="reels-title">Referencias en <em>movimiento</em></h2>
+          <a class="link link--dark" href="mailto:rakundesigns@gmail.com?subject=Quiero%20ver%20el%20portafolio">Pide el portafolio completo <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </div>
+        <ul class="reels__grid">
+          <li class="reel" style="--c: var(--pink)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 01: reel de lanzamiento"></video><button class="reel__play" type="button" aria-label="Reproducir video 01"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Reel de lanzamiento</span><span class="reel__meta mono">01 · Influencer · 9:16</span></figcaption>
+            </figure>
+          </li>
+          <li class="reel" style="--c: var(--blue)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 02: consulta en 30 segundos"></video><button class="reel__play" type="button" aria-label="Reproducir video 02"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Consulta en 30 s</span><span class="reel__meta mono">02 · Médico · 9:16</span></figcaption>
+            </figure>
+          </li>
+          <li class="reel" style="--c: var(--yellow)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 03: media kit animado"></video><button class="reel__play" type="button" aria-label="Reproducir video 03"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Media kit animado</span><span class="reel__meta mono">03 · Influencer · 9:16</span></figcaption>
+            </figure>
+          </li>
+          <li class="reel" style="--c: var(--navy-deep)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 04: tráiler de curso"></video><button class="reel__play" type="button" aria-label="Reproducir video 04"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Tráiler de curso</span><span class="reel__meta mono">04 · Mentor · 9:16</span></figcaption>
+            </figure>
+          </li>
+          <li class="reel" style="--c: var(--blue)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 05: identidad en movimiento"></video><button class="reel__play" type="button" aria-label="Reproducir video 05"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Identidad en movimiento</span><span class="reel__meta mono">05 · Médico · 9:16</span></figcaption>
+            </figure>
+          </li>
+          <li class="reel" style="--c: var(--pink)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 06: campaña de contenido"></video><button class="reel__play" type="button" aria-label="Reproducir video 06"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Campaña de contenido</span><span class="reel__meta mono">06 · Influencer · 9:16</span></figcaption>
+            </figure>
+          </li>
+          <li class="reel" style="--c: var(--navy-deep)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 07: webinar de autoridad"></video><button class="reel__play" type="button" aria-label="Reproducir video 07"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Webinar de autoridad</span><span class="reel__meta mono">07 · Mentor · 9:16</span></figcaption>
+            </figure>
+          </li>
+          <li class="reel" style="--c: var(--yellow)">
+            <figure>
+              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 08: detrás de cámaras"></video><button class="reel__play" type="button" aria-label="Reproducir video 08"><svg class="ico"><use href="#i-play"/></svg></button></div>
+              <figcaption><span class="reel__title">Detrás de cámaras</span><span class="reel__meta mono">08 · Estudio · 9:16</span></figcaption>
+            </figure>
+          </li>
+        </ul>
+        <p class="placeholder-note mono">* Espacios listos para tus videos de referencia: agrega cada archivo en data-src.</p>
+      </div>
+
+      <!-- Por qué RAKÜN — TODO: cifras de muestra, reemplazar por las reales -->
+      <div class="block why" aria-labelledby="why-title">
+        <div class="block__head">
+          <h2 class="display display--md reveal" id="why-title">¿Por qué <em>RAKÜN?</em></h2>
+          <p class="block__aside">Porque diseñamos para un solo resultado: que te miren, te recuerden y te elijan.</p>
+        </div>
+        <dl class="stats">
+          <div class="stat"><dt class="mono">Proyectos entregados</dt><dd><span data-count="120">120</span><sup>+</sup></dd></div>
+          <div class="stat"><dt class="mono">Años de oficio</dt><dd><span data-count="6">6</span></dd></div>
+          <div class="stat"><dt class="mono">Clientes activos</dt><dd><span data-count="45">45</span></dd></div>
+          <div class="stat"><dt class="mono">Países</dt><dd><span data-count="5">5</span></dd></div>
+        </dl>
+        <p class="placeholder-note mono">* Cifras de muestra, pendientes de reemplazar por datos reales.</p>
+      </div>
+
+      <!-- Testimonios — TODO: textos de muestra, reemplazar por testimonios reales con permiso -->
+      <div class="block quotes" aria-labelledby="quotes-title" data-carousel>
+        <div class="block__head">
+          <h2 class="display display--md reveal" id="quotes-title">Lo que <em>dicen</em></h2>
+          <div class="quotes__ctrl">
+            <span class="quotes__count mono" aria-live="polite"><span data-carousel-index>01</span> / <span data-carousel-total>03</span></span>
+            <button class="round-btn" type="button" data-carousel-prev aria-label="Testimonio anterior"><svg class="ico" aria-hidden="true"><use href="#i-w"/></svg></button>
+            <button class="round-btn" type="button" data-carousel-next aria-label="Testimonio siguiente"><svg class="ico" aria-hidden="true"><use href="#i-e"/></svg></button>
+          </div>
+        </div>
+        <div class="quotes__viewport">
+          <figure class="quote is-active" data-slide style="--c: var(--pink)">
+            <span class="quote__mark" aria-hidden="true"><span class="quote__glyph">“</span></span>
+            <blockquote><p>Pasé de ser una cuenta más a que las marcas me escribieran a mí. La identidad cambió cómo me ven y cómo cobro.</p></blockquote>
+            <figcaption class="mono">Creadora de contenido · Bogotá</figcaption>
+          </figure>
+          <figure class="quote" data-slide hidden style="--c: var(--blue)">
+            <span class="quote__mark" aria-hidden="true"><span class="quote__glyph">“</span></span>
+            <blockquote><p>Mi consulta por fin se ve tan seria como mi trabajo. Los pacientes llegan diciendo que me encontraron por mi perfil.</p></blockquote>
+            <figcaption class="mono">Médica especialista · Medellín</figcaption>
+          </figure>
+          <figure class="quote" data-slide hidden style="--c: var(--yellow)">
+            <span class="quote__mark" aria-hidden="true"><span class="quote__glyph">“</span></span>
+            <blockquote><p>El lanzamiento de mi programa tuvo una imagen a la altura de lo que enseño. Se notó en las ventas desde el primer día.</p></blockquote>
+            <figcaption class="mono">Mentor de negocios · Ciudad de México</figcaption>
+          </figure>
+        </div>
+        <p class="placeholder-note mono">* Testimonios de muestra, pendientes de reemplazar por testimonios reales.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       007 · CTA FINAL — VER PLANES
+       ============================================================== -->
+  <section class="sec sec--navy cta" id="planes" aria-labelledby="cta-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Planes</span></div>
+    <div class="sec__body cta__body">
+      <h2 class="cta__title reveal" id="cta-title"><span>¿Listo para que</span> <span class="pink">te vean?</span></h2>
+
+      <div class="cta__row">
+        <div class="cta__eye-wrap" aria-hidden="true"><svg class="cta__eye" data-eye="eye-cta"></svg></div>
+        <div class="cta__action">
+          <button class="mega-btn" type="button" aria-expanded="false" aria-controls="profile-picker" data-plans data-eye-target>
+            <svg class="mega-btn__burst mega-btn__burst--1" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg>
+            <svg class="mega-btn__burst mega-btn__burst--2" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg>
+            <svg class="mega-btn__burst mega-btn__burst--3" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg>
+            <span class="mega-btn__label">Ver planes</span>
+            <svg class="ico mega-btn__ico" aria-hidden="true"><use href="#i-ne"/></svg>
+          </button>
+          <p class="cta__hint mono">Elige tu perfil y entra a tus planes</p>
+        </div>
+      </div>
+
+      <div class="picker" id="profile-picker" data-picker hidden>
+        <p class="picker__q mono" id="picker-label">¿Quién eres?</p>
+        <ul class="picker__list" aria-labelledby="picker-label">
+          <li><a class="pick pick--yellow" href="planes.html#creador" data-eye-target><span class="mono">01</span><span class="pick__name">Influencer</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a class="pick pick--blue" href="planes.html#medico" data-eye-target><span class="mono">02</span><span class="pick__name">Médico</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a class="pick pick--mix" href="planes.html#mentor" data-eye-target><span class="mono">03</span><span class="pick__name">Mentor</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ==================================================================
+     008 · FOOTER
+     ================================================================== -->
+<footer class="sec sec--cream ftr" id="contacto">
+  <div class="rail" aria-hidden="true"><span class="rail__num">008</span><span class="rail__label">Contacto</span></div>
+  <div class="sec__body">
+    <div class="ftr__top">
+      <a class="logo-h" href="#inicio" aria-label="RAKÜN Visual, volver al inicio">
+        <svg class="logo-h__mark" viewBox="0 0 1080 1080" aria-hidden="true">
+          <use href="#rk-iso"/>
+          <svg x="515.5" y="499.2" width="211.2" height="133.7" preserveAspectRatio="none" data-eye="eye-ftr"></svg>
+        </svg>
+        <span class="logo-h__type" aria-hidden="true"><span class="logo-h__word">RAK<span class="pink">Ü</span>N</span><span class="logo-h__sub">VISUAL</span></span>
+      </a>
+
+      <div class="ftr__cols">
+        <div class="ftr__col">
+          <h2 class="mono">Contacto</h2>
+          <a class="link link--dark" href="mailto:rakundesigns@gmail.com">rakundesigns@gmail.com <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <!-- TODO: número real de WhatsApp en formato internacional, p. ej. https://wa.me/573001234567 -->
+          <a class="link link--dark" href="https://wa.me/" rel="noopener">WhatsApp <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </div>
+        <div class="ftr__col">
+          <h2 class="mono">Redes</h2>
+          <!-- TODO: enlaces reales a las redes -->
+          <a class="link link--dark" href="#" rel="noopener">Instagram <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a class="link link--dark" href="#" rel="noopener">TikTok <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a class="link link--dark" href="#" rel="noopener">Behance <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </div>
+        <div class="ftr__col">
+          <h2 class="mono">Estudio</h2>
+          <p>Bogotá / Colombia</p>
+          <p class="mono">4.7110° N · 74.0721° W</p>
+          <p class="mono"><time data-clock>--:--</time> hora local</p>
+        </div>
+      </div>
+    </div>
+
+
+    <p class="ftr__giant" aria-hidden="true">RAK<span class="pink">Ü</span>N</p>
+
+    <div class="ftr__bottom mono">
+      <span>© 2026 RAKÜN Visual Design</span>
+      <span>Diseño que te hace mirar</span>
+      <a href="#inicio" class="ftr__top-link">Volver arriba <svg class="ico" aria-hidden="true"><use href="#i-n"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<!-- GSAP + ScrollTrigger + Lenis (opcionales: la página funciona sin ellos) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script type="module" src="main.js"></script>
+</body>
+</html>
