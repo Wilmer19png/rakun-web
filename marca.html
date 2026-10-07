@@ -324,11 +324,84 @@
   </section>
 
   <!-- ==============================================================
-       004 · LOS PLANES (los rellena planes.js según el perfil)
+       004 · ¿QUÉ ES CADA COSA? (catálogo de formatos; lo arma planes/formatos.js)
+       ============================================================== -->
+  <section class="sec sec--cream mk-fx" id="formatos" aria-labelledby="fx-title" data-fx>
+    <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
+    <div class="rail" aria-hidden="true"><span class="rail__num">004</span><span class="rail__label">Formatos</span></div>
+    <div class="sec__body">
+      <div class="block__head">
+        <div>
+          <p class="mono fx-kicker">Mundo 01 / Marca personal · catálogo</p>
+          <h2 class="display display--md" id="fx-title">¿Qué es <em>cada cosa?</em></h2>
+        </div>
+        <p class="block__aside">Antes de elegir un plan, mira cómo se arma cada formato. Lo que incluyen tus planes, sin tecnicismos.</p>
+      </div>
+
+      <p class="mono fx-label" id="fx-who-label">¿Quién eres?</p>
+      <div class="fx-who" role="group" aria-labelledby="fx-who-label">
+        <button class="fx-who__btn" type="button" data-fx-profile="creador" aria-pressed="true" style="--t: var(--yellow)"><span class="mono">Influencers · creadores</span>Creador</button>
+        <button class="fx-who__btn" type="button" data-fx-profile="medico" aria-pressed="false" style="--t: var(--blue)"><span class="mono">Médicos · salud</span>Médico</button>
+        <button class="fx-who__btn" type="button" data-fx-profile="mentor" aria-pressed="false" style="--t: var(--pink)"><span class="mono">Mentores · coaches</span>Mentor</button>
+      </div>
+
+      <!-- 1 · el mismo video en tres niveles, abierto en la línea de tiempo -->
+      <div class="fx-head">
+        <h3 class="fx-head__title">Video a cámara · <em>3 niveles</em></h3>
+        <p class="mono fx-head__note">El mismo video de 30 s, abierto en la línea de tiempo</p>
+      </div>
+      <div class="fx-tiers" data-fx-tiers></div>
+      <div class="fx-drawer" id="fx-drawer-tiers" data-fx-drawer="tiers" inert>
+        <div class="fx-drawer__in">
+          <div class="fx-drawer__panel">
+            <div class="fx-drawer__head">
+              <div>
+                <p class="mono fx-drawer__kicker" data-fx-kicker></p>
+                <h4 class="fx-drawer__title" data-fx-title></h4>
+                <p class="fx-drawer__desc" data-fx-desc></p>
+              </div>
+              <div class="fx-drawer__side"><span class="mono" data-fx-count></span><button class="fx-x" type="button" data-fx-close aria-label="Cerrar ejemplos">✕</button></div>
+            </div>
+            <div class="fx-videos" data-fx-videos></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 · más formatos: tarjetas de texto en carrusel -->
+      <div class="fx-head fx-head--more">
+        <h3 class="fx-head__title">Más formatos para <em data-fx-who>creadores</em></h3>
+        <div class="fx-arrows">
+          <span class="mono fx-head__note">Toca uno para ver sus ejemplos</span>
+          <button class="fx-arrow" type="button" data-fx-prev aria-label="Formatos anteriores">←</button>
+          <button class="fx-arrow" type="button" data-fx-next aria-label="Más formatos">→</button>
+        </div>
+      </div>
+      <ul class="fx-rail" data-fx-formats aria-label="Formatos"></ul>
+      <div class="fx-drawer" id="fx-drawer-formats" data-fx-drawer="formats" inert>
+        <div class="fx-drawer__in">
+          <div class="fx-drawer__panel">
+            <div class="fx-drawer__head">
+              <div>
+                <p class="mono fx-drawer__kicker" data-fx-kicker></p>
+                <h4 class="fx-drawer__title" data-fx-title></h4>
+                <p class="fx-drawer__desc" data-fx-desc></p>
+              </div>
+              <div class="fx-drawer__side"><span class="mono" data-fx-count></span><button class="fx-x" type="button" data-fx-close aria-label="Cerrar ejemplos">✕</button></div>
+            </div>
+            <div class="fx-videos" data-fx-videos></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="mono fx-fine">* Los videos son espacios listos: cada ejemplo se reemplaza por un trabajo real de RAKÜN.</p>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       005 · LOS PLANES (los rellena planes.js según el perfil)
        ============================================================== -->
   <section class="sec sec--cream pl-plans" id="planes" aria-labelledby="plans-title">
-    <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
-    <div class="rail" aria-hidden="true"><span class="rail__num">004</span><span class="rail__label">Planes</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Planes</span></div>
     <div class="sec__body">
       <div class="mk-plans-head">
         <div>
@@ -404,7 +477,7 @@
        ============================================================== -->
   <section class="sec pl-carta" id="extras" aria-labelledby="carta-title">
     <span class="lip" aria-hidden="true" style="--lip: #14132B"></span>
-    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Extras</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Extras</span></div>
     <div class="sec__body">
       <div class="pl-head">
         <div>
@@ -422,7 +495,7 @@
        ============================================================== -->
   <section class="sec sec--pink pl-rules" id="reglas" aria-labelledby="rules-title">
     <span class="lip" aria-hidden="true" style="--lip: var(--pink)"></span>
-    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Reglas</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Reglas</span></div>
     <div class="sec__body">
       <h2 class="pl-rules__title" id="rules-title">Las reglas de la casa.</h2>
       <ol class="rules">
@@ -438,7 +511,7 @@
 </main>
 
 <footer class="sec sec--navy p-ftr" id="contacto">
-  <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Contacto</span></div>
+  <div class="rail" aria-hidden="true"><span class="rail__num">008</span><span class="rail__label">Contacto</span></div>
   <div class="sec__body">
     <div class="p-ftr__cols">
       <div class="ftr__col">

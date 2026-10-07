@@ -6,6 +6,7 @@
    ========================================================================== */
 
 import { RakunEye } from '../eye.js';
+import { initFormats, setFormatsProfile } from './formatos.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
 
 // TODO: número real de WhatsApp en formato internacional, sin "+" ni espacios (ej. '573001234567').
@@ -249,6 +250,7 @@ function setProfile(p, focusTab = false) {
   });
   $('[data-panel]').setAttribute('aria-labelledby', `tab-${p}`);
   history.replaceState(null, '', `#${p}`);
+  setFormatsProfile(p);
   render();
 }
 
@@ -425,6 +427,7 @@ initHeader(() => lenis);
 initMegaMenu();
 initCursor();
 initAnchors();
+initFormats((p) => setProfile(p));
 initPlans();
 initSos();
 initPillars();
