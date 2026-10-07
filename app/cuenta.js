@@ -1,6 +1,6 @@
 /* RAKÜN · crear contraseña (desde el enlace de invitación o de recuperación) */
 import { $, $$ } from './util.js';
-import { getClient, getProfile, homeFor, errorText, isConfigured } from './supa.js';
+import { getClient, getProfile, homeFor, errorText, isConfigured, withTimeout } from './supa.js';
 import { SUPABASE_URL } from './config.js';
 
 /* Los enlaces que mandamos por WhatsApp llegan aquí como ?activar=<enlace de Supabase>.
@@ -38,16 +38,34 @@ $$('[data-toggle-pass]').forEach((b) => b.addEventListener('click', () => {
     return;
   }
   try {
-    const sb = await getClient();                 // aquí la librería lee el enlace y abre la sesión
-    const { data: { session } } = await sb.auth.getSession();
+    // Leemos nosotros mismos lo que trae el enlace (más confiable que la detección automática)
+    const sb = await withTimeout(getClient({ detectSessionInUrl: false }), 20000, 'No se pudo cargar la conexión');
+    const accessToken = hash.get('access_token');
+    const refreshToken = hash.get('refresh_token');
+    const code = new URLSearchParams(location.search).get('code');
+    let session = null;
+    if (accessToken && refreshToken) {
+      const { data, error } = await withTimeout(sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken }), 15000);
+      if (error) throw error;
+      session = data.session;
+    } else if (code) {
+      const { data, error } = await withTimeout(sb.auth.exchangeCodeForSession(code), 15000);
+      if (error) throw error;
+      session = data.session;
+    } else {
+      ({ data: { session } } = await withTimeout(sb.auth.getSession(), 15000));
+    }
     if (!session) { show('expired'); return; }
     history.replaceState(null, '', location.pathname);   // saca los tokens de la barra de direcciones
-    const p = await getProfile();
+
+    let p = null;
+    try { p = await withTimeout(getProfile(), 10000); } catch { /* el nombre es opcional */ }
     $('[data-who]').textContent = p?.full_name ? `Hola, ${p.full_name.split(' ')[0]}` : session.user.email;
     form.elements.username.value = session.user.email;
     show('form');
     form.elements.password.focus();
-  } catch {
+  } catch (err) {
+    $('[data-detail]').textContent = `Detalle: ${errorText(err)}`;
     show('expired');
   }
 })();
@@ -62,7 +80,7 @@ form.addEventListener('submit', async (e) => {
   say('Guardando…');
   try {
     const sb = await getClient();
-    const { error } = await sb.auth.updateUser({ password: pass });
+    const { error } = await withTimeout(sb.auth.updateUser({ password: pass }), 20000);
     if (error) throw error;
     const p = await getProfile();
     location.replace(homeFor(p));

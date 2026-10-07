@@ -8,17 +8,24 @@ let client = null;
 
 export const isConfigured = () => Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
-/** Cliente de Supabase (la librería se descarga la primera vez que se pide). */
-export async function getClient() {
+/**
+ * Cliente de Supabase (la librería se descarga la primera vez que se pide).
+ * La página de "crear contraseña" lo crea con detectSessionInUrl: false y lee ella misma el enlace.
+ */
+export async function getClient({ detectSessionInUrl = true } = {}) {
   if (!isConfigured()) throw new Error('Supabase aún no está configurado (app/config.js).');
   if (!client) {
     const { createClient } = await import(CDN);
     client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl },
     });
   }
   return client;
 }
+
+/** Corta una espera que se quedó colgada. */
+export const withTimeout = (promise, ms, label = 'La conexión tardó demasiado') =>
+  Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error(label)), ms))]);
 
 /** Perfil del usuario con sesión, o null. */
 export async function getProfile() {
