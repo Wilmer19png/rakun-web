@@ -5,6 +5,9 @@
    ========================================================================== */
 import { $, $$, esc, safeUrl, initials, ago, waNumber } from './util.js';
 import { getClient, getProfile, isStaff, isConfigured, accountUrl, errorText } from './supa.js';
+import { viewProjects } from './admin-proyectos.js';
+import { viewParrilla } from './admin-parrilla.js';
+import { viewPlans } from './admin-planes.js';
 
 const WORLD = { marca: ['Marca', 'var(--yellow)'], produccion: ['Producción', 'var(--blue)'], web: ['Web', 'var(--pink)'] };
 const STATUS = [
@@ -46,13 +49,26 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, leads: [
   go(location.hash.slice(1) || 'solicitudes');
 })();
 
-function go(view) {
+function go(view, opts = {}) {
   if (!VIEWS[view]) view = 'solicitudes';
   state.view = view;
   history.replaceState(null, '', `#${view}`);
   $$('[data-view]').forEach((b) => b.classList.toggle('is-on', b.dataset.view === view));
   closeDrawer();
-  return VIEWS[view]();
+  closeModal();
+  return VIEWS[view](opts);
+}
+
+/** Herramientas que reciben las secciones que viven en otros módulos. */
+const ctx = () => ({ sb, me, staff, main, head, loading, fail, openModal, closeModal, openDrawer, closeDrawer, go, WORLD });
+
+function openDrawer(html, label = 'Detalle') {
+  const box = $('[data-drawer-box]');
+  box.setAttribute('aria-label', label);
+  box.innerHTML = html;
+  $$('[data-close-drawer]', box).forEach((b) => b.addEventListener('click', closeDrawer));
+  $('[data-drawer]').hidden = false;
+  return box;
 }
 
 const head = (n, kicker, title, actions = '') => `
@@ -364,9 +380,9 @@ const soon = (n, title, text) => () => {
 const VIEWS = {
   solicitudes: viewLeads,
   clientes: viewClients,
-  proyectos: soon('03', 'Proyectos', 'Etapas, tareas por área y quién está a cargo, para los tres mundos.'),
-  parrillas: soon('04', 'Parrillas', 'El calendario de contenido con redes, estados y envío al cliente para aprobar.'),
+  proyectos: (o) => viewProjects(ctx(), o),
+  parrillas: (o) => viewParrilla(ctx(), o),
   documentos: soon('05', 'Documentos', 'Contratos, recibos, estrategias y guiones: archivo privado o link.'),
-  planes: soon('06', 'Planes y precios', 'Editar precios y extras de los tres mundos, y marcar servicios como agotados.'),
+  planes: (o) => viewPlans(ctx(), o),
   equipo: viewTeam,
 };

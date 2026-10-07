@@ -634,3 +634,9 @@
 @media (prefers-reduced-motion: reduce) {
   .mk-mini__rec i, .mk-mini__play, .mk-mini__phone .p { animation: none; }
 }
+
+/* carta: servicio agotado (se marca desde el gestor) */
+.carta li.is-out { opacity: .55; }
+.carta li.is-out .carta__name, .carta li.is-out .carta__price b { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--pink); }
+.carta__out { display: inline-block; flex: none; order: 2; padding: 3px 7px; border: 2px solid var(--pink); color: var(--pink); font-size: .58rem; letter-spacing: .1em; text-decoration: none; rotate: -6deg; }
+.carta li.is-out .carta__name::after { order: 1; }

@@ -82,3 +82,18 @@ La página tiene que abrirse desde un servidor (no con doble clic en el archivo)
 1. `login.html` → entra con tu usuario → te lleva al gestor.
 2. En `marca.html`, toca **Quiero este plan**, llena el formulario → aparece en **Solicitudes**.
 3. **Convertir en cliente → Crear acceso → Generar enlace** → abre el enlace en una ventana privada → crea la contraseña → entras al portal.
+
+---
+
+# Fase 2 · Proyectos, parrillas y planes
+
+1. **SQL Editor → New query** → pega todo `supabase/fase2.sql` → **Run**. Crea:
+   - `projects`: los proyectos de cada cliente (marca, producción, web) con su etapa.
+   - `posts`: la parrilla de contenido. El cliente solo ve lo que se le envía ("Por aprobar" en adelante) y solo puede aprobar o pedir cambios.
+   - `plan_catalog`: los planes y precios que se publican desde el gestor.
+2. Nada más. No hay que tocar la función `invitar` ni `app/config.js`.
+
+Cómo se usa:
+- **Proyectos → Nuevo proyecto**: elige el cliente y el tipo. La etapa que marques es la que ve el cliente en su portal.
+- **Parrillas**: elige el proyecto, toca un día para crear una pieza, márcala como "Lista" y luego **Enviar al cliente para aprobar**. El cliente la ve en su portal → pestaña **Parrilla**, y puede aprobar o pedir un cambio.
+- **Planes y precios**: edita, y cuando esté listo toca **Publicar en la página**. Mientras no publiques, la página sigue mostrando los precios base del Excel.

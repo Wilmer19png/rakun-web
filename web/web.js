@@ -7,6 +7,7 @@
 
 import { RakunEye } from '../eye.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
+import { loadCatalog } from '../app/catalog.js';
 
 /* ---------- Smooth scroll + anclas ---------- */
 let lenis = null;
@@ -203,6 +204,29 @@ function initDesk() {
 /* ==========================================================================
    Arranque
    ========================================================================== */
+/* ---------- Planes: si en el gestor se publicaron cambios, se pintan esos ---------- */
+const escHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+async function initWebPlans() {
+  const list = $('[data-web-plans]');
+  if (!list) return;
+  const c = await loadCatalog('web');
+  const plans = (c?.plans || []).filter((p) => !p.hidden);
+  if (!plans.length) return;                          // sin catálogo: se queda el HTML de la página
+  list.innerHTML = plans.map((p, i) => {
+    const lead = escHTML(JSON.stringify({ world: 'web', plan: `Web · ${p.name}`, price: p.price }));
+    return `
+    <li class="plan${p.hot ? ' plan--hot' : ''}" style="--c: ${escHTML(p.color || 'var(--yellow)')}">
+      ${p.hot ? '<span class="plan__badge sticker sticker--pink mono">Recomendado</span>' : ''}
+      <p class="mono plan__n">Plan ${String(i + 1).padStart(2, '0')}</p>
+      <h3 class="plan__name">${escHTML(p.name)}</h3>
+      <p class="plan__for">${escHTML(p.for)}</p>
+      <p class="plan__price"><span class="mono">desde</span> ${escHTML(p.price)}</p>
+      <ul class="plan__list">${(p.list || []).map((li) => `<li>${escHTML(li)}</li>`).join('')}</ul>
+      <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=${encodeURIComponent(`Quiero el plan ${p.name}`)}" data-lead="${lead}">Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+    </li>`;
+  }).join('');
+}
+
 initClock();
 initLenis();
 initHeader(() => lenis);
@@ -213,6 +237,7 @@ initTerminal();
 initCompare();
 initCommits();
 initDesk();
+initWebPlans();
 
 const hdrEye = $('[data-eye="eye-hdr"]');
 if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).followCursor();
