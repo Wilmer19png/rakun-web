@@ -111,3 +111,17 @@ Cómo se usa:
 - **Gestor → Documentos → Subir documento**: elige cliente, proyecto, carpeta y estado, y sube un archivo o pega un link. Desmarca "Lo ve el cliente" si es solo para el equipo.
 - **Portal → Documentos**: el cliente ve sus documentos por carpeta, los abre o descarga y puede **subir su material** (archivo o link), que te aparece en "Material del cliente".
 - Los archivos se abren con un enlace temporal de 5 minutos: nadie puede compartirlos por fuera de la cuenta.
+
+---
+
+# Fase 4 · Grabaciones y reuniones
+
+1. **SQL Editor → New query** → pega todo `supabase/fase4.sql` → **Run**. Crea:
+   - `shoots` (grabaciones): fecha, duración, lugar, dirección, quién va del equipo y qué debe preparar el cliente;
+   - `meetings` (reuniones): tema, tipo, fecha, link de Meet, con quién y los acuerdos;
+   - `team_members()`: deja que el cliente vea solo el nombre y el área de quienes trabajan en lo suyo.
+
+Cómo se usa:
+- **Gestor → Grabaciones → Programar grabación**. El cliente la ve en su portal, marca su lista de "para ese día" y toca **Confirmo** o **Necesito otra fecha** (con los días que le sirven). Su respuesta te aparece en la grabación.
+- **Gestor → Reuniones → Agendar reunión**, con el link de Google Meet. El cliente también puede **pedir una reunión** desde su portal: te aparece arriba en rojo, con el número en el menú, y la confirmas poniéndole fecha y link.
+- Después de cada reunión, escribe los **acuerdos**: el cliente los ve en su historial.

@@ -81,3 +81,11 @@ export async function openDocument(sb, d) {
   if (error) throw error;
   return data.signedUrl;
 }
+
+/* ---------- grabaciones y reuniones ---------- */
+export const MEET_KIND = { arranque: 'Arranque', revision: 'Revisión', dudas: 'Dudas', entrega: 'Entrega', reporte: 'Reporte del mes' };
+export const MEET_STATUS = { solicitada: ['Solicitada', '#FF2C68', '#fff'], confirmada: ['Confirmada', '#3C8C6E', '#fff'], realizada: ['Realizada', '#1B1A35', '#F3F0EA'], cancelada: ['Cancelada', '#C3C0DD', '#010221'] };
+export const SHOOT_STATUS = { programada: ['Programada', '#2BCDFF', '#010221'], realizada: ['Realizada', '#1B1A35', '#F3F0EA'], cancelada: ['Cancelada', '#C3C0DD', '#010221'] };
+
+export const fmtDay = (d) => new Date(d).toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short' });
+export const fmtTime = (d) => new Date(d).toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });

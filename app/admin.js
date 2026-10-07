@@ -9,6 +9,7 @@ import { viewProjects } from './admin-proyectos.js';
 import { viewParrilla } from './admin-parrilla.js';
 import { viewPlans } from './admin-planes.js';
 import { viewDocuments } from './admin-documentos.js';
+import { viewShoots, viewMeetings } from './admin-agenda.js';
 
 const WORLD = { marca: ['Marca', 'var(--yellow)'], produccion: ['Producción', 'var(--blue)'], web: ['Web', 'var(--pink)'] };
 const STATUS = [
@@ -44,6 +45,12 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, leads: [
 
   const { data } = await sb.from('profiles').select('id, full_name, email, role, area, color').in('role', ['admin', 'equipo']).order('full_name');
   staff = data || [];
+
+  // avisos en el menú: reuniones que pidieron los clientes y aún no tienen fecha
+  sb.from('meetings').select('id', { count: 'exact', head: true }).eq('status', 'solicitada').then(({ count }) => {
+    const b = $('[data-badge-meet]');
+    if (b && count) { b.hidden = false; b.textContent = count; }
+  });
 
   boot.hidden = true;
   $('[data-app]').hidden = false;
@@ -336,7 +343,7 @@ async function viewTeam() {
   if (error) { main.innerHTML = ''; fail(error); return; }
   staff = data;
   const isAdmin = me.role === 'admin';
-  main.innerHTML = head('07', 'Quiénes trabajan aquí', 'Equipo', isAdmin ? '<button class="gx__btn gx__btn--dark" type="button" data-new-staff>+ Invitar al equipo</button>' : '') + `
+  main.innerHTML = head('09', 'Quiénes trabajan aquí', 'Equipo', isAdmin ? '<button class="gx__btn gx__btn--dark" type="button" data-new-staff>+ Invitar al equipo</button>' : '') + `
     <div class="gx__team">
       ${data.map((s) => `
         <div class="gx__person">
@@ -380,6 +387,8 @@ const VIEWS = {
   clientes: viewClients,
   proyectos: (o) => viewProjects(ctx(), o),
   parrillas: (o) => viewParrilla(ctx(), o),
+  grabaciones: () => viewShoots(ctx()),
+  reuniones: () => viewMeetings(ctx()),
   documentos: () => viewDocuments(ctx()),
   planes: (o) => viewPlans(ctx(), o),
   equipo: viewTeam,

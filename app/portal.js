@@ -10,6 +10,7 @@ import {
   STAGES, WORLD_NAME, WORLD_COLOR, netInfo, FORMATS, statusInfo, DOW,
   monthStart, addMonths, monthLabel, monthCells, ymd,
   DOC_CATS, docStatus, MAX_FILE, safeFileName, fileSize, openDocument,
+  MEET_KIND, MEET_STATUS, SHOOT_STATUS, fmtDay, fmtTime,
 } from './content.js';
 
 let sb, me;
@@ -49,6 +50,7 @@ const st = { projects: [], project: null, month: monthStart(new Date()), posts: 
   const { data } = await sb.from('projects').select('id, name, world, plan, stage, status, end_date').neq('status', 'terminado').order('created_at', { ascending: false });
   st.projects = data || [];
   renderProjects();
+  renderNext();
 
   boot.hidden = true;
   $('[data-app]').hidden = false;
@@ -59,7 +61,7 @@ const st = { projects: [], project: null, month: monthStart(new Date()), posts: 
 /* ---------- pestañas ---------- */
 function route() {
   const want = location.hash.slice(1);
-  const tab = ['parrilla', 'documentos'].includes(want) ? want : 'resumen';
+  const tab = ['parrilla', 'documentos', 'grabaciones', 'reuniones'].includes(want) ? want : 'resumen';
   $$('[data-tab]').forEach((s) => { s.hidden = s.dataset.tab !== tab; });
   $$('[data-tab-link]').forEach((a) => {
     const on = a.dataset.tabLink === tab;
@@ -68,6 +70,163 @@ function route() {
   });
   if (tab === 'parrilla') openParrilla();
   if (tab === 'documentos') openDocs();
+  if (tab === 'grabaciones') openShoots();
+  if (tab === 'reuniones') openMeets();
+}
+
+/* ---------- equipo (nombre y área de quienes trabajan en lo tuyo) ---------- */
+let teamCache = null;
+async function team() {
+  if (!teamCache) {
+    const { data } = await sb.rpc('team_members');
+    teamCache = Object.fromEntries((data || []).map((p) => [p.id, p]));
+  }
+  return teamCache;
+}
+const crewHTML = (ids, people) => (ids || []).map((id) => people[id]).filter(Boolean).map((p) =>
+  `<span class="px__crew"><span class="gx__ava gx__ava--sm" style="background:${esc(p.color)}">${esc(initials(p.full_name))}</span><span>${esc(p.full_name.split(' ')[0])}<small>${esc(p.area || '')}</small></span></span>`).join('');
+
+/* ---------- resumen: próxima grabación y próxima reunión ---------- */
+async function renderNext() {
+  const box = $('[data-next]');
+  const now = new Date().toISOString();
+  const [{ data: shoots }, { data: meets }] = await Promise.all([
+    sb.from('shoots').select('*').eq('status', 'programada').gte('starts_at', now).order('starts_at').limit(1),
+    sb.from('meetings').select('*').eq('status', 'confirmada').gte('starts_at', now).order('starts_at').limit(1),
+  ]);
+  const s = shoots?.[0], m = meets?.[0];
+  if (!s && !m) { box.innerHTML = ''; return; }
+  box.innerHTML = `
+    ${s ? `<a class="px__box px__nextcard" href="#grabaciones"><p class="mono">Próxima grabación</p><h3>${esc(fmtDay(s.starts_at))}</h3><p>${esc(fmtTime(s.starts_at))} · ${esc(s.location || 'lugar por confirmar')}</p>${s.client_response ? '' : '<span class="mono px__cta">Confírmanos tu asistencia →</span>'}</a>` : ''}
+    ${m ? `<a class="px__box px__nextcard" href="#reuniones"><p class="mono">Próxima reunión</p><h3>${esc(fmtDay(m.starts_at))}</h3><p>${esc(fmtTime(m.starts_at))} · ${esc(m.title)}</p><span class="mono px__cta">Ver detalles →</span></a>` : ''}`;
+}
+
+/* ---------- grabaciones ---------- */
+async function openShoots() {
+  const box = $('[data-shoots]');
+  box.innerHTML = '<p class="mono gx__empty">Cargando tus grabaciones…</p>';
+  const [{ data, error }, people] = await Promise.all([sb.from('shoots').select('*').order('starts_at'), team()]);
+  if (error) { box.innerHTML = `<p class="gx__error">${esc(errorText(error))}</p>`; return; }
+  const now = Date.now();
+  const next = data.filter((s) => s.status === 'programada' && new Date(s.starts_at).getTime() > now);
+  const past = data.filter((s) => !next.includes(s)).reverse();
+  box.innerHTML = `
+    <p class="mono px__date">Grabaciones</p>
+    <h1 class="px__hello">Lo que <em>grabamos.</em></h1>
+    ${next.map((s) => {
+      const mapUrl = s.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address)}` : '';
+      return `<article class="px__shoot" data-id="${s.id}">
+        <div class="px__shoot-when"><b>${new Date(s.starts_at).getDate()}</b><span class="mono">${new Date(s.starts_at).toLocaleDateString('es-CO', { month: 'long' })}</span><span class="mono">${esc(fmtTime(s.starts_at))} · ${Number(s.duration_hours)} h</span></div>
+        <div class="px__shoot-main">
+          <h2>${esc(fmtDay(s.starts_at))} · ${esc(s.location || 'Lugar por confirmar')}</h2>
+          ${s.address ? `<p class="px__shoot-addr">📍 ${esc(s.address)} · <a href="${mapUrl}" target="_blank" rel="noopener">Ver en el mapa ↗</a></p>` : ''}
+          ${(s.crew || []).length ? `<p class="mono px__k">Quién va</p><div class="px__crews">${crewHTML(s.crew, people)}</div>` : ''}
+          ${(s.prep || []).length ? `<p class="mono px__k">Para ese día</p><ul class="px__prep">${s.prep.map((p, i) => `<li><label><input type="checkbox" data-prep="${s.id}-${i}"><span>${esc(p)}</span></label></li>`).join('')}</ul>` : ''}
+        </div>
+        <div class="px__shoot-act">
+          ${s.client_response === 'confirmada' ? '<p class="px__ok">✓ Confirmaste tu asistencia</p>' : ''}
+          ${s.client_response === 'reprogramar' ? `<p class="px__warn">⟳ Pediste otra fecha${s.client_note ? `: “${esc(s.client_note)}”` : ''}. Te escribimos para acordarla.</p>` : ''}
+          ${s.client_response ? '' : '<button class="gx__btn gx__btn--hot" type="button" data-confirm>✓ Confirmo</button>'}
+          ${s.client_response === 'reprogramar' ? '' : '<button class="gx__btn" type="button" data-move>Necesito otra fecha</button>'}
+          <div class="px__move" data-move-box hidden>
+            <textarea rows="3" placeholder="¿Qué días y horas te sirven?" aria-label="Fechas que te sirven"></textarea>
+            <button class="gx__btn gx__btn--dark" type="button" data-move-send>Enviar</button>
+          </div>
+          <p class="mono gx__saved" data-msg aria-live="polite"></p>
+        </div>
+      </article>`;
+    }).join('') || '<div class="gx__soon"><p>No tienes grabaciones programadas por ahora. Cuando agendemos una, aquí verás la fecha, el lugar, quién va y qué preparar.</p></div>'}
+    ${past.length ? `<h2 class="mono px__k px__past-h">Anteriores</h2><div class="gx__table">${past.map((s) => `<div class="gx__tr px__past"><span>${esc(fmtDay(s.starts_at))}</span><span>${esc(s.location || '—')}</span><span class="mono">${esc(SHOOT_STATUS[s.status][0])}</span></div>`).join('')}</div>` : ''}`;
+
+  // la lista de "para ese día" se recuerda en este navegador
+  $$('[data-prep]', box).forEach((c) => {
+    try { c.checked = localStorage.getItem(`rakun:prep:${c.dataset.prep}`) === '1'; } catch { /* sin almacenamiento */ }
+    c.addEventListener('change', () => { try { localStorage.setItem(`rakun:prep:${c.dataset.prep}`, c.checked ? '1' : '0'); } catch { /* */ } });
+  });
+  $$('[data-id]', box).forEach((card) => {
+    const id = card.dataset.id;
+    const msg = $('[data-msg]', card);
+    const respond = async (response, note) => {
+      msg.textContent = 'Enviando…';
+      const { error: err } = await sb.rpc('respond_shoot', { shoot_id: id, response, note: note || null });
+      if (err) { msg.textContent = errorText(err); return; }
+      openShoots();
+      renderNext();
+    };
+    $('[data-confirm]', card)?.addEventListener('click', () => respond('confirmada'));
+    $('[data-move]', card)?.addEventListener('click', () => { const b = $('[data-move-box]', card); b.hidden = !b.hidden; $('textarea', b).focus(); });
+    $('[data-move-send]', card)?.addEventListener('click', () => {
+      const note = $('[data-move-box] textarea', card).value.trim();
+      if (!note) { msg.textContent = 'Cuéntanos qué días y horas te sirven.'; return; }
+      respond('reprogramar', note);
+    });
+  });
+}
+
+/* ---------- reuniones ---------- */
+async function openMeets() {
+  const box = $('[data-meets]');
+  box.innerHTML = '<p class="mono gx__empty">Cargando tus reuniones…</p>';
+  const [{ data, error }, people, { data: client }] = await Promise.all([
+    sb.from('meetings').select('*').order('starts_at', { ascending: true, nullsFirst: true }),
+    team(),
+    sb.from('clients').select('id').eq('user_id', me.id).maybeSingle(),
+  ]);
+  if (error) { box.innerHTML = `<p class="gx__error">${esc(errorText(error))}</p>`; return; }
+  const soon = Date.now() - 2 * 3600e3;
+  const requested = data.filter((m) => m.status === 'solicitada');
+  const next = data.filter((m) => m.status === 'confirmada' && m.starts_at && new Date(m.starts_at).getTime() > soon);
+  const past = data.filter((m) => !requested.includes(m) && !next.includes(m)).reverse();
+  const card = (m) => {
+    const p = people[m.owner_id];
+    const link = safeUrl(m.link);
+    return `<article class="px__meet">
+      <div class="px__shoot-when"><b>${new Date(m.starts_at).getDate()}</b><span class="mono">${new Date(m.starts_at).toLocaleDateString('es-CO', { month: 'long' })}</span><span class="mono">${esc(fmtTime(m.starts_at))} · ${m.duration_min} min</span></div>
+      <div class="px__shoot-main">
+        <p class="mono px__k">${esc(MEET_KIND[m.kind] || 'Reunión')}</p>
+        <h2>${esc(m.title)}</h2>
+        ${p ? `<div class="px__crews">${crewHTML([m.owner_id], people)}</div>` : ''}
+        ${m.summary ? `<p class="mono px__k">Acuerdos</p><p class="px__copy">${esc(m.summary)}</p>` : ''}
+      </div>
+      <div class="px__shoot-act">${link ? `<a class="gx__btn gx__btn--hot" href="${esc(link)}" target="_blank" rel="noopener noreferrer">Entrar a la reunión ↗</a>` : '<p class="px__upload-hint">El link de la videollamada te llega antes de la reunión.</p>'}</div>
+    </article>`;
+  };
+  box.innerHTML = `
+    <p class="mono px__date">Reuniones</p>
+    <h1 class="px__hello">Hablemos <em>cuando quieras.</em></h1>
+    <div class="px__meetgrid">
+      <div>
+        ${requested.map((m) => `<div class="px__pending">● Pediste una reunión: <b>${esc(m.title)}</b>. Te confirmamos la fecha pronto.</div>`).join('')}
+        ${next.map(card).join('') || '<div class="gx__soon"><p>No tienes reuniones agendadas.</p></div>'}
+        ${past.length ? `<h2 class="mono px__k px__past-h">Anteriores</h2>${past.map((m) => `<div class="gx__tr px__past"><span>${m.starts_at ? esc(fmtDay(m.starts_at)) : '—'}</span><span>${esc(m.title)}</span><span class="mono">${esc(MEET_STATUS[m.status][0])}</span></div>${m.summary ? `<p class="px__past-sum">${esc(m.summary)}</p>` : ''}`).join('')}` : ''}
+      </div>
+      <aside class="px__upload">
+        <p class="mono">Pedir una reunión</p>
+        <p class="px__upload-p">Cuéntanos de qué quieres hablar y qué horarios te sirven. Te confirmamos con el link de la videollamada.</p>
+        ${CALCOM_URL ? `<a class="gx__btn gx__btn--hot px__cal-btn" href="${esc(CALCOM_URL)}" target="_blank" rel="noopener">Elegir horario en el calendario ↗</a><p class="px__upload-hint">o escríbenos aquí:</p>` : ''}
+        <form data-ask novalidate>
+          <input class="px__link-in" name="title" maxlength="160" placeholder="Tema (p. ej. dudas sobre la parrilla)" aria-label="Tema">
+          <textarea class="px__link-in" name="note" rows="3" maxlength="1000" placeholder="Días y horas que te sirven" aria-label="Horarios"></textarea>
+          <p class="mono gx__saved" data-msg aria-live="polite"></p>
+          <button class="gx__btn gx__btn--hot" type="submit">Pedir reunión →</button>
+        </form>
+      </aside>
+    </div>`;
+
+  $('[data-ask]', box).addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.currentTarget;
+    const msg = $('[data-msg]', f);
+    const title = f.elements.title.value.trim();
+    if (!title) { msg.textContent = 'Cuéntanos el tema.'; f.elements.title.focus(); return; }
+    if (!client?.id) { msg.textContent = 'Tu cuenta aún no está ligada a un proyecto. Escríbenos.'; return; }
+    msg.textContent = 'Enviando…';
+    const { error: err } = await sb.from('meetings').insert({
+      client_id: client.id, title, kind: 'dudas', status: 'solicitada', requested_by: me.id, client_note: f.elements.note.value.trim() || null,
+    });
+    if (err) { msg.textContent = errorText(err); return; }
+    openMeets();
+  });
 }
 
 /* ---------- documentos ---------- */

@@ -22,9 +22,9 @@
       <nav class="px__nav" aria-label="Secciones del portal">
         <a href="#resumen" data-tab-link="resumen">Resumen</a>
         <a href="#parrilla" data-tab-link="parrilla">Parrilla</a>
-        <span aria-disabled="true" title="Próximamente">Grabaciones</span>
+        <a href="#grabaciones" data-tab-link="grabaciones">Grabaciones</a>
         <a href="#documentos" data-tab-link="documentos">Documentos</a>
-        <span aria-disabled="true" title="Próximamente">Reuniones</span>
+        <a href="#reuniones" data-tab-link="reuniones">Reuniones</a>
       </nav>
       <div class="px__me"><span class="gx__ava" data-me-ava></span><span data-me-name></span><button class="mono gx__out" type="button" data-logout>Salir</button></div>
     </header>
@@ -48,6 +48,8 @@
           <img src="assets/rakun-isotipo.svg" alt="" width="160" height="160">
         </section>
 
+        <div class="px__next" data-next></div>
+
         <div class="px__grid">
           <section class="px__box px__box--y">
             <p class="mono">¿Tienes dudas?</p>
@@ -62,6 +64,16 @@
             <a class="px__link mono" href="login.html" data-change-pass>Cambiar contraseña</a>
           </section>
         </div>
+      </section>
+
+      <!-- GRABACIONES -->
+      <section data-tab="grabaciones" hidden>
+        <div data-shoots></div>
+      </section>
+
+      <!-- REUNIONES -->
+      <section data-tab="reuniones" hidden>
+        <div data-meets></div>
       </section>
 
       <!-- DOCUMENTOS -->

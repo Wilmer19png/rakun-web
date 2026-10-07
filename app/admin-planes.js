@@ -43,7 +43,7 @@ export async function viewPlans(ctx) {
 function render(ctx) {
   const { main, head } = ctx;
   const w = st.world;
-  main.innerHTML = head('06', 'Lo que ve el cliente en la página', 'Planes y precios', `
+  main.innerHTML = head('08', 'Lo que ve el cliente en la página', 'Planes y precios', `
     ${[['marca', 'Marca personal', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)']]
       .map(([k, n, c]) => `<button class="gx__chip gx__chip--world${st.world === k ? ' is-on' : ''}" style="--c:${c}" type="button" data-world="${k}">${n}</button>`).join('')}`) +
     (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : `

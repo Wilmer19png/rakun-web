@@ -23,7 +23,7 @@ export async function viewDocuments(ctx) {
   const who = Object.fromEntries(staff.map((s) => [s.id, s]));
   const list = docs.filter((d) => (!st.client || d.client_id === st.client) && (!st.cat || d.category === st.cat));
 
-  main.innerHTML = head('05', 'Todo lo que se entrega queda registrado', 'Documentos', `
+  main.innerHTML = head('07', 'Todo lo que se entrega queda registrado', 'Documentos', `
     <select class="gx__pick" data-client aria-label="Cliente"><option value="">Todos los clientes</option>${(clients || []).map((c) => `<option value="${c.id}"${st.client === c.id ? ' selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
     <button class="gx__btn gx__btn--dark" type="button" data-new>+ Subir documento</button>`) + `
     <div class="gx__subtabs">
