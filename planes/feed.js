@@ -154,5 +154,23 @@ function initSeen() {
   }, () => { timers.forEach(clearInterval); timers = []; cancelAnimationFrame(raf); });
 }
 
+/* ---------- 004 · también grabamos: el visor cuenta y los subtítulos cambian ---------- */
+const REC_SUBS = ['esto nadie', 'te lo dice', 'pero funciona', 'mira esto'];
+function initRec() {
+  const sec = $('[data-rec]');
+  if (!sec || reduced) return;
+  const tc = $('[data-rec-tc]', sec);
+  const sub = $('[data-rec-sub]', sec);
+  let s = 0, k = 0, timers = [];
+  whileVisible(sec, () => {
+    timers.push(setInterval(() => {
+      s += 1;
+      tc.textContent = `00:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+    }, 1000));
+    timers.push(setInterval(() => { k += 1; sub.textContent = pick(REC_SUBS, k); }, 1200));
+  }, () => { timers.forEach(clearInterval); timers = []; });
+}
+
 initFeed();
 initSeen();
+initRec();
