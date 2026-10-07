@@ -61,6 +61,36 @@ export function initHeader(lenisGetter) {
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
   $$('.hdr__nav a').forEach((a) => a.addEventListener('click', closeMenu));
+  initNavSpy();
+}
+
+/* ---------- El nav de cada página marca la sección en la que estás ---------- */
+function initNavSpy() {
+  const links = $$('.hdr__nav a[data-spy]');
+  const targets = links.map((a) => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+  if (!targets.length) return;
+  let current = null;
+  const mark = (id) => {
+    if (id === current) return;
+    current = id;
+    links.forEach((a) => {
+      const on = a.getAttribute('href') === `#${id}`;
+      a.classList.toggle('is-current', on);
+      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+  };
+  // "actual" = la última sección enlazada cuyo inicio ya pasó la mitad de la pantalla
+  let queued = false;
+  const update = () => {
+    queued = false;
+    const mid = window.innerHeight * 0.5;
+    let id = '';
+    targets.forEach((t) => { if (t.getBoundingClientRect().top <= mid) id = t.id; });
+    mark(id);
+  };
+  window.addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
 }
 
 /* ---------- Menú "Lo que hacemos": los dos mundos de RAKÜN ---------- */

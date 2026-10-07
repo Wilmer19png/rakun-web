@@ -1494,3 +1494,18 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 .door__enter:hover, .door__enter:focus-visible { color: var(--white); }
 .door.is-staging .door__enter { opacity: 0; translate: 0 14px; }
 .door.is-staging .door__enter.is-in { opacity: 1; translate: 0 0; }
+
+/* ---------- Header por página: enlace de la sección actual + mundos clicables ---------- */
+.hdr__nav a.is-current { color: var(--white); }
+.hdr__nav a.is-current::after { transform: scaleX(1); }
+
+/* el nombre de cada mundo lleva al inicio de su página */
+.hdr__nav .mega a.mega__head { display: flex; flex-direction: column; gap: 18px; margin: -12px -14px 0; padding: 12px 14px; transition: background-color .2s; }
+.hdr__nav .mega a.mega__head::after { display: none; }
+.mega__head .mega__kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.mega__head .mega__title { display: block; }
+.mega__go { padding: 3px 7px; border: 1px solid currentColor; color: var(--pink); opacity: 0; translate: -6px 0; transition: opacity .2s, translate .25s var(--ease-out); }
+.mega__head:hover, .mega__head:focus-visible { background: rgba(255, 255, 255, .05); }
+.mega__head:hover .mega__go, .mega__head:focus-visible .mega__go, .mega__head[aria-current] .mega__go { opacity: 1; translate: 0 0; }
+.mega__head[aria-current] .mega__go { color: var(--yellow); }
+.mega__head:hover .mega__title { text-decoration: underline 3px var(--pink); text-underline-offset: 8px; }
