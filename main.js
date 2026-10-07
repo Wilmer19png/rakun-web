@@ -569,7 +569,7 @@ function runDoor() {
       resolve();
     };
 
-    // Entrada: la placa de la mirilla se corre en 3 cuadros, el ojo se abre y aparece la pregunta
+    // Entrada: la corredera de la rejilla se abre en 3 cuadros, el ojo se abre y aparece la pregunta
     if (reduced) {
       door.classList.add('is-peeking');
       eye.open$.snap(1);
@@ -598,7 +598,7 @@ function runDoor() {
         if (kind === 'page') location.href = href; else done();
         return;
       }
-      // la puerta se abre en 3 cuadros
+      // la tapa de alcantarilla se levanta y se corre en 3 cuadros
       [1, 2, 3].forEach((s, k) => later(160 + k * 110, () => { door.dataset.leaf = String(s); }));
       if (kind === 'page') {
         [1, 2, 3].forEach((s, k) => later(560 + k * 100, () => { door.dataset.cut = String(s); }));
@@ -609,7 +609,7 @@ function runDoor() {
       }
     };
 
-    // "Solo vengo a mirar": la puerta se abre hacia la home
+    // "Solo vengo a mirar": la tapa se corre y entras a la home
     $('[data-door-enter]', door).addEventListener('click', () => leave('home'));
     // los otros mundos (Producción, Web y apps) son páginas aparte
     $$('a[data-door-pick]', door).forEach((a) => a.addEventListener('click', (e) => {

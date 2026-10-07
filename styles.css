@@ -1332,8 +1332,7 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
   color: var(--white);
   background:
     radial-gradient(ellipse 40% 50% at 28% 10%, rgba(255, 44, 104, .14) 0%, rgba(255, 44, 104, 0) 70%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 46px),
-    #04051A;
+    radial-gradient(circle at 26% 54%, #15142c 0%, #0b0a1a 60%);
 }
 .door::after {
   content: ""; position: fixed; inset: 0; pointer-events: none;
@@ -1356,36 +1355,51 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 .door__neon small { font-family: var(--f-mono); font-size: .32em; letter-spacing: .3em; margin-left: .4em; vertical-align: .6em; }
 @keyframes neon { 0%, 100% { opacity: 1; } 41% { opacity: .35; } 42% { opacity: 1; } 44% { opacity: .5; } 45% { opacity: 1; } }
 
-/* marco y puerta */
+/* la tapa de alcantarilla (antes era una puerta; se conservan los nombres door__*) */
 .door__frame {
   grid-area: frame; justify-self: center; align-self: start;
   position: relative;
-  height: min(68vh, 600px); aspect-ratio: 380 / 600;
-  padding: 14px;
-  background: #0d0c22;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .08), 0 0 0 1px rgba(0, 0, 0, .6);
-  perspective: 1400px;
+  height: min(62vh, 500px); aspect-ratio: 1;
 }
+/* el hueco: luz rosa que sube y escalera; se ve cuando la tapa se corre */
 .door__inside {
-  position: absolute; inset: 14px;
-  background: radial-gradient(circle at 50% 40%, var(--pink) 0%, #7a0f33 60%, #200514 100%);
+  position: absolute; inset: 0; border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 44, 104, .15) 0%, #120214 45%, #05020c 75%);
+  box-shadow: inset 0 18px 40px rgba(0, 0, 0, .9), 0 0 0 16px #2a2840, 0 0 0 20px #0b0a1a;
 }
-.door__leaf {
-  position: absolute; inset: 14px;
-  transform-origin: left center;
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, .045) 0 2px, transparent 2px 64px),
-    var(--navy);
-  box-shadow: 16px 18px 0 rgba(0, 0, 0, .5), inset 0 0 0 3px rgba(255, 255, 255, .06);
+.door__ladder {
+  position: absolute; left: 44%; width: 12%; top: 18%; bottom: 18%; opacity: .7;
+  background: repeating-linear-gradient(180deg, transparent 0 34px, #3a3858 34px 42px);
+  border-left: 6px solid #3a3858; border-right: 6px solid #3a3858;
 }
-.door[data-leaf="1"] .door__leaf { transform: rotateY(-28deg); }
-.door[data-leaf="2"] .door__leaf { transform: rotateY(-62deg); }
-.door[data-leaf="3"] .door__leaf { transform: rotateY(-88deg); }
+.door[data-leaf="1"] .door__inside { background: radial-gradient(circle at 50% 50%, rgba(255, 44, 104, .35) 0%, #120214 45%, #05020c 75%); }
+.door[data-leaf="2"] .door__inside { background: radial-gradient(circle at 50% 50%, rgba(255, 44, 104, .55) 0%, #120214 50%, #05020c 78%); box-shadow: inset 0 18px 40px rgba(0, 0, 0, .9), 0 0 0 16px #2a2840, 0 0 0 20px #0b0a1a, 0 0 36px rgba(255, 44, 104, .6); }
+.door[data-leaf="3"] .door__inside { background: radial-gradient(circle at 50% 50%, rgba(255, 44, 104, .75) 0%, #3a0620 55%, #05020c 80%); box-shadow: inset 0 18px 40px rgba(0, 0, 0, .9), 0 0 0 16px #2a2840, 0 0 0 20px #0b0a1a, 0 0 54px rgba(255, 44, 104, .6); }
 
-/* mirilla con rejilla */
+/* la tapa: hierro fundido con relieve de rombos */
+.door__leaf {
+  position: absolute; inset: 0; border-radius: 50%;
+  container-type: inline-size;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .07) 0 3px, transparent 3px 16px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, .35) 0 3px, transparent 3px 16px),
+    radial-gradient(circle at 38% 30%, #2c2a48 0%, var(--navy) 55%, #131228 100%);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .06), inset 0 0 0 30px rgba(0, 0, 0, .18), 14px 18px 0 rgba(0, 0, 0, .55);
+}
+/* al elegir: la tapa se levanta y se corre a un lado, a pocos cuadros */
+.door[data-leaf="1"] .door__leaf { transform: translate(1.2%, -2%) rotate(3deg); }
+.door[data-leaf="2"] .door__leaf { transform: translate(18%, -5%) rotate(12deg); }
+.door[data-leaf="3"] .door__leaf { transform: translate(46%, -2%) rotate(24deg); }
+.door__ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.door__ring text { font-family: var(--f-mono); font-size: 17px; font-weight: 500; letter-spacing: 7px; fill: #3a3858; }
+.door__pry { position: absolute; top: 48.4%; width: 6.8%; height: 2.4%; border-radius: 6px; background: #05020c; box-shadow: inset 0 2px 3px rgba(0, 0, 0, .9); }
+.door__pry--l { left: 14%; }
+.door__pry--r { right: 14%; }
+
+/* mirilla con rejilla (idéntica a la de la puerta) */
 .door__hatch {
-  position: absolute; left: 50%; top: 12%;
-  width: 68%; aspect-ratio: 240 / 112; translate: -50% 0;
+  position: absolute; left: 50%; top: 29%;
+  width: 52%; aspect-ratio: 240 / 112; translate: -50% 0;
   overflow: hidden;
   background: var(--ink-0);
   box-shadow: inset 0 6px 14px rgba(0, 0, 0, .8), 0 0 0 4px #2a2840, 0 0 0 6px rgba(0, 0, 0, .5);
@@ -1403,15 +1417,11 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 .door[data-hatch="2"] .door__slide { translate: -67% 0; }
 .door.is-peeking .door__slide { translate: -101% 0; }
 
-.door__bolt { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #3a3858; box-shadow: 1px 1px 0 rgba(0, 0, 0, .6); }
-.door__bolt--1 { left: 7%; top: 5%; }
-.door__bolt--2 { right: 7%; top: 5%; }
-.door__bolt--3 { left: 7%; bottom: 5%; }
-.door__bolt--4 { right: 7%; bottom: 5%; }
-.door__sticker { position: absolute; left: 12%; top: 44%; rotate: -5deg; padding: 7px 11px; font-weight: 500; text-transform: none; letter-spacing: .04em; }
-.door__plate { position: absolute; left: 50%; bottom: 12%; translate: -50% 0; padding: 6px 10px; border: 1px solid rgba(255, 255, 255, .25); color: var(--mist); white-space: nowrap; }
-.door__handle { position: absolute; right: 9%; top: 52%; width: 12px; height: 70px; border-radius: 6px; background: var(--mist); box-shadow: 3px 3px 0 rgba(0, 0, 0, .5); }
-
+.door__bolt { position: absolute; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: #3a3858; box-shadow: 1px 1px 0 rgba(0, 0, 0, .6); }
+.door__bolt--1 { top: 8%; }
+.door__bolt--2 { bottom: 8%; }
+.door__sticker { position: absolute; left: 19%; top: 59%; rotate: -5deg; padding: 7px 11px; font-weight: 500; text-transform: none; letter-spacing: .04em; }
+.door__plate { position: absolute; left: 50%; bottom: 18%; translate: -50% 0; padding: 6px 10px; border: 1px solid rgba(255, 255, 255, .25); color: var(--mist); white-space: nowrap; }
 /* la pregunta y los dos mundos */
 .door__ask { grid-area: ask; display: flex; flex-direction: column; gap: 22px; max-width: 640px; }
 .door__kicker { color: var(--mist); }

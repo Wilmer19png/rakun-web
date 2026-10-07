@@ -166,29 +166,34 @@
 </div>
 
 <!-- ================================================================
-     000 · LA PUERTA — "¿Qué buscas?": se abre la mirilla, el ojo te mira y eliges mundo
+     000 · LA ENTRADA — tapa de alcantarilla: se abre la rejilla, el ojo te mira y eliges mundo
      ================================================================ -->
 <div class="door" data-door role="dialog" aria-modal="true" aria-labelledby="door-q">
   <p class="door__neon" aria-hidden="true">RAK<span>Ü</span>N <small>club</small></p>
 
+  <!-- la tapa de alcantarilla: misma mirilla con rejilla; al elegir, la tapa se corre y abajo hay luz -->
   <div class="door__frame" aria-hidden="true">
-    <span class="door__inside"></span>
+    <span class="door__inside"><span class="door__ladder"></span></span>
     <div class="door__leaf" data-door-leaf>
+      <svg class="door__ring" viewBox="0 0 500 500">
+        <defs><path id="door-ring" d="M250 250 m-206 0 a206 206 0 1 1 412 0 a206 206 0 1 1 -412 0"/></defs>
+        <circle cx="250" cy="250" r="224" fill="none" stroke="rgba(0,0,0,.4)" stroke-width="3"/>
+        <circle cx="250" cy="250" r="186" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3"/>
+        <text><textPath href="#door-ring">RAKÜN · BOGOTÁ D.C. · SOLO CON MIRADA · RAKÜN · ALCANTARILLADO VISUAL ·</textPath></text>
+      </svg>
+      <span class="door__pry door__pry--l"></span><span class="door__pry door__pry--r"></span>
       <div class="door__hatch">
         <div class="door__peek"><svg class="door__eye" data-door-eye></svg></div>
         <span class="door__grille"></span>
         <span class="door__slide"></span>
       </div>
       <span class="door__bolt door__bolt--1"></span><span class="door__bolt door__bolt--2"></span>
-      <span class="door__bolt door__bolt--3"></span><span class="door__bolt door__bolt--4"></span>
       <span class="door__sticker sticker sticker--pink mono">Te estamos viendo.</span>
       <p class="door__plate mono">Nº 001 · Solo con mirada</p>
-      <span class="door__handle"></span>
     </div>
   </div>
-
   <div class="door__ask">
-    <p class="mono door__kicker">Antes de entrar</p>
+    <p class="mono door__kicker">Antes de bajar</p>
     <h2 class="door__q" id="door-q">¿Qué <em>buscas?</em></h2>
     <div class="door__picks">
       <a class="ticket" href="marca.html" data-door-pick="marca" data-eye-target style="--t: var(--yellow)">
@@ -214,7 +219,7 @@
       </a>
     </div>
     <button class="door__enter mono" type="button" data-door-enter>Solo vengo a mirar <span aria-hidden="true">→</span> entrar a RAKÜN</button>
-    <p class="mono door__fine" aria-hidden="true">fig. 000 — la puerta · 4.7110° N · 74.0721° W</p>
+    <p class="mono door__fine" aria-hidden="true">fig. 000 — la entrada · 4.7110° N · 74.0721° W</p>
   </div>
   <span class="door__cut" aria-hidden="true"></span>
 </div>
