@@ -10,7 +10,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&family=Permanent+Marker&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&family=Permanent+Marker&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="produccion/produccion.css">
 </head>
@@ -420,11 +420,118 @@
         <img class="p-cta__boom" src="assets/ojo-estallando.svg" alt="" width="1355" height="1205">
       </div>
       <div class="p-cta__action">
-        <a class="p-cta__btn" href="mailto:rakundesigns@gmail.com?subject=Quiero%20cotizar%20una%20producci%C3%B3n" data-cta-btn data-eye-target>Cotizar producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="p-cta__btn" href="#guion" aria-controls="guion" aria-expanded="false" data-cta-btn data-guion-open data-eye-target>Cotizar producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
         <p class="mono">Cuéntanos la idea. Nosotros la miramos.</p>
       </div>
     </div>
   </section>
+  <!-- ==============================================================
+       006b · COTIZAR: se despliega como un guion literario a máquina de escribir
+       Cada bloque teclea su texto (data-say) y luego muestra los campos reales.
+       ============================================================== -->
+  <section class="sec p-guion" id="guion" aria-labelledby="guion-title" data-guion>
+    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Tu guion</span></div>
+    <div class="sec__body p-guion__body">
+      <aside class="p-guion__side">
+        <p class="mono p-guion__kicker">Formulario · Producción audiovisual</p>
+        <h2 class="p-guion__title" id="guion-title">Escribe tu <em>escena.</em></h2>
+        <p class="p-guion__lede">Llena los espacios del guion como si fuera tu película. Entre más detalles, más precisa la cotización.</p>
+        <p class="mono p-guion__status" data-guion-status aria-live="polite"></p>
+        <div class="p-guion__tools">
+          <button class="mono p-guion__tool" type="button" data-guion-skip>Saltar a los campos →</button>
+          <button class="mono p-guion__tool" type="button" data-guion-replay>↻ Volver a escribir</button>
+        </div>
+      </aside>
+
+      <form class="g-sheet" data-guion-form novalidate>
+        <span class="g-sheet__stamp mono" aria-hidden="true">Confidencial</span>
+        <span class="g-sheet__brad g-sheet__brad--1" aria-hidden="true"></span>
+        <span class="g-sheet__brad g-sheet__brad--2" aria-hidden="true"></span>
+        <span class="g-sheet__brad g-sheet__brad--3" aria-hidden="true"></span>
+        <p class="g-sheet__page" aria-hidden="true">1.</p>
+
+        <div class="g-blk g-c g-b" data-say="RAKÜN VISUAL DESIGN"><div class="g-real"><p>RAKÜN VISUAL DESIGN</p></div></div>
+        <div class="g-blk g-c g-gap" data-say="Guion de cotización · Borrador Nº 001"><div class="g-real"><p>Guion de cotización · Borrador Nº 001</p></div></div>
+
+        <div class="g-blk g-b g-gap" data-say="FADE IN:"><div class="g-real"><p>FADE IN:</p></div></div>
+        <div class="g-blk g-b g-gap" data-say="INT. TU PROYECTO — DÍA"><div class="g-real"><p>INT. TU PROYECTO — DÍA</p></div></div>
+
+        <div class="g-blk g-gap" data-say="Una idea le da vueltas en la cabeza a __________. Quiere convertirla en: [ ] VIDEOCLIP  [ ] CORTO  [ ] LARGOMETRAJE  [ ] COMERCIAL">
+          <div class="g-real">
+            <p>Una idea le da vueltas en la cabeza a <input class="g-f g-f--name" name="nombre" autocomplete="name" placeholder="tu nombre" aria-label="Tu nombre" required>. Quiere convertirla en:</p>
+            <fieldset class="g-opts g-opts--row">
+              <legend class="g-sr">Tipo de proyecto</legend>
+              <label class="g-opt"><input type="radio" name="tipo" value="Videoclip" checked><span>Videoclip</span></label>
+              <label class="g-opt"><input type="radio" name="tipo" value="Corto"><span>Corto</span></label>
+              <label class="g-opt"><input type="radio" name="tipo" value="Largometraje"><span>Largometraje</span></label>
+              <label class="g-opt"><input type="radio" name="tipo" value="Comercial"><span>Comercial</span></label>
+              <label class="g-opt"><input type="radio" name="tipo" value="Otro"><span>Otro</span></label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="g-blk g-ch" data-say="RAKÜN (V.O.)"><div class="g-real"><p>RAKÜN (V.O.)</p></div></div>
+        <div class="g-blk g-dl g-gap" data-say="¿En qué etapa te acompañamos?">
+          <div class="g-real">
+            <p>¿En qué etapa te acompañamos?</p>
+            <fieldset class="g-opts">
+              <legend class="g-sr">Etapas</legend>
+              <label class="g-opt g-opt--box"><input type="checkbox" name="etapas" value="Preproducción" checked><span>Preproducción <i>— idea, guion, casting, locaciones</i></span></label>
+              <label class="g-opt g-opt--box"><input type="checkbox" name="etapas" value="Rodaje"><span>Rodaje <i>— cámara, luces, equipo en set</i></span></label>
+              <label class="g-opt g-opt--box"><input type="checkbox" name="etapas" value="Postproducción"><span>Postproducción <i>— montaje, color, sonido, VFX</i></span></label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="g-blk g-ch" data-say="TÚ"><div class="g-real"><p>TÚ</p></div></div>
+        <div class="g-blk g-dl g-gap" data-say="Lo necesito para el ______ y lo rodaríamos en __________.">
+          <div class="g-real"><p>Lo necesito para el <input class="g-f g-f--date" name="fecha" placeholder="dd / mm" aria-label="Fecha"> y lo rodaríamos en <input class="g-f g-f--place" name="locacion" placeholder="ciudad o locación" aria-label="Locación">.</p></div>
+        </div>
+
+        <div class="g-blk g-ch" data-say="RAKÜN (V.O.)"><div class="g-real"><p>RAKÜN (V.O.)</p></div></div>
+        <div class="g-blk g-dl g-gap" data-say="¿Con cuánto contamos?">
+          <div class="g-real">
+            <p>¿Con cuánto contamos?</p>
+            <fieldset class="g-opts">
+              <legend class="g-sr">Presupuesto</legend>
+              <label class="g-opt g-opt--dot"><input type="radio" name="presupuesto" value="Menos de $5 millones"><span>Menos de $5 millones</span></label>
+              <label class="g-opt g-opt--dot"><input type="radio" name="presupuesto" value="$5 – $15 millones"><span>$5 – $15 millones</span></label>
+              <label class="g-opt g-opt--dot"><input type="radio" name="presupuesto" value="$15 – $40 millones"><span>$15 – $40 millones</span></label>
+              <label class="g-opt g-opt--dot"><input type="radio" name="presupuesto" value="Más de $40 millones"><span>Más de $40 millones</span></label>
+              <label class="g-opt g-opt--dot"><input type="radio" name="presupuesto" value="Aún no lo sé" checked><span>Aún no lo sé, oriéntenme</span></label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="g-blk g-tr g-gap" data-say="CORTE A:"><div class="g-real"><p>CORTE A:</p></div></div>
+
+        <div class="g-blk g-b g-gap" data-say="INT. CUÉNTANOS TU IDEA — CONTINUO"><div class="g-real"><p><mark>INT. CUÉNTANOS TU IDEA — CONTINUO</mark></p></div></div>
+        <div class="g-blk g-gap" data-say="Escríbelo como si ya lo estuvieras viendo. Una línea basta; diez, también.">
+          <div class="g-real">
+            <p>Escríbelo como si ya lo estuvieras viendo. Una línea basta; diez, también.</p>
+            <textarea class="g-idea" name="idea" rows="6" aria-label="Cuéntanos tu idea" placeholder="Abre en negro. Se escucha una respiración. Corte a una azotea en Bogotá, de noche…" required></textarea>
+            <p class="g-note">Referencias (links, moodboard, demo): <input class="g-f g-f--refs" name="referencias" placeholder="pega aquí tus links" aria-label="Referencias"></p>
+          </div>
+        </div>
+
+        <div class="g-blk g-ch" data-say="TÚ"><div class="g-real"><p>TÚ</p></div></div>
+        <div class="g-blk g-dl g-gap" data-say="Me pueden escribir a __________ o al WhatsApp ________.">
+          <div class="g-real"><p>Me pueden escribir a <input class="g-f g-f--mail" type="email" name="correo" autocomplete="email" placeholder="correo" aria-label="Correo" required> o al WhatsApp <input class="g-f g-f--tel" type="tel" name="whatsapp" autocomplete="tel" placeholder="+57" aria-label="WhatsApp">.</p></div>
+        </div>
+
+        <div class="g-blk g-tr" data-say="FUNDIDO A NEGRO.">
+          <div class="g-real">
+            <p>FUNDIDO A NEGRO.</p>
+            <div class="g-send">
+              <p class="mono g-send__note" data-guion-msg>Te respondemos en 24 h hábiles con una propuesta y un presupuesto por etapas.</p>
+              <button class="g-send__btn" type="submit">Enviar guion <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
 </main>
 
 <footer class="sec sec--navy p-ftr" id="contacto">

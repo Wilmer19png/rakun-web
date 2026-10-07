@@ -408,6 +408,119 @@ function initCta() {
   btn.addEventListener('blur', calm);
 }
 
+/* ==========================================================================
+   006b · Cotizar: el guion se despliega y se escribe a máquina
+   Cada .g-blk teclea su data-say; al terminar aparece el contenido real (.g-real).
+   ========================================================================== */
+const GUION_MAIL = 'rakundesigns@gmail.com';
+const GUION_TICK = 32;                                   // ms por golpe de tecla
+function initGuion() {
+  const sec = $('[data-guion]');
+  const form = $('[data-guion-form]');
+  if (!sec || !form) return;
+  const openers = $$('[data-guion-open]');
+  const blocks = $$('.g-blk', form);
+  const status = $('[data-guion-status]', sec);
+  const total = blocks.reduce((n, b) => n + b.dataset.say.length, 0);
+  let timer = null;
+  let typedOnce = false;
+
+  // el texto tecleado vive en un <p> aparte, oculto para lectores de pantalla
+  blocks.forEach((b) => {
+    const ghost = document.createElement('p');
+    ghost.className = 'g-ghost';
+    ghost.setAttribute('aria-hidden', 'true');
+    b.prepend(ghost);
+  });
+  sec.classList.add('is-closed');
+
+  const finish = () => {
+    clearTimeout(timer);
+    blocks.forEach((b) => { b.classList.remove('is-wait', 'is-typing'); b.classList.add('is-done'); });
+    sec.classList.remove('is-typing');
+    status.textContent = 'Listo. Llena los espacios en rosado.';
+    typedOnce = true;
+  };
+
+  const type = () => {
+    clearTimeout(timer);
+    blocks.forEach((b) => { b.classList.remove('is-done', 'is-typing'); b.classList.add('is-wait'); $('.g-ghost', b).textContent = ''; });
+    sec.classList.add('is-typing');
+    let bi = 0, ci = 0, done = 0, beat = 0;
+    const step = () => {
+      const b = blocks[bi];
+      if (!b) { finish(); return; }
+      const say = b.dataset.say;
+      if (ci === 0) { b.classList.remove('is-wait'); b.classList.add('is-typing'); }
+      const n = 2 + (beat++ % 3);                        // golpes irregulares: pocos cuadros
+      ci = Math.min(say.length, ci + n);
+      done += n;
+      $('.g-ghost', b).textContent = say.slice(0, ci);
+      status.textContent = `● Escribiendo… ${Math.min(99, Math.round((done / total) * 100))}%`;
+      if (ci >= say.length) { b.classList.remove('is-typing'); b.classList.add('is-done'); bi++; ci = 0; }
+      timer = setTimeout(step, ci === 0 ? GUION_TICK * 3 : GUION_TICK);
+    };
+    step();
+  };
+
+  const open = () => {
+    const first = sec.classList.contains('is-closed');
+    sec.classList.remove('is-closed');
+    openers.forEach((o) => o.setAttribute('aria-expanded', 'true'));
+    scrollToEl(sec);
+    if (first && !typedOnce) {
+      if (reduced) finish();
+      else setTimeout(type, 500);
+    }
+  };
+
+  openers.forEach((o) => o.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();                                 // que initAnchors no lo trate como ancla normal
+    open();
+  }));
+  $('[data-guion-skip]', sec).addEventListener('click', finish);
+  $('[data-guion-replay]', sec).addEventListener('click', () => (reduced ? finish() : type()));
+
+  // TODO: cuando haya backend, enviar a un endpoint en lugar de abrir el correo
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (sec.classList.contains('is-typing')) finish();
+    const bad = $$('[required]', form).find((f) => !f.checkValidity());
+    const msg = $('[data-guion-msg]', form);
+    if (bad) {
+      msg.textContent = bad.name === 'correo' ? 'Falta un correo válido para responderte.' : `Falta: ${bad.getAttribute('aria-label')}.`;
+      msg.classList.add('is-error');
+      bad.focus();
+      return;
+    }
+    msg.classList.remove('is-error');
+    const d = new FormData(form);
+    const etapas = d.getAll('etapas').join(', ') || 'Por definir';
+    const body = [
+      'FADE IN:', '',
+      'INT. TU PROYECTO — DÍA', '',
+      `Nombre: ${d.get('nombre')}`,
+      `Proyecto: ${d.get('tipo')}`,
+      `Etapas: ${etapas}`,
+      `Fecha: ${d.get('fecha') || 'Por definir'}`,
+      `Locación: ${d.get('locacion') || 'Por definir'}`,
+      `Presupuesto: ${d.get('presupuesto')}`, '',
+      'CUÉNTANOS TU IDEA:', d.get('idea'), '',
+      `Referencias: ${d.get('referencias') || '—'}`,
+      `Correo: ${d.get('correo')}`,
+      `WhatsApp: ${d.get('whatsapp') || '—'}`, '',
+      'FUNDIDO A NEGRO.',
+    ].join('\n');
+    const subject = `Guion de cotización · ${d.get('tipo')} · ${d.get('nombre')}`;
+    window.location.href = `mailto:${GUION_MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    msg.textContent = 'Se abrió tu correo con el guion listo. Solo dale enviar.';
+  });
+
+  // si llegan directo a #guion, se abre
+  if (location.hash === '#guion' || location.hash === '#cotizar-guion') open();
+}
+
 /* ---------- Anclas: las etapas se abren desde el menú y la sub-navegación ---------- */
 function initAnchors() {
   document.addEventListener('click', (e) => {
@@ -443,6 +556,7 @@ initSet();
 initCrew();
 initTapes();
 initCta();
+initGuion();
 initAnchors();
 
 const hdrEye = $('[data-eye="eye-hdr"]');
