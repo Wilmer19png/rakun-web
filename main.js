@@ -287,18 +287,6 @@ function scrollAnimations() {
     },
   });
 
-  // Proceso: los aros se llenan con el scroll
-  $$('.step').forEach((step) => {
-    $$('.r', step).forEach((r) => {
-      const track = r.cloneNode();
-      track.setAttribute('class', 'r-track');
-      r.before(track);
-    });
-    const tl = gsap.timeline({ scrollTrigger: { trigger: step, start: 'top 88%', end: 'top 45%', scrub: 0.6 } });
-    tl.fromTo($$('.r', step), { strokeDasharray: '0 1' }, { strokeDasharray: '1 0', ease: 'none', stagger: 0.18, duration: 1 }, 0)
-      .fromTo($('.r-core', step), { scale: 0 }, { scale: 1, ease: 'back.out(2)', duration: 0.5 }, 0.55);
-  });
-
   // Videos y estrategia viven ahora en marca.html: solo se animan si la sección está en la página
   if ($('.reels__grid')) {
     gsap.from('.reel', {
@@ -339,6 +327,34 @@ function scrollAnimations() {
 }
 
 /* ---------- Marquee infinito (velocidad según scroll) ---------- */
+// ---------- Cómo trabajamos: la línea roja recorre los 4 pasos ----------
+const TL_DURATION = 3200; // ms que tarda el rojo en cruzar toda la línea (debe coincidir con el CSS)
+function initTimeline() {
+  const tl = $('[data-tl]');
+  if (!tl) return;
+  const steps = $$('.tl__step', tl);
+  if (reduced || !('IntersectionObserver' in window)) {
+    tl.classList.add('is-run');
+    steps.forEach((s) => s.classList.add('is-on'));
+    return;
+  }
+  tl.dataset.armed = '';
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    tl.classList.add('is-run');
+    // cada paso se enciende cuando el rojo (avance lineal) llega a su nodo
+    const width = tl.getBoundingClientRect().width;
+    const left = tl.getBoundingClientRect().left;
+    steps.forEach((s) => {
+      const node = $('.tl__node', s).getBoundingClientRect();
+      const at = (node.left + node.width / 2 - left) / width;
+      setTimeout(() => s.classList.add('is-on'), Math.max(0, at) * TL_DURATION);
+    });
+  }, { threshold: 0.45 });
+  io.observe(tl);
+}
+
 function initMarquee() {
   const track = $('[data-marquee]');
   if (!track) return;
@@ -615,6 +631,7 @@ initMegaMenu();
 initCursor();
 mountEyes();
 initMarquee();
+initTimeline();
 initCarousel();
 initReels();
 initPillars();

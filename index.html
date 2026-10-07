@@ -458,43 +458,74 @@
           <h2 class="display display--md reveal" id="process-title">Cómo <em>trabajamos</em></h2>
           <p class="block__aside">Cuatro pasos, cero relleno. Cada fase termina con algo que puedes ver y aprobar.</p>
         </div>
-        <ol class="steps">
-          <li class="step">
-            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
-              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
-            </svg>
-            <span class="step__num mono">01</span>
-            <h3 class="step__title">Descubrir</h3>
-            <p>Entendemos quién eres, a quién le hablas y qué te hace distinto.</p>
+        <!-- Línea de tiempo: visual arriba, nodo sobre la línea, texto abajo. La línea roja avanza al entrar en pantalla. -->
+        <ol class="tl" data-tl>
+          <li class="tl__step">
+            <div class="tl__art tl-find" aria-hidden="true">
+              <span class="tl-find__lens">
+                <svg viewBox="0 0 212 140">
+                  <defs><clipPath id="tl-eye"><path d="M36 12L100 12C146 12 174 36 194 123.83L32 24.69Q26 16 36 12Z"/></clipPath></defs>
+                  <path d="M10 5L100 4C152 4 182 34 204 134L8 14Q2 9 10 5Z" fill="#1B1A35"/>
+                  <line x1="26" y1="23.02" x2="207" y2="133.79" stroke="#FF2C68" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M36 12L100 12C146 12 174 36 194 123.83L32 24.69Q26 16 36 12Z" fill="#2BCDFF"/>
+                  <g clip-path="url(#tl-eye)"><g transform="translate(118 74)"><circle r="58" fill="#FFF02B"/><circle r="40" fill="#FF2C68"/><circle r="24.5" fill="#fff"/><circle r="21" fill="#1B1A35"/></g></g>
+                </svg>
+              </span>
+              <span class="tl-find__handle"></span>
+              <span class="tl-note tl-note--y" style="--x: 58%; --y: 4%; --r: 4deg">¿quién eres?</span>
+              <span class="tl-note tl-note--p" style="--x: 38%; --y: 40%; --r: -3deg">¿qué te hace distinto?</span>
+              <span class="tl-note" style="--x: 0%; --y: 86%; --r: -4deg">¿a quién le hablas?</span>
+            </div>
+            <span class="tl__node" aria-hidden="true"></span>
+            <p class="tl__when mono">01 · Semana 1</p>
+            <h3 class="tl__title">Descubrir</h3>
+            <p class="tl__text">Entendemos quién eres, a quién le hablas y qué te hace distinto.</p>
+            <span class="tl__out mono">Entrega · Diagnóstico</span>
           </li>
-          <li class="step">
-            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
-              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
-            </svg>
-            <span class="step__num mono">02</span>
-            <h3 class="step__title">Definir</h3>
-            <p>Convertimos eso en una estrategia y un concepto visual claro.</p>
+          <li class="tl__step">
+            <div class="tl__art tl-brief" aria-hidden="true">
+              <div class="tl-brief__card">
+                <span class="tl-brief__tape"></span>
+                <p class="mono">Brief · Nº 002</p>
+                <p class="tl-brief__row">Público <b>✓</b></p>
+                <p class="tl-brief__row">Tono <b>✓</b></p>
+                <p class="tl-brief__row">Concepto <b>✓</b><span class="tl-brief__ring"></span></p>
+              </div>
+            </div>
+            <span class="tl__node" aria-hidden="true"></span>
+            <p class="tl__when mono">02 · Semana 2</p>
+            <h3 class="tl__title">Definir</h3>
+            <p class="tl__text">Convertimos eso en una estrategia y un concepto visual claro.</p>
+            <span class="tl__out mono">Entrega · Estrategia + concepto</span>
           </li>
-          <li class="step">
-            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
-              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
-            </svg>
-            <span class="step__num mono">03</span>
-            <h3 class="step__title">Diseñar</h3>
-            <p>Identidad, piezas y pantallas con actitud, listas para usar.</p>
+          <li class="tl__step">
+            <div class="tl__art tl-swatch" aria-hidden="true">
+              <span class="tl-swatch__chip" style="--c: var(--navy); --i: -1.5"><i></i>RK-NAVY</span>
+              <span class="tl-swatch__chip" style="--c: var(--blue); --i: -.5"><i></i>RK-AZUL</span>
+              <span class="tl-swatch__chip" style="--c: var(--yellow); --i: .5"><i></i>RK-AMAR</span>
+              <span class="tl-swatch__chip" style="--c: var(--pink); --i: 1.5"><i></i>RK-ROSA</span>
+              <span class="tl-swatch__tag">Crear</span>
+            </div>
+            <span class="tl__node" aria-hidden="true"></span>
+            <p class="tl__when mono">03 · Semanas 3-4</p>
+            <h3 class="tl__title">Diseñar</h3>
+            <p class="tl__text">Identidad, piezas y pantallas con actitud, listas para usar.</p>
+            <span class="tl__out mono">Entrega · Piezas para aprobar</span>
           </li>
-          <li class="step">
-            <svg class="step__rings" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="r r1" cx="60" cy="60" r="52" pathLength="1"/><circle class="r r2" cx="60" cy="60" r="38" pathLength="1"/>
-              <circle class="r r3" cx="60" cy="60" r="25" pathLength="1"/><circle class="r-core" cx="60" cy="60" r="11"/>
-            </svg>
-            <span class="step__num mono">04</span>
-            <h3 class="step__title">Lanzar</h3>
-            <p>Salimos al mundo contigo y medimos que todos estén mirando.</p>
+          <li class="tl__step">
+            <div class="tl__art tl-live" aria-hidden="true">
+              <span class="tl-live__phone"><span class="tl-live__screen"><i class="tl-live__play"></i><i class="tl-live__cap"></i><i class="tl-live__cap tl-live__cap--y"></i></span></span>
+              <span class="tl-note tl-note--y tl-live__views" style="--x: 62%; --y: 14%; --r: -4deg">▲ 12.4K</span>
+              <svg class="tl-live__burst" viewBox="-50 -50 100 100"><polygon points="0,-48 9,-18 38,-30 20,-5 46,10 16,14 22,44 0,22 -22,44 -16,14 -46,10 -20,-5 -38,-30 -9,-18"/></svg>
+              <span class="tl-live__air mono">¡Al aire!</span>
+            </div>
+            <span class="tl__node" aria-hidden="true"></span>
+            <p class="tl__when mono">04 · Al aire</p>
+            <h3 class="tl__title">Lanzar</h3>
+            <p class="tl__text">Salimos al mundo contigo y medimos que todos estén mirando.</p>
+            <span class="tl__out mono">Entrega · Publicación + métricas</span>
           </li>
+          <li class="tl__line" aria-hidden="true"><span class="tl__fill"></span></li>
         </ol>
       </div>
 
