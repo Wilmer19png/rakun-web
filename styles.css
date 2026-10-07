@@ -1393,3 +1393,15 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
   .mega--3 { grid-template-columns: minmax(0, 1fr); }
   .mega__world--c { padding: 0 0 24px; border: 0; background: none; }
 }
+
+/* Puerta: entrar a la home sin elegir mundo */
+.door__enter {
+  align-self: flex-start;
+  padding: 6px 0 4px;
+  color: var(--mist);
+  border-bottom: 1px solid currentColor;
+  transition: color .15s steps(2);
+}
+.door__enter:hover, .door__enter:focus-visible { color: var(--white); }
+.door.is-staging .door__enter { opacity: 0; translate: 0 14px; }
+.door.is-staging .door__enter.is-in { opacity: 1; translate: 0 0; }

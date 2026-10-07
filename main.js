@@ -299,17 +299,19 @@ function scrollAnimations() {
       .fromTo($('.r-core', step), { scale: 0 }, { scale: 1, ease: 'back.out(2)', duration: 0.5 }, 0.55);
   });
 
-  // Videos: entrada escalonada
-  gsap.from('.reel', {
-    y: 80, opacity: 0, duration: 1.1, ease: 'expo.out', stagger: 0.08,
-    scrollTrigger: { trigger: '.reels__grid', start: 'top 85%', once: true },
-  });
-
-  // Estrategia: pilares en cascada
-  gsap.from('.pillar', {
-    x: -30, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.08,
-    scrollTrigger: { trigger: '.pillars', start: 'top 85%', once: true },
-  });
+  // Videos y estrategia viven ahora en marca.html: solo se animan si la sección está en la página
+  if ($('.reels__grid')) {
+    gsap.from('.reel', {
+      y: 80, opacity: 0, duration: 1.1, ease: 'expo.out', stagger: 0.08,
+      scrollTrigger: { trigger: '.reels__grid', start: 'top 85%', once: true },
+    });
+  }
+  if ($('.pillars')) {
+    gsap.from('.pillar', {
+      x: -30, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.08,
+      scrollTrigger: { trigger: '.pillars', start: 'top 85%', once: true },
+    });
+  }
 
   // Cifras con contador
   $$('[data-count]').forEach((el) => {
@@ -533,7 +535,7 @@ function runDoor() {
   }
   lenis?.stop();
   const eye = new RakunEye($('[data-door-eye]', door), { prefix: 'eye-door', openness: 0 });
-  const staged = $$('.door__kicker, .door__q, .ticket, .door__fine', door);
+  const staged = $$('.door__kicker, .door__q, .ticket, .door__enter, .door__fine', door);
   door.tabIndex = -1;
   door.focus({ preventScroll: true });
 
@@ -591,7 +593,8 @@ function runDoor() {
       }
     };
 
-    $('[data-door-pick="marca"]', door).addEventListener('click', () => leave('marca'));
+    // "Solo vengo a mirar": la puerta se abre hacia la home
+    $('[data-door-enter]', door).addEventListener('click', () => leave('home'));
     // los otros mundos (Producción, Web y apps) son páginas aparte
     $$('a[data-door-pick]', door).forEach((a) => a.addEventListener('click', (e) => {
       e.preventDefault();

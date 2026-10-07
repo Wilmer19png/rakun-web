@@ -268,8 +268,10 @@ function initPlans() {
   $('[data-quarterly]').addEventListener('click', () => { state.quarterly = !state.quarterly; render(false); });
 
   const fromHash = location.hash.slice(1);
-  if (DATA[fromHash]) setProfile(fromHash);
-  else render(false);
+  if (DATA[fromHash]) {
+    setProfile(fromHash);
+    requestAnimationFrame(() => $('#planes').scrollIntoView());   // llega desde otra página: directo a los planes
+  } else render(false);
 }
 
 /* ==========================================================================
@@ -334,6 +336,50 @@ function initSos() {
   }
 }
 
+/* ---------- Estrategia: "Ver más" despliega el detalle de cada pilar ---------- */
+function initPillars() {
+  $$('.pillar__more').forEach((btn) => {
+    const panel = document.getElementById(btn.getAttribute('aria-controls'));
+    const label = btn.firstChild;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      label.textContent = open ? 'Ver menos' : 'Ver más';
+      btn.closest('.pillar').classList.toggle('is-open', open);
+      panel.hidden = !open;
+    });
+  });
+}
+
+/* ---------- Referencias: cada <video data-src> carga al acercarse y se reproduce en bucle ---------- */
+function initReels() {
+  $$('.reel').forEach((reel) => {
+    const video = $('video', reel);
+    const btn = $('.reel__play', reel);
+    const src = video?.dataset.src;
+    if (!src) { if (btn) btn.hidden = true; return; }
+    let userPaused = reduced;
+    const setIcon = (playing) => {
+      btn.querySelector('use').setAttribute('href', playing ? '#i-pause' : '#i-play');
+      btn.setAttribute('aria-label', btn.getAttribute('aria-label').replace(/^(Reproducir|Pausar)/, playing ? 'Pausar' : 'Reproducir'));
+    };
+    const load = () => {
+      if (video.src) return;
+      if (video.dataset.poster) video.poster = video.dataset.poster;
+      video.src = src;
+      video.addEventListener('loadeddata', () => video.classList.add('is-ready'), { once: true });
+    };
+    const play = () => { load(); video.play().then(() => setIcon(true)).catch(() => {}); };
+    btn.addEventListener('click', () => {
+      if (video.paused) { userPaused = false; play(); } else { userPaused = true; video.pause(); setIcon(false); }
+    });
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { load(); if (!userPaused) play(); }
+      else if (!video.paused) { video.pause(); setIcon(false); }
+    }, { rootMargin: '200px 0px', threshold: 0.25 }).observe(reel);
+  });
+}
+
 /* ---------- WhatsApp: enlaces con mensaje ya escrito ---------- */
 function initWhatsapp() {
   $$('[data-whatsapp]').forEach((a) => { a.href = waLink(a.dataset.whatsapp); a.target = '_blank'; a.rel = 'noopener'; });
@@ -357,7 +403,7 @@ function initAnchors() {
       e.preventDefault();
       closeMenu();
       setProfile(id);
-      const target = $('#inicio');
+      const target = $('#planes');
       if (lenis) lenis.scrollTo(target, { duration: 1 }); else target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
       return;
     }
@@ -381,6 +427,8 @@ initCursor();
 initAnchors();
 initPlans();
 initSos();
+initPillars();
+initReels();
 initWhatsapp();
 
 const hdrEye = $('[data-eye="eye-hdr"]');

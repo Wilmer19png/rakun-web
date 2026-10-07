@@ -191,13 +191,13 @@
     <p class="mono door__kicker">Antes de entrar</p>
     <h2 class="door__q" id="door-q">¿Qué <em>buscas?</em></h2>
     <div class="door__picks">
-      <button class="ticket" type="button" data-door-pick="marca" data-eye-target style="--t: var(--yellow)">
+      <a class="ticket" href="marca.html" data-door-pick="marca" data-eye-target style="--t: var(--yellow)">
         <span class="mono ticket__n">Mundo 01</span>
         <span class="ticket__name">Marca personal</span>
         <span class="ticket__line">Para quienes viven de su imagen.</span>
-        <span class="mono ticket__tags">Influencers · Médicos · Mentores</span>
+        <span class="mono ticket__tags">Creadores · Médicos · Mentores</span>
         <svg class="ico ticket__ico" aria-hidden="true"><use href="#i-ne"/></svg>
-      </button>
+      </a>
       <a class="ticket ticket--b" href="produccion.html" data-door-pick="prod" data-eye-target style="--t: var(--blue)">
         <span class="mono ticket__n">Mundo 02</span>
         <span class="ticket__name">Producción audiovisual</span>
@@ -213,6 +213,7 @@
         <svg class="ico ticket__ico" aria-hidden="true"><use href="#i-ne"/></svg>
       </a>
     </div>
+    <button class="door__enter mono" type="button" data-door-enter>Solo vengo a mirar <span aria-hidden="true">→</span> entrar a RAKÜN</button>
     <p class="mono door__fine" aria-hidden="true">fig. 000 — la puerta · 4.7110° N · 74.0721° W</p>
   </div>
   <span class="door__cut" aria-hidden="true"></span>
@@ -248,9 +249,9 @@
         <p class="mono mega__kicker">Mundo 01 · Marca personal</p>
         <p class="mega__title" id="mega-a">Para quienes <em>viven</em> de su imagen.</p>
         <ul class="mega__list">
-          <li><a href="planes.html#creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Marca · Contenido · Media kit</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-          <li><a href="planes.html#medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Identidad · Confianza · Pacientes</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-          <li><a href="planes.html#mentor"><span class="mega__sw" style="--sw: linear-gradient(135deg, var(--yellow) 50%, var(--blue) 50%)"></span><span><span class="mega__name">Mentores</span><span class="mono">Autoridad · Cursos · Lanzamientos</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="marca.html#creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Marca · Contenido · Media kit</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="marca.html#medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Identidad · Confianza · Pacientes</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="marca.html#mentor"><span class="mega__sw" style="--sw: linear-gradient(135deg, var(--yellow) 50%, var(--blue) 50%)"></span><span><span class="mega__name">Mentores</span><span class="mono">Autoridad · Cursos · Lanzamientos</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
         </ul>
       </section>
       <section class="mega__world mega__world--b" aria-labelledby="mega-b">
@@ -352,65 +353,66 @@
     <div class="sec__body">
       <div class="focus__head">
         <h2 class="display reveal" id="focus-title">Nos enfocamos en quienes quieren ser <em class="scribbled">vistos.<svg class="scribble" viewBox="0 0 260 96" preserveAspectRatio="none" aria-hidden="true"><path d="M30 60 C 10 30, 80 6, 150 8 C 220 10, 262 32, 246 60 C 230 86, 120 94, 60 82 C 20 74, 14 50, 44 32"/></svg></em></h2>
-        <p class="focus__aside">Tres perfiles, tres maneras de llamar la atención. Elige el tuyo y entra a una página pensada solo para ti.</p>
+        <p class="focus__aside">Tres especialidades, una sola mirada. Entra a la que necesitas: cada una tiene su propia página, pensada solo para eso.</p>
       </div>
 
       <div class="cards">
         <article class="card" style="--c: var(--yellow); --c-ink: var(--navy)">
-          <a class="card__link" href="planes.html#creador" data-eye-target>
+          <a class="card__link" href="marca.html" data-eye-target>
             <span class="card__top">
               <span class="card__num">01</span>
               <svg class="ico card__arrow" aria-hidden="true"><use href="#i-e"/></svg>
             </span>
             <span class="card__media" aria-hidden="true">
               <svg class="card__spikes" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
-              <span class="card__tag mono">Reels · Marca · Media kit</span>
+              <span class="card__tag mono">Creadores · Médicos · Mentores</span>
             </span>
-            <h3 class="card__title">Influencers</h3>
-            <span class="card__desc">Marca personal, contenido y media kit para que las marcas te busquen a ti.</span>
-            <span class="card__tags mono">Marca personal · Contenido · Media kit</span>
+            <h3 class="card__title">Marca personal</h3>
+            <span class="card__desc">Contenido, estrategia y pauta para que no puedan dejar de mirarte. Con planes mensuales y sin letra pequeña.</span>
+            <span class="card__tags mono">Reels · Estrategia · Pauta · Planes</span>
           </a>
         </article>
 
         <article class="card" style="--c: var(--blue); --c-ink: var(--navy)">
-          <a class="card__link" href="planes.html#medico" data-eye-target>
+          <a class="card__link" href="produccion.html" data-eye-target>
             <span class="card__top">
               <span class="card__num">02</span>
               <svg class="ico card__arrow" aria-hidden="true"><use href="#i-e"/></svg>
             </span>
             <span class="card__media" aria-hidden="true">
               <svg class="card__spikes" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
-              <span class="card__tag mono">Consulta · Confianza · Pacientes</span>
+              <span class="card__tag mono">Videoclips · Cortos · Comerciales</span>
             </span>
-            <h3 class="card__title">Médicos</h3>
-            <span class="card__desc">Identidad profesional que transmite confianza y convierte seguidores en pacientes.</span>
-            <span class="card__tags mono">Identidad · Confianza · Captación</span>
+            <h3 class="card__title">Producción audiovisual</h3>
+            <span class="card__desc">Historias que se ruedan: de la idea al último render, con un equipo completo en el set.</span>
+            <span class="card__tags mono">Preproducción · Rodaje · Postproducción</span>
           </a>
         </article>
 
         <article class="card card--mentor" style="--c: var(--navy); --c-ink: var(--white)">
-          <a class="card__link" href="planes.html#mentor" data-eye-target>
+          <a class="card__link" href="web.html" data-eye-target>
             <span class="card__top">
               <span class="card__num">03</span>
               <svg class="ico card__arrow" aria-hidden="true"><use href="#i-e"/></svg>
             </span>
             <span class="card__media" aria-hidden="true">
               <svg class="card__spikes" viewBox="-50 -50 100 100"><use href="#rk-burst"/></svg>
-              <span class="card__tag mono">Cursos · Programas · Lanzamientos</span>
+              <span class="card__tag mono">Sitios · Landings · Tiendas · Apps</span>
             </span>
-            <h3 class="card__title">Mentores</h3>
-            <span class="card__desc">Autoridad visual para lanzamientos, cursos y programas que se venden solos.</span>
-            <span class="card__tags mono">Autoridad · Lanzamientos · Cursos</span>
+            <h3 class="card__title">Páginas web y apps</h3>
+            <span class="card__desc">Pantallas que no puedes dejar de mirar: rápidas, encontrables y hechas para convertir.</span>
+            <span class="card__tags mono">Diseño UI · Desarrollo · SEO</span>
           </a>
         </article>
       </div>
 
-      <ol class="services" aria-label="Servicios">
+      <ol class="services" aria-label="Lo que hay detrás de los tres mundos">
         <li><span class="mono">01</span> Estrategia</li>
         <li><span class="mono">02</span> Identidad</li>
-        <li><span class="mono">03</span> Digital</li>
-        <li><span class="mono">04</span> Contenido <svg class="ico" aria-hidden="true"><use href="#i-e"/></svg></li>
+        <li><span class="mono">03</span> Contenido</li>
+        <li><span class="mono">04</span> Tecnología <svg class="ico" aria-hidden="true"><use href="#i-e"/></svg></li>
       </ol>
+
     </div>
   </section>
 
@@ -443,134 +445,10 @@
   </section>
 
   <!-- ==============================================================
-       005 · ESTRATEGIA DIGITAL
-       ============================================================== -->
-  <section class="sec sec--navy strategy" id="estrategia" aria-labelledby="strategy-title">
-    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Estrategia</span></div>
-    <div class="sec__body">
-      <div class="strategy__head">
-        <h2 class="display reveal" id="strategy-title">Estrategia <em>digital</em></h2>
-        <div class="strategy__aside">
-          <p class="strategy__lede">Diseño bonito sin estrategia es ruido. Antes de dibujar definimos a quién le hablas, dónde te van a ver y qué tienen que hacer cuando te vean.</p>
-          <a class="link" href="mailto:rakundesigns@gmail.com?subject=Quiero%20una%20estrategia%20digital" data-eye-target>Pide tu diagnóstico <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
-        </div>
-      </div>
-
-      <ol class="pillars" data-pillars>
-        <li class="pillar" style="--pc: var(--pink)">
-          <div class="pillar__row">
-            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-diag"/></svg></span>
-            <span class="pillar__n mono">01</span>
-            <h3 class="pillar__title">Diagnóstico</h3>
-            <p class="pillar__short">Qué comunica hoy tu imagen.</p>
-            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-1">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="pillar__detail" id="pillar-1" hidden>
-            <div class="pillar__inner">
-              <p>Auditamos tu perfil, tu competencia y lo que hoy comunica tu imagen para saber desde dónde partimos.</p>
-              <ul class="pillar__list">
-                <li>Auditoría de perfil y redes</li>
-                <li>Análisis de competencia y referentes</li>
-                <li>Mapa de tu audiencia</li>
-                <li>Informe con prioridades</li>
-              </ul>
-              <span class="pillar__out mono">Entrega: auditoría de marca y perfil</span>
-            </div>
-          </div>
-        </li>
-        <li class="pillar" style="--pc: var(--yellow)">
-          <div class="pillar__row">
-            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-target"/></svg></span>
-            <span class="pillar__n mono">02</span>
-            <h3 class="pillar__title">Posicionamiento</h3>
-            <p class="pillar__short">El lugar que vas a ocupar.</p>
-            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-2">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="pillar__detail" id="pillar-2" hidden>
-            <div class="pillar__inner">
-              <p>Definimos tu territorio, tu mensaje y el tono con el que te van a recordar.</p>
-              <ul class="pillar__list">
-                <li>Propuesta de valor</li>
-                <li>Mensajes clave y tono de voz</li>
-                <li>Territorio visual</li>
-                <li>Bio y pitch de presentación</li>
-              </ul>
-              <span class="pillar__out mono">Entrega: plataforma de marca</span>
-            </div>
-          </div>
-        </li>
-        <li class="pillar" style="--pc: var(--blue)">
-          <div class="pillar__row">
-            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-plan"/></svg></span>
-            <span class="pillar__n mono">03</span>
-            <h3 class="pillar__title">Plan de contenido</h3>
-            <p class="pillar__short">Publicar con intención.</p>
-            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-3">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="pillar__detail" id="pillar-3" hidden>
-            <div class="pillar__inner">
-              <p>Pilares, formatos y calendario para publicar con intención, no por obligación.</p>
-              <ul class="pillar__list">
-                <li>Pilares de contenido</li>
-                <li>Formatos por red social</li>
-                <li>Calendario mensual</li>
-                <li>Guiones y copys</li>
-              </ul>
-              <span class="pillar__out mono">Entrega: calendario y guiones</span>
-            </div>
-          </div>
-        </li>
-        <li class="pillar" style="--pc: var(--pink)">
-          <div class="pillar__row">
-            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-funnel"/></svg></span>
-            <span class="pillar__n mono">04</span>
-            <h3 class="pillar__title">Embudo y conversión</h3>
-            <p class="pillar__short">De seguidor a cliente.</p>
-            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-4">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="pillar__detail" id="pillar-4" hidden>
-            <div class="pillar__inner">
-              <p>Convertimos la atención en contactos y los contactos en clientes.</p>
-              <ul class="pillar__list">
-                <li>Bio y enlaces que convierten</li>
-                <li>Landing de captación</li>
-                <li>Lead magnet</li>
-                <li>Secuencia de seguimiento</li>
-              </ul>
-              <span class="pillar__out mono">Entrega: funnel y landing</span>
-            </div>
-          </div>
-        </li>
-        <li class="pillar" style="--pc: var(--yellow)">
-          <div class="pillar__row">
-            <span class="pillar__icon" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#ic-chart"/></svg></span>
-            <span class="pillar__n mono">05</span>
-            <h3 class="pillar__title">Medición</h3>
-            <p class="pillar__short">Lo que importa, cada mes.</p>
-            <button class="pillar__more mono" type="button" aria-expanded="false" aria-controls="pillar-5">Ver más<span class="pillar__plus" aria-hidden="true"></span></button>
-          </div>
-          <div class="pillar__detail" id="pillar-5" hidden>
-            <div class="pillar__inner">
-              <p>Las métricas que importan y ajustes cada mes para que todos sigan mirando.</p>
-              <ul class="pillar__list">
-                <li>KPIs según tu objetivo</li>
-                <li>Tablero mensual</li>
-                <li>Reunión de ajustes</li>
-                <li>Recomendaciones accionables</li>
-              </ul>
-              <span class="pillar__out mono">Entrega: reporte mensual</span>
-            </div>
-          </div>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- ==============================================================
        006 · ESTUDIO: proceso, videos, cifras, testimonios
        ============================================================== -->
   <section class="sec sec--cream studio" id="estudio" aria-label="Estudio">
-    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Estudio</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Estudio</span></div>
 
     <div class="sec__body">
 
@@ -620,68 +498,6 @@
         </ol>
       </div>
 
-      <!-- Videos de referencia.
-           Para cada video: pon el archivo en videos/ y escribe su ruta en data-src
-           (p. ej. data-src="videos/ref-01.mp4"). Opcional: data-poster="videos/ref-01.webp".
-           Los videos se cargan solo al acercarse, se reproducen en silencio y en bucle. -->
-      <div class="block reels" aria-labelledby="reels-title">
-        <div class="block__head">
-          <h2 class="display display--md reveal" id="reels-title">Referencias en <em>movimiento</em></h2>
-          <a class="link link--dark" href="mailto:rakundesigns@gmail.com?subject=Quiero%20ver%20el%20portafolio">Pide el portafolio completo <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
-        </div>
-        <ul class="reels__grid">
-          <li class="reel" style="--c: var(--pink)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 01: reel de lanzamiento"></video><button class="reel__play" type="button" aria-label="Reproducir video 01"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Reel de lanzamiento</span><span class="reel__meta mono">01 · Influencer · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--blue)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 02: consulta en 30 segundos"></video><button class="reel__play" type="button" aria-label="Reproducir video 02"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Consulta en 30 s</span><span class="reel__meta mono">02 · Médico · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--yellow)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 03: media kit animado"></video><button class="reel__play" type="button" aria-label="Reproducir video 03"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Media kit animado</span><span class="reel__meta mono">03 · Influencer · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--navy-deep)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 04: tráiler de curso"></video><button class="reel__play" type="button" aria-label="Reproducir video 04"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Tráiler de curso</span><span class="reel__meta mono">04 · Mentor · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--blue)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 05: identidad en movimiento"></video><button class="reel__play" type="button" aria-label="Reproducir video 05"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Identidad en movimiento</span><span class="reel__meta mono">05 · Médico · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--pink)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 06: campaña de contenido"></video><button class="reel__play" type="button" aria-label="Reproducir video 06"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Campaña de contenido</span><span class="reel__meta mono">06 · Influencer · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--navy-deep)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 07: webinar de autoridad"></video><button class="reel__play" type="button" aria-label="Reproducir video 07"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Webinar de autoridad</span><span class="reel__meta mono">07 · Mentor · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--yellow)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 08: detrás de cámaras"></video><button class="reel__play" type="button" aria-label="Reproducir video 08"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Detrás de cámaras</span><span class="reel__meta mono">08 · Estudio · 9:16</span></figcaption>
-            </figure>
-          </li>
-        </ul>
-        <p class="placeholder-note mono">* Espacios listos para tus videos de referencia: agrega cada archivo en data-src.</p>
-      </div>
-
       <!-- Por qué RAKÜN — TODO: cifras de muestra, reemplazar por las reales -->
       <div class="block why" aria-labelledby="why-title">
         <div class="block__head">
@@ -711,17 +527,17 @@
           <figure class="quote is-active" data-slide style="--c: var(--pink)">
             <span class="quote__mark" aria-hidden="true"><span class="quote__glyph">“</span></span>
             <blockquote><p>Pasé de ser una cuenta más a que las marcas me escribieran a mí. La identidad cambió cómo me ven y cómo cobro.</p></blockquote>
-            <figcaption class="mono">Creadora de contenido · Bogotá</figcaption>
+            <figcaption class="mono">Creadora de contenido · Marca personal · Bogotá</figcaption>
           </figure>
           <figure class="quote" data-slide hidden style="--c: var(--blue)">
             <span class="quote__mark" aria-hidden="true"><span class="quote__glyph">“</span></span>
-            <blockquote><p>Mi consulta por fin se ve tan seria como mi trabajo. Los pacientes llegan diciendo que me encontraron por mi perfil.</p></blockquote>
-            <figcaption class="mono">Médica especialista · Medellín</figcaption>
+            <blockquote><p>Llegamos con una canción y una idea en una servilleta. Salimos con un videoclip que se ve de otro presupuesto, y sin un solo día perdido en el set.</p></blockquote>
+            <figcaption class="mono">Artista independiente · Producción audiovisual · Bogotá</figcaption>
           </figure>
           <figure class="quote" data-slide hidden style="--c: var(--yellow)">
             <span class="quote__mark" aria-hidden="true"><span class="quote__glyph">“</span></span>
-            <blockquote><p>El lanzamiento de mi programa tuvo una imagen a la altura de lo que enseño. Se notó en las ventas desde el primer día.</p></blockquote>
-            <figcaption class="mono">Mentor de negocios · Ciudad de México</figcaption>
+            <blockquote><p>Nuestra web anterior era bonita y no vendía. La nueva carga en segundos, sale en Google y los pedidos por WhatsApp se duplicaron en el primer mes.</p></blockquote>
+            <figcaption class="mono">Tienda online · Web y apps · Medellín</figcaption>
           </figure>
         </div>
         <p class="placeholder-note mono">* Testimonios de muestra, pendientes de reemplazar por testimonios reales.</p>
@@ -733,7 +549,7 @@
        007 · CTA FINAL — VER PLANES
        ============================================================== -->
   <section class="sec sec--navy cta" id="planes" aria-labelledby="cta-title">
-    <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Planes</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Planes</span></div>
     <div class="sec__body cta__body">
       <h2 class="cta__title reveal" id="cta-title"><span>¿Listo para que</span> <span class="pink">te vean?</span></h2>
 
@@ -747,16 +563,16 @@
             <span class="mega-btn__label">Ver planes</span>
             <svg class="ico mega-btn__ico" aria-hidden="true"><use href="#i-ne"/></svg>
           </button>
-          <p class="cta__hint mono">Elige tu perfil y entra a tus planes</p>
+          <p class="cta__hint mono">Elige qué necesitas y entra a tus planes</p>
         </div>
       </div>
 
       <div class="picker" id="profile-picker" data-picker hidden>
-        <p class="picker__q mono" id="picker-label">¿Quién eres?</p>
+        <p class="picker__q mono" id="picker-label">¿Qué necesitas?</p>
         <ul class="picker__list" aria-labelledby="picker-label">
-          <li><a class="pick pick--yellow" href="planes.html#creador" data-eye-target><span class="mono">01</span><span class="pick__name">Influencer</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-          <li><a class="pick pick--blue" href="planes.html#medico" data-eye-target><span class="mono">02</span><span class="pick__name">Médico</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-          <li><a class="pick pick--mix" href="planes.html#mentor" data-eye-target><span class="mono">03</span><span class="pick__name">Mentor</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a class="pick pick--yellow" href="marca.html#planes" data-eye-target><span class="mono">01</span><span class="pick__name">Marca personal</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a class="pick pick--blue" href="produccion.html#cotizar" data-eye-target><span class="mono">02</span><span class="pick__name">Producción</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a class="pick pick--mix" href="web.html#planes" data-eye-target><span class="mono">03</span><span class="pick__name">Páginas web</span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
         </ul>
       </div>
     </div>
@@ -767,7 +583,7 @@
      008 · FOOTER
      ================================================================== -->
 <footer class="sec sec--cream ftr" id="contacto">
-  <div class="rail" aria-hidden="true"><span class="rail__num">008</span><span class="rail__label">Contacto</span></div>
+  <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Contacto</span></div>
   <div class="sec__body">
     <div class="ftr__top">
       <a class="logo-h" href="#inicio" aria-label="RAKÜN Visual, volver al inicio">

@@ -220,3 +220,46 @@
 @media (prefers-reduced-motion: reduce) {
   .sos__hatch.is-knocking { animation: none; }
 }
+
+/* ==========================================================================
+   Landing de Marca personal (marca.html)
+   ========================================================================== */
+.mk-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; margin-top: 40px; }
+.mk-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 22px 12px;
+  background: var(--pink); color: var(--ink-0);
+  font: 900 1.4rem/1 var(--f-display); text-transform: uppercase;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, .5);
+  transition: translate .15s steps(2), box-shadow .15s steps(2);
+}
+.mk-btn:hover, .mk-btn:focus-visible { translate: -3px -3px; box-shadow: 9px 9px 0 rgba(0, 0, 0, .5); }
+.mk-quick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.mk-quick a {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--line-dark); border-left: 8px solid var(--t);
+  font: 900 1.3rem/1 var(--f-display); text-transform: uppercase;
+  transition: background-color .15s steps(2), color .15s steps(2);
+}
+.mk-quick a .mono { color: var(--mist); font-size: var(--fs-mono); }
+.mk-quick a .ico { margin-left: auto; width: 18px; height: 18px; }
+.mk-quick a:hover, .mk-quick a:focus-visible { background: var(--t); color: var(--ink-0); }
+.mk-quick a:hover .mono, .mk-quick a:focus-visible .mono { color: var(--ink-0); }
+
+/* referencias dentro de la landing */
+.mk-refs .block__head { margin-bottom: clamp(28px, 4vw, 48px); }
+
+/* encabezado de planes + pestañas "¿Quién eres?" sobre crema */
+.mk-plans-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; flex-wrap: wrap; margin-bottom: 8px; }
+.mk-plans-title { text-shadow: none; }
+.pl-who--dark { color: var(--ink-soft); margin-top: 40px; }
+.pl-plans .ptk { background: var(--white); }
+.pl-plans .ptk::after { background: var(--cream); }
+.pl-plans .ptk[aria-selected="true"] { background: var(--navy); color: var(--white); }
+.pl-plans .ptk[aria-selected="true"] .ptk__n, .pl-plans .ptk[aria-selected="true"] .ptk__line { color: var(--mist); }
+.mk-panel { margin-top: clamp(40px, 5vw, 64px); padding-top: clamp(32px, 4vw, 48px); border-top: 2px solid var(--navy); }
+
+@media (max-width: 960px) {
+  .mk-quick { grid-template-columns: minmax(0, 1fr); }
+}
