@@ -19,6 +19,10 @@
   margin-bottom: clamp(28px, 4vw, 44px);
 }
 .pl-head__kicker { color: var(--ink-soft); margin-bottom: 12px; }
+/* sin título grande: solo la línea de la plataforma y la explicación, en una fila */
+.pl-head--slim { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+.pl-head--slim .pl-head__kicker { margin: 0; }
+.pl-head--slim .p-head__aside { justify-self: end; max-width: 46ch; margin: 0; }
 
 /* ==========================================================================
    001 · Elige tu perfil

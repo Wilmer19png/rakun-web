@@ -18,7 +18,6 @@ const DATA = {
   creador: {
     head: {
       kicker: 'Planes mensuales · Instagram, TikTok y Facebook',
-      title: 'Para creadores que quieren <em>despegar.</em>',
       lede: 'Elige tu línea: FLUJO (mucho contenido) o IMPACTO (contenido elaborado). Todo se publica también en Facebook sin costo extra.',
     },
     color: 'var(--yellow)',
@@ -56,7 +55,6 @@ const DATA = {
   medico: {
     head: {
       kicker: 'Planes mensuales · médicos, odontólogos, veterinarios, estéticas',
-      title: 'Para llenar tu <em>agenda.</em>',
       lede: 'Grabamos en tu consultorio, editamos y movemos tu pauta. La inversión en pauta la pagas directamente a Meta.',
     },
     color: 'var(--blue)',
@@ -94,7 +92,6 @@ const DATA = {
   mentor: {
     head: {
       kicker: 'Planes mensuales de contenido',
-      title: 'Para que tu programa <em>se venda solo.</em>',
       lede: 'Investigación, ideas, plan de contenidos, guiones, edición y publicación. Tú enseñas; nosotros hacemos que te miren.',
     },
     color: 'var(--pink)',
@@ -216,7 +213,6 @@ function render(animate = true) {
   const d = DATA[state.profile];
   // encabezado
   $('[data-head-kicker]').textContent = d.head.kicker;
-  $('[data-head-title]').innerHTML = d.head.title;
   $('[data-head-lede]').textContent = d.head.lede;
   // interruptores (solo creadores)
   $('[data-switches]').hidden = state.profile !== 'creador';
