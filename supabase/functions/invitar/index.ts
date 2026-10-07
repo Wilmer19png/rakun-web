@@ -19,14 +19,31 @@ const json = (body: unknown, status = 200) =>
 
 const STAFF = ['admin', 'equipo'];
 
+// Supabase entrega las claves con nombres distintos según el proyecto:
+// las clásicas (ANON / SERVICE_ROLE) o las nuevas (PUBLISHABLE / SECRET, en formato JSON).
+function envKey(classic: string, modern: string): string {
+  const direct = Deno.env.get(classic);
+  if (direct) return direct;
+  const raw = Deno.env.get(modern) ?? '';
+  try {
+    const parsed = JSON.parse(raw);
+    if (typeof parsed === 'string') return parsed;
+    const values = Array.isArray(parsed) ? parsed : Object.values(parsed ?? {});
+    const first = values.find((v) => typeof v === 'string');
+    if (first) return first as string;
+  } catch { /* no era JSON: es la clave tal cual */ }
+  return raw;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   if (req.method !== 'POST') return json({ error: 'Método no permitido.' }, 405);
 
   try {
     const url = Deno.env.get('SUPABASE_URL')!;
-    const anon = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const service = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const anon = envKey('SUPABASE_ANON_KEY', 'SUPABASE_PUBLISHABLE_KEYS');
+    const service = envKey('SUPABASE_SERVICE_ROLE_KEY', 'SUPABASE_SECRET_KEYS');
+    if (!url || !anon || !service) return json({ error: 'La función no encuentra las claves del proyecto.' }, 500);
 
     // 1 · ¿quién está invitando?
     const caller = createClient(url, anon, { global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } } });
