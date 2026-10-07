@@ -19,7 +19,7 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 let lenis = null;
 function initLenis() {
   if (reduced || !window.Lenis) return;
-  lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true });
+  lenis = new window.Lenis({ lerp: 0.16, smoothWheel: true });
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
 }
@@ -409,68 +409,45 @@ function initCta() {
 }
 
 /* ==========================================================================
-   006b · Cotizar: el guion se despliega y se escribe a máquina
-   Cada .g-blk teclea su data-say; al terminar aparece el contenido real (.g-real).
+   006b · Cotizar: el guion se despliega listo para llenar
+   (sin máquina de escribir: se abre y se escribe de una vez)
    ========================================================================== */
-const GUION_TICK = 32;                                   // ms por golpe de tecla
 function initGuion() {
   const sec = $('[data-guion]');
   const form = $('[data-guion-form]');
   if (!sec || !form) return;
   const openers = $$('[data-guion-open]');
-  const blocks = $$('.g-blk', form);
   const status = $('[data-guion-status]', sec);
-  const total = blocks.reduce((n, b) => n + b.dataset.say.length, 0);
-  let timer = null;
-  let typedOnce = false;
-
-  // el texto tecleado vive en un <p> aparte, oculto para lectores de pantalla
-  blocks.forEach((b) => {
-    const ghost = document.createElement('p');
-    ghost.className = 'g-ghost';
-    ghost.setAttribute('aria-hidden', 'true');
-    b.prepend(ghost);
-  });
+  const msg = $('[data-guion-msg]', form);
+  const sendBtn = $('.g-send__btn', form);
+  const again = $('.g-send__again', form);
+  const intro = msg.textContent;
+  const date = form.elements.fecha;
   sec.classList.add('is-closed');
+  status.textContent = 'Llena los espacios en rosado.';
 
-  const finish = () => {
-    clearTimeout(timer);
-    blocks.forEach((b) => { b.classList.remove('is-wait', 'is-typing'); b.classList.add('is-done'); });
-    sec.classList.remove('is-typing');
-    status.textContent = 'Listo. Llena los espacios en rosado.';
-    typedOnce = true;
-  };
-
-  const type = () => {
-    clearTimeout(timer);
-    blocks.forEach((b) => { b.classList.remove('is-done', 'is-typing'); b.classList.add('is-wait'); $('.g-ghost', b).textContent = ''; });
-    sec.classList.add('is-typing');
-    let bi = 0, ci = 0, done = 0, beat = 0;
-    const step = () => {
-      const b = blocks[bi];
-      if (!b) { finish(); return; }
-      const say = b.dataset.say;
-      if (ci === 0) { b.classList.remove('is-wait'); b.classList.add('is-typing'); }
-      const n = 2 + (beat++ % 3);                        // golpes irregulares: pocos cuadros
-      ci = Math.min(say.length, ci + n);
-      done += n;
-      $('.g-ghost', b).textContent = say.slice(0, ci);
-      status.textContent = `● Escribiendo… ${Math.min(99, Math.round((done / total) * 100))}%`;
-      if (ci >= say.length) { b.classList.remove('is-typing'); b.classList.add('is-done'); bi++; ci = 0; }
-      timer = setTimeout(step, ci === 0 ? GUION_TICK * 3 : GUION_TICK);
-    };
-    step();
-  };
+  // la fecha: desde hoy en adelante, con el calendario del navegador
+  const today = new Date();
+  date.min = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const niceDate = (v) => (v ? v.split('-').reverse().join('/') : 'por definir');
+  date.addEventListener('click', () => { try { date.showPicker(); } catch { /* navegador sin showPicker */ } });
 
   const open = () => {
-    const first = sec.classList.contains('is-closed');
     sec.classList.remove('is-closed');
     openers.forEach((o) => o.setAttribute('aria-expanded', 'true'));
     scrollToEl(sec);
-    if (first && !typedOnce) {
-      if (reduced) finish();
-      else setTimeout(type, 500);
-    }
+  };
+
+  // Limpiar: hoja en blanco para mandar otra propuesta
+  const clear = () => {
+    form.reset();
+    msg.textContent = intro;
+    msg.classList.remove('is-error');
+    sendBtn.hidden = false;
+    again.hidden = true;
+    status.textContent = 'Hoja en blanco. Llena los espacios en rosado.';
+    form.elements.nombre.focus({ preventScroll: true });
+    scrollToEl(sec);
   };
 
   openers.forEach((o) => o.addEventListener('click', (e) => {
@@ -478,16 +455,13 @@ function initGuion() {
     e.stopPropagation();                                 // que initAnchors no lo trate como ancla normal
     open();
   }));
-  $('[data-guion-skip]', sec).addEventListener('click', finish);
-  $('[data-guion-replay]', sec).addEventListener('click', () => (reduced ? finish() : type()));
+  $$('[data-guion-clear]', sec).forEach((b) => b.addEventListener('click', clear));
 
   // El guion se guarda como una solicitud (tabla leads) y aparece en el gestor.
   // Si Supabase aún no está conectado, submitLead abre el correo con todo escrito.
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (sec.classList.contains('is-typing')) finish();
     const bad = $$('[required]', form).find((f) => !f.checkValidity());
-    const msg = $('[data-guion-msg]', form);
     const btn = $('button[type="submit"]', form);
     if (bad) {
       msg.textContent = bad.name === 'correo' ? 'Falta un correo válido para responderte.'
@@ -509,7 +483,7 @@ function initGuion() {
       const res = await submitLead({
         world: 'produccion',
         plan: `Producción · ${d.get('tipo')}`,
-        plan_detail: `Etapas: ${etapas} · Fecha: ${d.get('fecha') || 'por definir'} · Presupuesto: ${d.get('presupuesto')}`,
+        plan_detail: `Etapas: ${etapas} · Fecha: ${niceDate(d.get('fecha'))} · Presupuesto: ${d.get('presupuesto')}`,
         name: String(d.get('nombre')).trim(),
         email: String(d.get('correo')).trim(),
         phone: String(d.get('whatsapp')).trim(),
@@ -521,7 +495,11 @@ function initGuion() {
       msg.textContent = res.via === 'email'
         ? 'Se abrió tu correo con el guion listo. Solo dale enviar.'
         : '¡Guion recibido! Te respondemos en 24 h hábiles con una propuesta por etapas.';
-      if (res.via === 'db') form.querySelector('.g-send__btn').hidden = true;
+      if (res.via === 'db') {
+        sendBtn.hidden = true;
+        again.hidden = false;
+        status.textContent = 'Guion enviado. ¿Tienes otra idea? Limpia la hoja.';
+      }
     } catch (err) {
       const { errorText } = await import('../app/supa.js');
       msg.textContent = errorText(err);

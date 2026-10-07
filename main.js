@@ -21,7 +21,7 @@ if (HAS_GSAP) gsap.registerPlugin(ScrollTrigger);
 let lenis = null;
 function initLenis() {
   if (reduced || !window.Lenis) return;
-  lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true });
+  lenis = new window.Lenis({ lerp: 0.16, smoothWheel: true });
   if (HAS_GSAP) {
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));
@@ -64,14 +64,16 @@ function endIntro(intro, eye) {
    el punteado aparece por capas, el ojo se abre, mira a los lados, parpadea y
    vuelve al frente; luego entra el logo. En cada cuadro el punteado, los bordes
    y el polvo "hierven" entre tres dibujos. */
-const INTRO_FPS = 7;
-const INTRO_EXIT = 50;                                // cuadro en que empieza la salida
+const INTRO_FPS = 12;
+const INTRO_EXIT = 40;                                // cuadro en que empieza la salida (~3,3 s)
 const INTRO_T = 0.605;                                // umbral final del punteado (más alto = más sucio)
 const INTRO_DRAW = [1.2, 0.95, 0.86, 0.78, 0.72, 0.67];
 const INTRO_BOIL = [3, 17, 29];
-const INTRO_OPEN = { 8: 0.3, 9: 0.75, 10: 1.08, 19: 0.12, 20: 0.6, 44: 0.12, 45: 0.7 };
+const INTRO_OPEN = { 8: 0.3, 9: 0.75, 10: 1.08, 19: 0.12, 20: 0.6 };
 const INTRO_ROT = { 14: -2, 15: -4, 16: -4, 17: -4, 18: -4, 19: -4, 20: -4, 21: -4, 22: -1, 23: 2, 24: 3.5, 25: 3.5, 26: 3.5, 27: 3.5, 28: 3.5, 29: 3.5, 30: 3.5, 31: 1.5, 32: -0.6 };
 const INTRO_DY = { 15: 6, 16: 6, 17: 6, 18: 6, 19: 6, 20: 6, 21: 6, 24: -6, 25: -6, 26: -6, 27: -6, 28: -6, 29: -6, 30: -6, 33: 3 };
+// Lo que dice el indicador de carga mientras corre la intro
+const INTRO_MSG = [[0, 'Levantando la tapa'], [10, 'Abriendo el ojo'], [14, 'Revisando el barrio'], [32, 'Listo, bajemos']];
 
 function introLook(f) {
   if (f === 14) return [-0.5, -0.15];
@@ -100,9 +102,18 @@ function runIntro() {
   const badge = $('.badge--intro', intro);
   const boil = $$('[data-boil]', intro);
   const thr = $$('[data-thr]', intro);
+  const msg = $('[data-intro-msg]', intro);
+  const pct = $('[data-intro-pct]', intro);
+  const bar = $('[data-intro-bar]', intro);
+  const progress = (f) => {
+    const p = Math.min(1, f / INTRO_EXIT);
+    pct.textContent = `${String(Math.round(p * 100)).padStart(3, '0')}%`;
+    bar.style.transform = `scaleX(${Math.floor(p * 20) / 20})`;   // a saltos de 5 %
+    msg.textContent = INTRO_MSG.filter(([from]) => f >= from).pop()[1];
+  };
 
   const paint = (f) => {
-    const b = INTRO_BOIL[f % 3];
+    const b = INTRO_BOIL[Math.floor(f / 2) % 3];             // hierve cada 2 cuadros: menos trabajo para el navegador
     boil.forEach((n) => n.setAttribute('seed', b + Number(n.dataset.boil)));
 
     let t = INTRO_T;
@@ -118,8 +129,9 @@ function runIntro() {
 
     head.setAttribute('transform', `rotate(${INTRO_ROT[f] || 0} 470 800) translate(0 ${INTRO_DY[f] || 0})`);
 
-    badge.style.opacity = f >= 36 ? '1' : '0';
-    badge.style.transform = f === 36 ? 'rotate(-4deg) scale(.92)' : f === 37 ? 'rotate(2deg) scale(1.04)' : 'none';
+    badge.style.opacity = f >= 32 ? '1' : '0';
+    badge.style.transform = f === 32 ? 'rotate(-4deg) scale(.92)' : f === 33 ? 'rotate(2deg) scale(1.04)' : 'none';
+    progress(f);
   };
 
   // Salida: corte diagonal con línea rosa (anime.js si está; si no, transición CSS)
@@ -566,6 +578,7 @@ function runDoor() {
       Pointer.target = null;                                  // los ojos de la home vuelven a seguir el cursor
       root.classList.remove('door-on');
       lenis?.start();
+      if (/[?&]alcantarilla/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash);
       resolve();
     };
 

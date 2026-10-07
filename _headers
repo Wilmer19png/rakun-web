@@ -1,0 +1,7 @@
+# Netlify: cuánto tiempo guarda el navegador cada archivo.
+# La letra y los dibujos casi nunca cambian: se guardan y no se vuelven a pedir.
+# (Si cambias un archivo de estas carpetas, cámbiale también el nombre.)
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*
+  Cache-Control: public, max-age=604800

@@ -173,7 +173,7 @@ function open(kind, i) {
   const who = { creador: 'Creador', medico: 'Médico', mentor: 'Mentor' }[fx.profile];
   const drawer = $(`[data-fx-drawer="${kind === 'tier' ? 'tiers' : 'formats'}"]`, root);
   if (kind === 'tier') {
-    fillDrawer(drawer, { kicker: `Video a cámara · ${who}`, title: TIERS[i].name, desc: TIERS[i].desc, examples: placeholders(fx.profile) });
+    fillDrawer(drawer, { kicker: `Tipos de edición · ${who}`, title: TIERS[i].name, desc: TIERS[i].desc, examples: placeholders(fx.profile) });
   } else {
     const [name, desc, unit] = FORMATS[fx.profile][i];
     fillDrawer(drawer, { kicker: `${unit} · ${who}`, title: name, desc, examples: placeholders(fx.profile) });

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RAKÜN Visual Design — Diseño que te hace mirar</title>
-  <meta name="description" content="Estudio de diseño visual y estrategia digital en Bogotá. Identidades, contenido y experiencias digitales para influencers, médicos y mentores que viven de su imagen.">
+  <meta name="description" content="Estudio de diseño visual y estrategia digital en Pereira. Identidades, contenido y experiencias digitales para influencers, médicos y mentores que viven de su imagen.">
   <meta name="theme-color" content="#010221">
 
   <!-- La intro solo se reproduce en la primera visita de la sesión. Se decide antes de pintar para evitar parpadeos. -->
@@ -18,13 +18,16 @@
       // La puerta ("¿Qué buscas?") también se muestra una vez por sesión, hasta que eliges mundo.
       var chose = false;
       try { chose = sessionStorage.getItem('rakun:door') === '1'; } catch (e) {}
-      if (!chose) d.classList.add('door-on');
+      // "Volver a la alcantarilla" (el ojo del menú): la entrada se vuelve a mostrar
+      var back = /[?&]alcantarilla/.test(location.search);
+      if (!chose || back) d.classList.add('door-on');
     })();
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&display=swap">
+  <link rel="preload" href="fonts/KnuckleDown.otf" as="font" type="font/otf" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -160,7 +163,8 @@
         <span class="badge__bar"><span>VISUAL</span><span>DESIGN</span></span>
       </span>
     </div>
-    <p class="intro__meta mono" aria-hidden="true"><span>RAKÜN / 000</span><span>4.7110° N · 74.0721° W</span></p>
+    <div class="intro__load" role="status"><p class="mono"><span data-intro-msg>Levantando la tapa</span><b data-intro-pct>000%</b></p><span class="intro__bar" aria-hidden="true"><i data-intro-bar></i></span></div>
+    <p class="intro__meta mono" aria-hidden="true"><span>RAKÜN / 000</span><span>4.8143° N · 75.6946° W</span></p>
     <button class="intro__skip mono" type="button" data-intro-skip>Saltar intro <svg class="ico" aria-hidden="true"><use href="#i-e"/></svg></button>
   </div>
 </div>
@@ -179,7 +183,7 @@
         <defs><path id="door-ring" d="M250 250 m-206 0 a206 206 0 1 1 412 0 a206 206 0 1 1 -412 0"/></defs>
         <circle cx="250" cy="250" r="224" fill="none" stroke="rgba(0,0,0,.4)" stroke-width="3"/>
         <circle cx="250" cy="250" r="186" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="3"/>
-        <text><textPath href="#door-ring">RAKÜN · BOGOTÁ D.C. · SOLO CON MIRADA · RAKÜN · ALCANTARILLADO VISUAL ·</textPath></text>
+        <text><textPath href="#door-ring">RAKÜN · PEREIRA · RISARALDA · SOLO CON MIRADA · RAKÜN · ALCANTARILLADO VISUAL ·</textPath></text>
       </svg>
       <span class="door__pry door__pry--l"></span><span class="door__pry door__pry--r"></span>
       <div class="door__hatch">
@@ -219,7 +223,7 @@
       </a>
     </div>
     <button class="door__enter mono" type="button" data-door-enter>Solo vengo a mirar <span aria-hidden="true">→</span> entrar a RAKÜN</button>
-    <p class="mono door__fine" aria-hidden="true">fig. 000 — la entrada · 4.7110° N · 74.0721° W</p>
+    <p class="mono door__fine" aria-hidden="true">fig. 000 — la entrada · 4.8143° N · 75.6946° W</p>
   </div>
   <span class="door__cut" aria-hidden="true"></span>
 </div>
@@ -238,7 +242,10 @@
       <span class="badge__bar"><span>VISUAL</span><span>DESIGN</span></span>
     </span>
   </a>
-  <svg class="hdr__eye" data-eye="eye-hdr"></svg>
+  <a class="hdr__home" href="index.html?alcantarilla" aria-label="Volver a la alcantarilla: elegir otro mundo">
+    <svg class="hdr__eye" data-eye="eye-hdr"></svg>
+    <span class="hdr__home-tip mono" aria-hidden="true">Volver a la alcantarilla</span>
+  </a>
 
   <nav class="hdr__nav" id="menu" aria-label="Principal">
     <ul>
@@ -252,7 +259,7 @@
     <!-- Lo que hacemos: los dos mundos de RAKÜN -->
     <div class="mega mega--3" id="mega" data-mega>
       <section class="mega__world" aria-labelledby="mega-a">
-        <a class="mega__head" href="marca.html"><span class="mono mega__kicker">Mundo 01 · Marca personal <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-a">Para quienes <em>viven</em> de su imagen.</span></a>
+        <a class="mega__head" href="marca.html"><span class="mono mega__kicker">Mundo 01 <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-a">Marca <em>personal</em></span></a>
         <ul class="mega__list">
           <li><a href="marca.html#creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Marca · Contenido · Media kit</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
           <li><a href="marca.html#medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Identidad · Confianza · Pacientes</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
@@ -260,7 +267,7 @@
         </ul>
       </section>
       <section class="mega__world mega__world--b" aria-labelledby="mega-b">
-        <a class="mega__head" href="produccion.html"><span class="mono mega__kicker">Mundo 02 · Producción audiovisual <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-b">Historias que se <em>ruedan.</em></span></a>
+        <a class="mega__head" href="produccion.html"><span class="mono mega__kicker">Mundo 02 <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-b">Producción <em>audiovisual</em></span></a>
         <ul class="mega__list">
           <li><a href="produccion.html#preproduccion"><span class="mega__num">01</span><span><span class="mega__name">Preproducción</span><span class="mono">Idea · Guion · Storyboard · Casting</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
           <li><a href="produccion.html#rodaje"><span class="mega__num">02</span><span><span class="mega__name">Rodaje</span><span class="mono">Dirección · Fotografía · Sonido · Arte</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
@@ -275,7 +282,7 @@
         <a class="link mega__all" href="produccion.html">Ver toda la producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
       </section>
       <section class="mega__world mega__world--c" aria-labelledby="mega-c">
-        <a class="mega__head" href="web.html"><span class="mono mega__kicker">Mundo 03 · Web y apps <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-c">Pantallas que no puedes dejar de <em>mirar.</em></span></a>
+        <a class="mega__head" href="web.html"><span class="mono mega__kicker">Mundo 03 <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-c">Web y <em>apps</em></span></a>
         <ul class="mega__list">
           <li><a href="web.html#boceto"><span class="mega__num">01</span><span><span class="mega__name">Del boceto al píxel</span><span class="mono">Wireframe · Diseño UI</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
           <li><a href="web.html#proceso"><span class="mega__num">02</span><span><span class="mega__name">Cómo trabajamos</span><span class="mono">Proceso paso a paso</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
@@ -288,7 +295,7 @@
   </nav>
 
   <a class="hdr__login" href="login.html"><svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.75"/></svg><span>Iniciar sesión</span></a>
-  <p class="hdr__clock mono"><span>BOGOTÁ</span> / <time data-clock>--:--</time> LOCAL</p>
+  <p class="hdr__clock mono"><span>PEREIRA</span> / <time data-clock>--:--</time> LOCAL</p>
   <a class="btn btn--pink hdr__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20iniciar%20un%20proyecto" data-eye-target>Iniciar proyecto <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
   <button class="hdr__menu mono" type="button" aria-expanded="false" aria-controls="menu" data-menu>
     <span class="hdr__menu-label">Menú</span><span class="hdr__menu-bars" aria-hidden="true"></span>
@@ -320,7 +327,7 @@
         <div class="hero__foot">
           <p class="hero__lede">Estudio de diseño visual y estrategia digital que construye identidades, contenido y experiencias para quienes viven de su imagen.</p>
           <div class="hero__meta mono">
-            <span>Estudio / Bogotá 2026</span>
+            <span>Estudio / Pereira 2026</span>
             <span>Identidad · Estrategia · Contenido</span>
           </div>
           <a class="link" href="#enfoque">¿Para quién diseñamos? <svg class="ico" aria-hidden="true"><use href="#i-se"/></svg></a>
@@ -342,7 +349,7 @@
           <figcaption class="collage__cap mono" aria-hidden="true"><span>fig. 01 — isotipo</span><span>el ojo te sigue</span></figcaption>
         </figure>
 
-        <p class="collage__tag collage__tag--geo mono" aria-hidden="true">4.7110° N<br>74.0721° W</p>
+        <p class="collage__tag collage__tag--geo mono" aria-hidden="true">4.8143° N<br>75.6946° W</p>
         <p class="collage__tag collage__tag--ref mono" aria-hidden="true">AW / 26<br>Studio ©</p>
       </div>
     </div>
@@ -645,8 +652,8 @@
         </div>
         <div class="ftr__col">
           <h2 class="mono">Estudio</h2>
-          <p>Bogotá / Colombia</p>
-          <p class="mono">4.7110° N · 74.0721° W</p>
+          <p>Pereira / Colombia</p>
+          <p class="mono">4.8143° N · 75.6946° W</p>
           <p class="mono"><time data-clock>--:--</time> hora local</p>
         </div>
       </div>
@@ -667,7 +674,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script type="module" src="main.js"></script>
 </body>
 </html>

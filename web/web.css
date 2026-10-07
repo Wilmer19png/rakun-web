@@ -239,7 +239,7 @@
    005 · El escritorio
    ========================================================================== */
 .w-desk { background: radial-gradient(ellipse 60% 60% at 70% 40%, #1f1d45 0%, #14132B 70%); color: var(--white); --line: var(--line-dark); }
-.w-desk::after { background-image: url("../assets/grain-light.svg"); mix-blend-mode: screen; opacity: .08; }
+.w-desk::after { background-image: url("../assets/grain-light.svg"); opacity: .08; }
 .desk {
   position: relative; min-width: 0; min-height: 1000px; overflow: hidden;
   background-image: linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);

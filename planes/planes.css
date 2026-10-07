@@ -150,28 +150,28 @@
 .includes__text { margin-top: 16px; color: var(--ink-soft); line-height: 1.5; }
 
 /* ---------- Botón de emergencia: la mirilla ---------- */
-.sos { position: relative; z-index: 6; display: flex; justify-content: flex-end; align-items: center; gap: 16px; margin-top: 48px; padding: 8px 0 8px 24px; width: fit-content; margin-left: auto; }
-.sos__hint { color: var(--ink-soft); text-align: right; line-height: 1.6; }
-.sos__hint b { color: var(--pink); font-weight: 400; }
+.sos { position: relative; z-index: 6; display: flex; justify-content: flex-end; align-items: center; gap: 24px; margin-top: 64px; padding: 8px 0 8px 24px; width: fit-content; margin-left: auto; }
+.sos__hint { color: var(--navy); text-align: right; font: 900 clamp(1.5rem, 2.2vw, 2.1rem)/.95 var(--f-display); text-transform: uppercase; letter-spacing: 0; }
+.sos__hint b { display: inline-block; margin-top: 10px; color: var(--pink); font: 500 .8rem/1 var(--f-mono); letter-spacing: .12em; }
 .sos__hatch {
-  position: relative; display: block; width: 132px; height: 64px; overflow: hidden;
+  position: relative; display: block; width: 220px; height: 106px; overflow: hidden;
   background: var(--ink-0);
   box-shadow: inset 0 5px 12px rgba(0, 0, 0, .8), 0 0 0 4px #2a2840, 6px 6px 0 rgba(27, 26, 53, .35);
 }
 .sos__hatch.is-knocking { animation: knock .45s steps(1) both; }
 @keyframes knock { 0% { translate: -3px 0; } 20% { translate: 3px 0; } 40% { translate: -2px 0; } 60% { translate: 2px 0; } 80% { translate: 0 0; } }
-.sos__eye { position: absolute; left: 50%; top: 50%; width: 84px; height: 56px; translate: -50% -50%; overflow: visible; }
+.sos__eye { position: absolute; left: 50%; top: 50%; width: 140px; height: 93px; translate: -50% -50%; overflow: visible; }
 .sos__iris { transform: translate(var(--ix, 118px), var(--iy, 76px)); }
-.sos__grille { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 13px, #3a3858 13px 18px); }
+.sos__grille { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 21px, #3a3858 21px 29px); }
 .sos__slide { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, #34325a 0 3px, #2a2840 3px 9px); box-shadow: inset -3px 0 0 rgba(0, 0, 0, .35); translate: var(--slide, 0%) 0; }
 .sos__dialog {
-  position: absolute; right: -8px; bottom: calc(100% + 14px); width: min(360px, 86vw);
+  position: absolute; right: -8px; bottom: calc(100% + 16px); width: min(440px, 86vw);
   background: var(--cream); color: var(--navy);
   box-shadow: 10px 10px 0 rgba(1, 2, 33, .45);
   rotate: -1deg; transform-origin: 90% 100%;
 }
 .sos__dialog::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 18px; }   /* puente para no perder el hover */
-.sos__dialog::after { content: ""; position: absolute; right: 52px; bottom: -11px; width: 22px; height: 22px; background: var(--cream); rotate: 45deg; }
+.sos__dialog::after { content: ""; position: absolute; right: 90px; bottom: -11px; width: 22px; height: 22px; background: var(--cream); rotate: 45deg; }
 .sos__dialog.is-pop-0 { scale: .9; }
 .sos__dialog.is-pop-1 { scale: 1.04; }
 .sos__bar { display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; background: var(--navy); color: var(--mist); }
@@ -179,17 +179,17 @@
 .sos__bar i:nth-child(2) { background: var(--yellow); }
 .sos__bar i:nth-child(3) { background: var(--blue); }
 .sos__bar .mono { margin-left: 8px; font-size: 9px; text-transform: none; letter-spacing: .06em; }
-.sos__body { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px 18px; }
-.sos__title { font: 900 1.5rem/.92 var(--f-display); text-transform: uppercase; }
-.sos__text { font-size: .9rem; line-height: 1.45; color: var(--ink-soft); }
-.sos__cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 11px 14px 8px; background: var(--ink-0); color: var(--pink); font: 900 1rem/1 var(--f-display); text-transform: uppercase; box-shadow: 4px 4px 0 var(--pink); transition: translate .15s steps(2); }
+.sos__body { display: flex; flex-direction: column; gap: 14px; padding: 22px 24px 24px; }
+.sos__title { font: 900 2rem/.92 var(--f-display); text-transform: uppercase; }
+.sos__text { font-size: 1rem; line-height: 1.45; color: var(--ink-soft); }
+.sos__cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 14px 18px 11px; background: var(--ink-0); color: var(--pink); font: 900 1.2rem/1 var(--f-display); text-transform: uppercase; box-shadow: 4px 4px 0 var(--pink); transition: translate .15s steps(2); }
 .sos__cta:hover, .sos__cta:focus-visible { translate: -2px -2px; }
 
 /* ==========================================================================
    003 · La carta del club
    ========================================================================== */
 .pl-carta { background: #14132B; color: var(--white); --line: var(--line-dark); }
-.pl-carta::after { background-image: url("../assets/grain-light.svg"); mix-blend-mode: screen; opacity: .07; }
+.pl-carta::after { background-image: url("../assets/grain-light.svg"); opacity: .07; }
 .pl-carta__aside { color: var(--mist); font-size: var(--fs-lead); line-height: 1.45; max-width: 26rem; }
 .carta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 56px; }
 .carta li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; padding: 14px 0; border-top: 1px dashed rgba(255, 255, 255, .25); }
@@ -555,7 +555,7 @@
   color: var(--ink-0);
   background: linear-gradient(90deg, var(--pink) 0 var(--split), var(--cream) var(--split));
 }
-.mk-rec::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url("../assets/grain-dark.svg") 0 0 / 240px; mix-blend-mode: multiply; opacity: .14; }
+.mk-rec::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url("../assets/grain-dark.svg") 0 0 / 240px; opacity: .14; }
 .mk-rec__lip { --lip: linear-gradient(90deg, var(--pink) 0 var(--split), var(--cream) var(--split)); }
 /* borde de papel rasgado vertical donde se juntan el rosa y el crema */
 .mk-rec__tear {

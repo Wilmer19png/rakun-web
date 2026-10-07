@@ -13,7 +13,7 @@ import { loadCatalog } from '../app/catalog.js';
 let lenis = null;
 function initLenis() {
   if (reduced || !window.Lenis) return;
-  lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true });
+  lenis = new window.Lenis({ lerp: 0.16, smoothWheel: true });
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
 }

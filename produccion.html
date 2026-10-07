@@ -4,13 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Producción audiovisual — RAKÜN Visual Design</title>
-  <meta name="description" content="Videoclips, cortos, largometrajes y comerciales. Preproducción, rodaje y postproducción con método, desde Bogotá.">
+  <meta name="description" content="Videoclips, cortos, largometrajes y comerciales. Preproducción, rodaje y postproducción con método, desde Pereira.">
   <meta name="theme-color" content="#010221">
   <script>document.documentElement.classList.add('js');</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&family=Permanent+Marker&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&family=Permanent+Marker&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap">
+  <link rel="preload" href="fonts/KnuckleDown.otf" as="font" type="font/otf" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="produccion/produccion.css">
 </head>
@@ -41,7 +42,10 @@
       <span class="badge__bar"><span>VISUAL</span><span>DESIGN</span></span>
     </span>
   </a>
-  <svg class="hdr__eye" data-eye="eye-hdr"></svg>
+  <a class="hdr__home" href="index.html?alcantarilla" aria-label="Volver a la alcantarilla: elegir otro mundo">
+    <svg class="hdr__eye" data-eye="eye-hdr"></svg>
+    <span class="hdr__home-tip mono" aria-hidden="true">Volver a la alcantarilla</span>
+  </a>
 
   <nav class="hdr__nav" id="menu" aria-label="Principal">
     <ul>
@@ -54,7 +58,7 @@
 
     <div class="mega mega--3" id="mega" data-mega>
       <section class="mega__world" aria-labelledby="mega-a">
-        <a class="mega__head" href="marca.html"><span class="mono mega__kicker">Mundo 01 · Marca personal <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-a">Para quienes <em>viven</em> de su imagen.</span></a>
+        <a class="mega__head" href="marca.html"><span class="mono mega__kicker">Mundo 01 <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-a">Marca <em>personal</em></span></a>
         <ul class="mega__list">
           <li><a href="marca.html#creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Marca · Contenido · Media kit</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
           <li><a href="marca.html#medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Identidad · Confianza · Pacientes</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
@@ -62,7 +66,7 @@
         </ul>
       </section>
       <section class="mega__world mega__world--b" aria-labelledby="mega-b">
-        <a class="mega__head" href="#inicio" aria-current="page"><span class="mono mega__kicker">Mundo 02 · Producción audiovisual <span class="mega__go">Estás aquí ↑</span></span><span class="mega__title" id="mega-b">Historias que se <em>ruedan.</em></span></a>
+        <a class="mega__head" href="#inicio" aria-current="page"><span class="mono mega__kicker">Mundo 02 <span class="mega__go">Estás aquí ↑</span></span><span class="mega__title" id="mega-b">Producción <em>audiovisual</em></span></a>
         <ul class="mega__list">
           <li><a href="#preproduccion"><span class="mega__num">01</span><span><span class="mega__name">Preproducción</span><span class="mono">Idea · Guion · Storyboard · Casting</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
           <li><a href="#rodaje"><span class="mega__num">02</span><span><span class="mega__name">Rodaje</span><span class="mono">Dirección · Fotografía · Sonido · Arte</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
@@ -77,7 +81,7 @@
         <a class="link mega__all" href="#inicio">Ver toda la producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
       </section>
       <section class="mega__world mega__world--c" aria-labelledby="mega-c">
-        <a class="mega__head" href="web.html"><span class="mono mega__kicker">Mundo 03 · Web y apps <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-c">Pantallas que no puedes dejar de <em>mirar.</em></span></a>
+        <a class="mega__head" href="web.html"><span class="mono mega__kicker">Mundo 03 <span class="mega__go">Ir a la página →</span></span><span class="mega__title" id="mega-c">Web y <em>apps</em></span></a>
         <ul class="mega__list">
           <li><a href="web.html#boceto"><span class="mega__num">01</span><span><span class="mega__name">Del boceto al píxel</span><span class="mono">Wireframe · Diseño UI</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
           <li><a href="web.html#proceso"><span class="mega__num">02</span><span><span class="mega__name">Cómo trabajamos</span><span class="mono">Proceso paso a paso</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
@@ -91,7 +95,7 @@
   </nav>
 
   <a class="hdr__login" href="login.html"><svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.75"/></svg><span>Iniciar sesión</span></a>
-  <p class="hdr__clock mono"><span>BOGOTÁ</span> / <time data-clock>--:--</time> LOCAL</p>
+  <p class="hdr__clock mono"><span>PEREIRA</span> / <time data-clock>--:--</time> LOCAL</p>
   <a class="btn btn--pink hdr__cta" href="#guion" data-guion-open data-eye-target>Cotizar producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
   <button class="hdr__menu mono" type="button" aria-expanded="false" aria-controls="menu" data-menu>
     <span class="hdr__menu-label">Menú</span><span class="hdr__menu-bars" aria-hidden="true"></span>
@@ -140,7 +144,7 @@
             <g stroke="#F3F0EA" stroke-width="2" opacity=".85"><line x1="20" y1="256" x2="520" y2="256"/><line x1="20" y1="326" x2="520" y2="326"/><line x1="20" y1="396" x2="520" y2="396"/><line x1="270" y1="256" x2="270" y2="396"/></g>
             <g font-family="JetBrains Mono, monospace" font-size="13" letter-spacing="2" fill="#C3C0DD">
               <text x="40" y="226">PROD.</text><text x="40" y="282">ESCENA</text><text x="290" y="282">TOMA</text>
-              <text x="40" y="352">DIRECCIÓN</text><text x="290" y="352">D. FOTOGRAFÍA</text><text x="40" y="440">BOGOTÁ · 4.7110° N · 74.0721° W</text>
+              <text x="40" y="352">DIRECCIÓN</text><text x="290" y="352">D. FOTOGRAFÍA</text><text x="40" y="440">PEREIRA · 4.8143° N · 75.6946° W</text>
             </g>
             <g font-family="Permanent Marker, cursive" fill="#F3F0EA">
               <text x="120" y="232" font-size="30">RAKÜN</text><text x="40" y="314" font-size="28">001</text>
@@ -425,8 +429,7 @@
     </div>
   </section>
   <!-- ==============================================================
-       006b · COTIZAR: se despliega como un guion literario a máquina de escribir
-       Cada bloque teclea su texto (data-say) y luego muestra los campos reales.
+       006b · COTIZAR: se despliega como un guion literario para llenar
        ============================================================== -->
   <section class="sec p-guion" id="guion" aria-labelledby="guion-title" data-guion>
     <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Tu guion</span></div>
@@ -437,8 +440,7 @@
         <p class="p-guion__lede">Llena los espacios del guion como si fuera tu película. Entre más detalles, más precisa la cotización.</p>
         <p class="mono p-guion__status" data-guion-status aria-live="polite"></p>
         <div class="p-guion__tools">
-          <button class="mono p-guion__tool" type="button" data-guion-skip>Saltar a los campos →</button>
-          <button class="mono p-guion__tool" type="button" data-guion-replay>↻ Volver a escribir</button>
+          <button class="mono p-guion__tool" type="button" data-guion-clear>↺ Limpiar guion</button>
         </div>
       </aside>
 
@@ -449,13 +451,13 @@
         <span class="g-sheet__brad g-sheet__brad--3" aria-hidden="true"></span>
         <p class="g-sheet__page" aria-hidden="true">1.</p>
 
-        <div class="g-blk g-c g-b" data-say="RAKÜN VISUAL DESIGN"><div class="g-real"><p>RAKÜN VISUAL DESIGN</p></div></div>
-        <div class="g-blk g-c g-gap" data-say="Guion de cotización · Borrador Nº 001"><div class="g-real"><p>Guion de cotización · Borrador Nº 001</p></div></div>
+        <div class="g-blk g-c g-b"><div class="g-real"><p>RAKÜN VISUAL DESIGN</p></div></div>
+        <div class="g-blk g-c g-gap"><div class="g-real"><p>Guion de cotización · Borrador Nº 001</p></div></div>
 
-        <div class="g-blk g-b g-gap" data-say="FADE IN:"><div class="g-real"><p>FADE IN:</p></div></div>
-        <div class="g-blk g-b g-gap" data-say="INT. TU PROYECTO — DÍA"><div class="g-real"><p>INT. TU PROYECTO — DÍA</p></div></div>
+        <div class="g-blk g-b g-gap"><div class="g-real"><p>FADE IN:</p></div></div>
+        <div class="g-blk g-b g-gap"><div class="g-real"><p>INT. TU PROYECTO — DÍA</p></div></div>
 
-        <div class="g-blk g-gap" data-say="Una idea le da vueltas en la cabeza a __________. Quiere convertirla en: [ ] VIDEOCLIP  [ ] CORTO  [ ] LARGOMETRAJE  [ ] COMERCIAL">
+        <div class="g-blk g-gap">
           <div class="g-real">
             <p>Una idea le da vueltas en la cabeza a <input class="g-f g-f--name" name="nombre" autocomplete="name" placeholder="tu nombre" aria-label="Tu nombre" required>. Quiere convertirla en:</p>
             <fieldset class="g-opts g-opts--row">
@@ -469,8 +471,8 @@
           </div>
         </div>
 
-        <div class="g-blk g-ch" data-say="RAKÜN (V.O.)"><div class="g-real"><p>RAKÜN (V.O.)</p></div></div>
-        <div class="g-blk g-dl g-gap" data-say="¿En qué etapa te acompañamos?">
+        <div class="g-blk g-ch"><div class="g-real"><p>RAKÜN (V.O.)</p></div></div>
+        <div class="g-blk g-dl g-gap">
           <div class="g-real">
             <p>¿En qué etapa te acompañamos?</p>
             <fieldset class="g-opts">
@@ -482,13 +484,13 @@
           </div>
         </div>
 
-        <div class="g-blk g-ch" data-say="TÚ"><div class="g-real"><p>TÚ</p></div></div>
-        <div class="g-blk g-dl g-gap" data-say="Lo necesito para el ______ y lo rodaríamos en __________.">
-          <div class="g-real"><p>Lo necesito para el <input class="g-f g-f--date" name="fecha" placeholder="dd / mm" aria-label="Fecha"> y lo rodaríamos en <input class="g-f g-f--place" name="locacion" placeholder="ciudad o locación" aria-label="Locación">.</p></div>
+        <div class="g-blk g-ch"><div class="g-real"><p>TÚ</p></div></div>
+        <div class="g-blk g-dl g-gap">
+          <div class="g-real"><p>Lo necesito para el <input class="g-f g-f--date" type="date" name="fecha" aria-label="Fecha en que lo necesitas"> y lo rodaríamos en <input class="g-f g-f--place" name="locacion" placeholder="ciudad o locación" aria-label="Locación">.</p></div>
         </div>
 
-        <div class="g-blk g-ch" data-say="RAKÜN (V.O.)"><div class="g-real"><p>RAKÜN (V.O.)</p></div></div>
-        <div class="g-blk g-dl g-gap" data-say="¿Con cuánto contamos?">
+        <div class="g-blk g-ch"><div class="g-real"><p>RAKÜN (V.O.)</p></div></div>
+        <div class="g-blk g-dl g-gap">
           <div class="g-real">
             <p>¿Con cuánto contamos?</p>
             <fieldset class="g-opts">
@@ -502,23 +504,23 @@
           </div>
         </div>
 
-        <div class="g-blk g-tr g-gap" data-say="CORTE A:"><div class="g-real"><p>CORTE A:</p></div></div>
+        <div class="g-blk g-tr g-gap"><div class="g-real"><p>CORTE A:</p></div></div>
 
-        <div class="g-blk g-b g-gap" data-say="INT. CUÉNTANOS TU IDEA — CONTINUO"><div class="g-real"><p><mark>INT. CUÉNTANOS TU IDEA — CONTINUO</mark></p></div></div>
-        <div class="g-blk g-gap" data-say="Escríbelo como si ya lo estuvieras viendo. Una línea basta; diez, también.">
+        <div class="g-blk g-b g-gap"><div class="g-real"><p><mark>INT. CUÉNTANOS TU IDEA — CONTINUO</mark></p></div></div>
+        <div class="g-blk g-gap">
           <div class="g-real">
             <p>Escríbelo como si ya lo estuvieras viendo. Una línea basta; diez, también.</p>
-            <textarea class="g-idea" name="idea" rows="6" aria-label="Cuéntanos tu idea" placeholder="Abre en negro. Se escucha una respiración. Corte a una azotea en Bogotá, de noche…" required></textarea>
+            <textarea class="g-idea" name="idea" rows="6" aria-label="Cuéntanos tu idea" placeholder="Abre en negro. Se escucha una respiración. Corte a una azotea en Pereira, de noche…" required></textarea>
             <p class="g-note">Referencias (links, moodboard, demo): <input class="g-f g-f--refs" name="referencias" placeholder="pega aquí tus links" aria-label="Referencias"></p>
           </div>
         </div>
 
-        <div class="g-blk g-ch" data-say="TÚ"><div class="g-real"><p>TÚ</p></div></div>
-        <div class="g-blk g-dl g-gap" data-say="Me pueden escribir a __________ o al WhatsApp ________.">
+        <div class="g-blk g-ch"><div class="g-real"><p>TÚ</p></div></div>
+        <div class="g-blk g-dl g-gap">
           <div class="g-real"><p>Me pueden escribir a <input class="g-f g-f--mail" type="email" name="correo" autocomplete="email" placeholder="correo" aria-label="Correo" required> o al WhatsApp <input class="g-f g-f--tel" type="tel" name="whatsapp" autocomplete="tel" placeholder="+57" aria-label="WhatsApp" required minlength="7">.</p></div>
         </div>
 
-        <div class="g-blk g-tr" data-say="FUNDIDO A NEGRO.">
+        <div class="g-blk g-tr">
           <div class="g-real">
             <p>FUNDIDO A NEGRO.</p>
             <!-- trampa para robots: las personas no la ven -->
@@ -530,6 +532,7 @@
             <div class="g-send">
               <p class="mono g-send__note" data-guion-msg>Te respondemos en 24 h hábiles con una propuesta y un presupuesto por etapas.</p>
               <button class="g-send__btn" type="submit">Enviar guion <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></button>
+              <button class="g-send__again mono" type="button" data-guion-clear hidden>↺ Escribir otra propuesta</button>
             </div>
           </div>
         </div>
@@ -556,8 +559,8 @@
       </div>
       <div class="ftr__col">
         <h2 class="mono">Estudio</h2>
-        <p>Bogotá / Colombia</p>
-        <p class="mono">4.7110° N · 74.0721° W</p>
+        <p>Pereira / Colombia</p>
+        <p class="mono">4.8143° N · 75.6946° W</p>
         <p class="mono"><time data-clock>--:--</time> hora local</p>
       </div>
     </div>
@@ -570,7 +573,7 @@
   </div>
 </footer>
 
-<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script type="module" src="produccion/produccion.js"></script>
 </body>
 </html>
