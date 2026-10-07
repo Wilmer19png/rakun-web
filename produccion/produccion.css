@@ -543,3 +543,8 @@ html:not(.js) .wall__lights { display: none; }
   .g-ch { margin-left: 30%; }
   .g-dl { margin-left: 12%; }
 }
+
+/* autorización de datos y trampa para robots del guion */
+.g-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.g-consent { display: flex; gap: 12px; align-items: flex-start; margin-top: 22px; text-align: left; text-transform: none; font-size: 13px; line-height: 1.5; color: rgba(27, 26, 53, .75); cursor: pointer; }
+.g-consent input { flex: none; width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--pink); }

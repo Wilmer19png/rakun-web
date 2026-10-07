@@ -412,7 +412,6 @@ function initCta() {
    006b · Cotizar: el guion se despliega y se escribe a máquina
    Cada .g-blk teclea su data-say; al terminar aparece el contenido real (.g-real).
    ========================================================================== */
-const GUION_MAIL = 'rakundesigns@gmail.com';
 const GUION_TICK = 32;                                   // ms por golpe de tecla
 function initGuion() {
   const sec = $('[data-guion]');
@@ -482,39 +481,54 @@ function initGuion() {
   $('[data-guion-skip]', sec).addEventListener('click', finish);
   $('[data-guion-replay]', sec).addEventListener('click', () => (reduced ? finish() : type()));
 
-  // TODO: cuando haya backend, enviar a un endpoint en lugar de abrir el correo
-  form.addEventListener('submit', (e) => {
+  // El guion se guarda como una solicitud (tabla leads) y aparece en el gestor.
+  // Si Supabase aún no está conectado, submitLead abre el correo con todo escrito.
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (sec.classList.contains('is-typing')) finish();
     const bad = $$('[required]', form).find((f) => !f.checkValidity());
     const msg = $('[data-guion-msg]', form);
+    const btn = $('button[type="submit"]', form);
     if (bad) {
-      msg.textContent = bad.name === 'correo' ? 'Falta un correo válido para responderte.' : `Falta: ${bad.getAttribute('aria-label')}.`;
+      msg.textContent = bad.name === 'correo' ? 'Falta un correo válido para responderte.'
+        : bad.name === 'consent' ? 'Necesitamos tu autorización para contactarte.'
+          : `Falta: ${bad.getAttribute('aria-label')}.`;
       msg.classList.add('is-error');
       bad.focus();
       return;
     }
     msg.classList.remove('is-error');
     const d = new FormData(form);
+    if (d.get('empresa_web')) return;                                   // robot
     const etapas = d.getAll('etapas').join(', ') || 'Por definir';
-    const body = [
-      'FADE IN:', '',
-      'INT. TU PROYECTO — DÍA', '',
-      `Nombre: ${d.get('nombre')}`,
-      `Proyecto: ${d.get('tipo')}`,
-      `Etapas: ${etapas}`,
-      `Fecha: ${d.get('fecha') || 'Por definir'}`,
-      `Locación: ${d.get('locacion') || 'Por definir'}`,
-      `Presupuesto: ${d.get('presupuesto')}`, '',
-      'CUÉNTANOS TU IDEA:', d.get('idea'), '',
-      `Referencias: ${d.get('referencias') || '—'}`,
-      `Correo: ${d.get('correo')}`,
-      `WhatsApp: ${d.get('whatsapp') || '—'}`, '',
-      'FUNDIDO A NEGRO.',
-    ].join('\n');
-    const subject = `Guion de cotización · ${d.get('tipo')} · ${d.get('nombre')}`;
-    window.location.href = `mailto:${GUION_MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    msg.textContent = 'Se abrió tu correo con el guion listo. Solo dale enviar.';
+    btn.disabled = true;
+    msg.textContent = 'Enviando tu guion…';
+    try {
+      const { submitLead } = await import('../app/lead-form.js');
+      const { safeUrl } = await import('../app/util.js');
+      const res = await submitLead({
+        world: 'produccion',
+        plan: `Producción · ${d.get('tipo')}`,
+        plan_detail: `Etapas: ${etapas} · Fecha: ${d.get('fecha') || 'por definir'} · Presupuesto: ${d.get('presupuesto')}`,
+        name: String(d.get('nombre')).trim(),
+        email: String(d.get('correo')).trim(),
+        phone: String(d.get('whatsapp')).trim(),
+        city: String(d.get('locacion') || '').trim(),
+        goal: String(d.get('idea')).trim(),
+        links: String(d.get('referencias') || '').split(/[\s,]+/).map(safeUrl).filter(Boolean),
+        contact_via: 'WhatsApp',
+      });
+      msg.textContent = res.via === 'email'
+        ? 'Se abrió tu correo con el guion listo. Solo dale enviar.'
+        : '¡Guion recibido! Te respondemos en 24 h hábiles con una propuesta por etapas.';
+      if (res.via === 'db') form.querySelector('.g-send__btn').hidden = true;
+    } catch (err) {
+      const { errorText } = await import('../app/supa.js');
+      msg.textContent = errorText(err);
+      msg.classList.add('is-error');
+    } finally {
+      btn.disabled = false;
+    }
   });
 
   // si llegan directo a #guion, se abre

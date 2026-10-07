@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crea tu contraseña — RAKÜN Visual Design</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#010221">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="app/app.css">
+</head>
+<body class="auth">
+  <main class="auth__wrap">
+    <aside class="auth__side">
+      <a class="auth__brand" href="index.html" aria-label="Volver a la página de RAKÜN">RAKÜN</a>
+      <div>
+        <p class="mono auth__kicker">Bienvenida al club</p>
+        <p class="auth__big">Un último<br><em>paso.</em></p>
+        <p class="auth__lede">Crea tu contraseña y entra cuando quieras a ver cómo va tu proyecto.</p>
+      </div>
+      <img class="auth__eye" src="assets/rakun-isotipo.svg" alt="" width="220" height="220">
+    </aside>
+
+    <section class="auth__panel">
+      <div class="auth__form" data-state="loading">
+        <p class="mono auth__kicker auth__kicker--dark">Un momento</p>
+        <h1 class="auth__title">Revisando <em>tu enlace…</em></h1>
+      </div>
+
+      <form class="auth__form" data-state="form" novalidate hidden>
+        <p class="mono auth__kicker auth__kicker--dark" data-who>Tu cuenta</p>
+        <h1 class="auth__title">Crea tu <em>contraseña.</em></h1>
+        <p class="auth__p">Mínimo 8 caracteres. Te va a servir para entrar desde <b>Iniciar sesión</b> en la página.</p>
+        <!-- para que el navegador guarde la contraseña con el correo correcto -->
+        <input class="auth__hidden" type="email" name="username" autocomplete="username" tabindex="-1" aria-hidden="true" readonly>
+        <label class="auth__f"><span>Contraseña nueva</span>
+          <span class="auth__pass"><input name="password" type="password" autocomplete="new-password" required minlength="8"><button type="button" class="mono" data-toggle-pass aria-label="Mostrar contraseña">Ver</button></span>
+        </label>
+        <label class="auth__f"><span>Repítela</span><input name="again" type="password" autocomplete="new-password" required minlength="8"></label>
+        <p class="mono auth__msg" data-msg aria-live="polite"></p>
+        <button class="auth__btn" type="submit">Guardar y entrar <span aria-hidden="true">→</span></button>
+      </form>
+
+      <div class="auth__form" data-state="expired" hidden>
+        <p class="mono auth__kicker auth__kicker--dark">Enlace vencido</p>
+        <h1 class="auth__title">Este enlace <em>ya no sirve.</em></h1>
+        <p class="auth__p">Los enlaces de acceso vencen por seguridad. Pide uno nuevo desde "¿Olvidaste tu contraseña?" o escríbele a tu manager en RAKÜN.</p>
+        <a class="auth__btn" href="login.html">Ir a iniciar sesión <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="app/cuenta.js"></script>
+</body>
+</html>

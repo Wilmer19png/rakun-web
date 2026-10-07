@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&family=Permanent+Marker&display=swap">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="app/lead-form.css">
   <link rel="stylesheet" href="web/web.css">
 </head>
 
@@ -83,6 +84,7 @@
     <a class="btn btn--pink hdr__cta-mobile" href="#planes">Ver planes <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
   </nav>
 
+  <a class="hdr__login" href="login.html"><svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.75"/></svg><span>Iniciar sesión</span></a>
   <p class="hdr__clock mono"><span>BOGOTÁ</span> / <time data-clock>--:--</time> LOCAL</p>
   <a class="btn btn--pink hdr__cta" href="#planes" data-eye-target>Ver planes <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
   <button class="hdr__menu mono" type="button" aria-expanded="false" aria-controls="menu" data-menu>
@@ -355,7 +357,7 @@ marca.<b class="f">lanzar</b>().<b class="f">then</b>(() =&gt; <b class="s">mira
           <p class="plan__for">Para lanzar algo ya: un producto, un curso, una campaña.</p>
           <p class="plan__price"><span class="mono">desde</span> [precio]</p>
           <ul class="plan__list"><li>Una página, un objetivo</li><li>Diseño a medida (cero plantillas)</li><li>Formulario o WhatsApp</li><li>Lista para Google y redes</li></ul>
-          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Landing">Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Landing" data-lead='{"world":"web","plan":"Web · Landing"}'>Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
         </li>
         <li class="plan plan--hot" style="--c: var(--pink)">
           <span class="plan__badge sticker sticker--pink mono">Recomendado</span>
@@ -364,7 +366,7 @@ marca.<b class="f">lanzar</b>().<b class="f">then</b>(() =&gt; <b class="s">mira
           <p class="plan__for">Para tener tu casa en internet, completa y fácil de editar.</p>
           <p class="plan__price"><span class="mono">desde</span> [precio]</p>
           <ul class="plan__list"><li>Varias páginas y blog</li><li>Diseño a medida en todas las pantallas</li><li>Editable por ti</li><li>SEO base y analítica</li></ul>
-          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Sitio%20web">Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Sitio%20web" data-lead='{"world":"web","plan":"Web · Sitio web"}'>Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
         </li>
         <li class="plan" style="--c: var(--blue)">
           <p class="mono plan__n">Plan 03</p>
@@ -372,7 +374,7 @@ marca.<b class="f">lanzar</b>().<b class="f">then</b>(() =&gt; <b class="s">mira
           <p class="plan__for">Para vender en línea o darle a tus clientes una herramienta propia.</p>
           <p class="plan__price"><span class="mono">desde</span> [precio]</p>
           <ul class="plan__list"><li>Tienda online o app a medida</li><li>Pagos y cuentas de usuario</li><li>Panel para administrar</li><li>Soporte después del lanzamiento</li></ul>
-          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Tienda%20o%20app">Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+          <a class="plan__cta" href="mailto:rakundesigns@gmail.com?subject=Quiero%20el%20plan%20Tienda%20o%20app" data-lead='{"world":"web","plan":"Web · Tienda o app"}'>Quiero este <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
         </li>
       </ul>
     </div>
@@ -413,5 +415,6 @@ marca.<b class="f">lanzar</b>().<b class="f">then</b>(() =&gt; <b class="s">mira
 
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script type="module" src="web/web.js"></script>
+<script type="module" src="app/lead-form.js"></script>
 </body>
 </html>

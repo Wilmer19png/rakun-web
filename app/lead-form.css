@@ -1,0 +1,100 @@
+/* ==========================================================================
+   RAKÜN · formulario "Quiero este plan" (modal)
+   ========================================================================== */
+.lf-open body { overflow: hidden; }
+.lf { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 3vh 16px; }
+.lf[hidden] { display: none; }
+.lf__scrim { position: absolute; inset: 0; background: rgba(1, 2, 33, .78); }
+.lf__box {
+  position: relative; width: min(1120px, 100%); max-height: 94vh; overflow: auto;
+  display: grid; grid-template-columns: 340px minmax(0, 1fr);
+  background: var(--cream); color: var(--navy);
+  box-shadow: 16px 18px 0 rgba(0, 0, 0, .45);
+}
+.lf .mono { font-family: var(--f-mono); font-size: var(--fs-mono); letter-spacing: .14em; text-transform: uppercase; }
+
+/* columna del plan */
+.lf__plan { position: relative; padding: 38px 30px 90px; background: var(--ink-0); color: var(--cream); }
+.lf__k { margin: 0 0 16px; color: var(--mist); }
+.lf__k--y { margin-top: 34px; color: var(--yellow); }
+.lf__k--dark { color: var(--ink-soft); margin-bottom: 10px; }
+.lf__ticket { position: relative; padding: 20px 22px; background: var(--cream); color: var(--navy); border-left: 10px solid var(--c, var(--yellow)); box-shadow: 6px 6px 0 rgba(0, 0, 0, .4); }
+.lf__ticket::after { content: ""; position: absolute; right: -9px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border-radius: 50%; background: var(--ink-0); }
+.lf__world { margin: 0; color: var(--ink-soft); }
+.lf__name { margin: 8px 0 8px; font-family: var(--f-display); font-weight: 900; font-size: 1.9rem; line-height: .92; text-transform: uppercase; }
+.lf__detail { margin: 0; font-size: .9rem; line-height: 1.4; }
+.lf__price { margin: 12px 0 0; font-family: var(--f-body); font-weight: 500; font-size: 1.35rem; }
+.lf__price:empty, .lf__detail:empty { display: none; }
+.lf__steps { margin: 0; padding: 0; list-style: none; }
+.lf__steps li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, .14); font-size: .9rem; line-height: 1.45; }
+.lf__steps b { font-family: var(--f-display); font-weight: 900; font-size: 1.4rem; color: var(--pink); }
+.lf__steps li:nth-child(2) b { color: var(--blue); }
+.lf__steps li:nth-child(3) b { color: var(--yellow); }
+.lf__steps strong { font-weight: 500; color: var(--white); }
+.lf__fine { position: absolute; left: 30px; bottom: 30px; margin: 0; font-size: .6rem; line-height: 1.7; color: var(--mist); }
+
+/* formulario */
+.lf__main { position: relative; padding: 38px 44px 34px; }
+.lf__x { position: absolute; right: 20px; top: 18px; width: 42px; height: 42px; border: 2px solid var(--navy); font-size: 1rem; }
+.lf__x:hover, .lf__x:focus-visible { background: var(--navy); color: var(--cream); }
+.lf__title { margin: 0 0 22px; font-family: var(--f-display); font-weight: 900; font-size: clamp(2.2rem, 3.6vw, 3rem); line-height: .9; text-transform: uppercase; }
+.lf__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+.lf__f { display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 0; border: 0; }
+.lf__f--wide { grid-column: 1 / -1; }
+.lf__l { display: block; margin: 0 0 6px; padding: 0; font-family: var(--f-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.lf__l b { color: var(--pink); font-weight: 500; }
+.lf__l small { text-transform: none; letter-spacing: 0; font-size: .7rem; }
+.lf input:not([type="radio"]):not([type="checkbox"]), .lf select, .lf textarea {
+  box-sizing: border-box; width: 100%; min-height: 46px; padding: 10px 14px;
+  border: 2px solid var(--navy); border-radius: 0; background: var(--white);
+  font: inherit; font-size: 1rem; font-weight: 400; color: var(--navy);
+}
+.lf textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
+.lf input::placeholder, .lf textarea::placeholder { color: rgba(27, 26, 53, .4); }
+.lf input:focus, .lf select:focus, .lf textarea:focus { outline: 3px solid var(--pink); outline-offset: 0; }
+.lf__phone { display: grid; grid-template-columns: 112px 1fr; }
+.lf__phone select { border-right: 0; font-family: var(--f-mono); font-size: .8rem; padding: 0 8px; }
+.lf__links { display: flex; flex-direction: column; gap: 8px; }
+.lf__link { display: grid; grid-template-columns: 1fr 46px; }
+.lf__link input { border-right: 0 !important; }
+.lf__link button { border: 2px solid var(--navy); background: var(--white); }
+.lf__link button:hover { background: var(--navy); color: var(--cream); }
+.lf__add { align-self: flex-start; margin-top: 8px; padding: 8px 0; color: var(--pink); font-size: .62rem !important; }
+.lf__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.lf__chips label { position: relative; cursor: pointer; }
+.lf__chips input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.lf__chips span { display: inline-block; padding: 10px 13px; border: 2px solid var(--navy); background: var(--white); font-family: var(--f-mono); font-size: .7rem; letter-spacing: .06em; }
+.lf__chips input:checked + span { background: var(--navy); color: var(--cream); }
+.lf__chips input:focus-visible + span { outline: 3px solid var(--pink); }
+.lf__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.lf__ok { display: flex; gap: 12px; align-items: flex-start; margin: 20px 0 0; font-size: .85rem; line-height: 1.45; color: var(--ink-soft); cursor: pointer; }
+.lf__ok input { flex: none; width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--pink); }
+.lf__send { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 22px; }
+.lf__msg { margin: 0; font-size: .6rem !important; color: var(--ink-soft); }
+.lf__msg.is-error { color: var(--pink); font-weight: 500; }
+.lf__btn {
+  display: inline-flex; align-items: center; gap: 10px; padding: 17px 22px 13px; cursor: pointer;
+  background: var(--pink); color: var(--ink-0);
+  font-family: var(--f-display); font-weight: 900; font-size: 1.4rem; line-height: 1; text-transform: uppercase;
+  box-shadow: 6px 6px 0 var(--navy); transition: translate .2s var(--ease-out), box-shadow .2s var(--ease-out);
+}
+.lf__btn:hover, .lf__btn:focus-visible { translate: -3px -3px; box-shadow: 9px 9px 0 var(--navy); }
+.lf__btn:disabled { opacity: .5; cursor: wait; }
+
+/* enviado */
+.lf__done { padding-top: 24px; }
+.lf__stamp { display: inline-block; padding: 6px 10px; background: var(--yellow); rotate: -2deg; }
+.lf__done .lf__title { margin-top: 16px; }
+.lf__lede { margin: 0 0 24px; max-width: 46ch; font-size: 1.05rem; line-height: 1.55; }
+.lf__cal { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 22px; margin-bottom: 26px; background: var(--white); border: 2px solid var(--navy); }
+.lf__cal[hidden] { display: none; }
+.lf__close-done { padding: 10px 0; border-bottom: 1px solid currentColor; font-size: .66rem !important; }
+
+@media (max-width: 860px) {
+  /* TODO responsive: se rediseña aparte */
+  .lf__box { grid-template-columns: minmax(0, 1fr); }
+  .lf__plan { padding-bottom: 30px; }
+  .lf__fine, .lf__steps { display: none; }
+  .lf__main { padding: 28px 20px; }
+  .lf__grid { grid-template-columns: minmax(0, 1fr); }
+}

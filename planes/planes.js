@@ -152,6 +152,14 @@ function priceOf(p) {
 function cardHTML(p, color) {
   const pr = priceOf(p);
   const subject = `Quiero el plan ${p.tag} ${p.name}`;
+  // datos que viajan al formulario "Quiero este plan" (app/lead-form.js)
+  const who = { creador: 'Creador', medico: 'Médico', mentor: 'Mentor' }[state.profile];
+  const lead = {
+    world: 'marca',
+    plan: `${who} · ${p.tag} · ${p.name}`,
+    detail: [pr.label, state.quarterly && state.profile === 'creador' ? 'pago trimestral' : null].filter(Boolean).join(' · '),
+    price: `${cop(pr.price)} / mes`,
+  };
   return `
     <li class="plc${p.hot ? ' plc--hot' : ''}" style="--c: ${color}">
       ${p.hot ? '<span class="plc__badge mono">★ Más elegido</span>' : ''}
@@ -167,7 +175,7 @@ function cardHTML(p, color) {
       <dl class="plc__rows">
         ${p.rows.map(([k, v]) => `<div class="plc__row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
       </dl>
-      <a class="plc__cta" href="mailto:rakundesigns@gmail.com?subject=${encodeURIComponent(subject)}">Quiero este plan <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      <a class="plc__cta" href="mailto:rakundesigns@gmail.com?subject=${encodeURIComponent(subject)}" data-lead="${esc(JSON.stringify(lead))}">Quiero este plan <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
     </li>`;
 }
 

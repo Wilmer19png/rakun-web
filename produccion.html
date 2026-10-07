@@ -90,6 +90,7 @@
     <a class="btn btn--pink hdr__cta-mobile" href="#guion" data-guion-open>Cotizar producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
   </nav>
 
+  <a class="hdr__login" href="login.html"><svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="1.75"/></svg><span>Iniciar sesión</span></a>
   <p class="hdr__clock mono"><span>BOGOTÁ</span> / <time data-clock>--:--</time> LOCAL</p>
   <a class="btn btn--pink hdr__cta" href="#guion" data-guion-open data-eye-target>Cotizar producción <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
   <button class="hdr__menu mono" type="button" aria-expanded="false" aria-controls="menu" data-menu>
@@ -514,12 +515,18 @@
 
         <div class="g-blk g-ch" data-say="TÚ"><div class="g-real"><p>TÚ</p></div></div>
         <div class="g-blk g-dl g-gap" data-say="Me pueden escribir a __________ o al WhatsApp ________.">
-          <div class="g-real"><p>Me pueden escribir a <input class="g-f g-f--mail" type="email" name="correo" autocomplete="email" placeholder="correo" aria-label="Correo" required> o al WhatsApp <input class="g-f g-f--tel" type="tel" name="whatsapp" autocomplete="tel" placeholder="+57" aria-label="WhatsApp">.</p></div>
+          <div class="g-real"><p>Me pueden escribir a <input class="g-f g-f--mail" type="email" name="correo" autocomplete="email" placeholder="correo" aria-label="Correo" required> o al WhatsApp <input class="g-f g-f--tel" type="tel" name="whatsapp" autocomplete="tel" placeholder="+57" aria-label="WhatsApp" required minlength="7">.</p></div>
         </div>
 
         <div class="g-blk g-tr" data-say="FUNDIDO A NEGRO.">
           <div class="g-real">
             <p>FUNDIDO A NEGRO.</p>
+            <!-- trampa para robots: las personas no la ven -->
+            <label class="g-hp" aria-hidden="true">Empresa web<input name="empresa_web" tabindex="-1" autocomplete="off"></label>
+            <label class="g-consent">
+              <input type="checkbox" name="consent" required aria-label="Autorización de datos">
+              <span>Autorizo a RAKÜN a tratar mis datos para responder esta cotización (Ley 1581 de 2012).</span>
+            </label>
             <div class="g-send">
               <p class="mono g-send__note" data-guion-msg>Te respondemos en 24 h hábiles con una propuesta y un presupuesto por etapas.</p>
               <button class="g-send__btn" type="submit">Enviar guion <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></button>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tu portal — RAKÜN</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#010221">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="app/app.css">
+</head>
+<body class="px">
+  <p class="gx__boot mono" data-boot>Abriendo tu portal…</p>
+
+  <div data-app hidden>
+    <header class="px__bar">
+      <a class="px__brand" href="index.html">RAKÜN</a>
+      <span class="mono px__pill">Portal del cliente</span>
+      <nav class="px__nav" aria-label="Secciones del portal">
+        <a class="is-on" href="#resumen" aria-current="page">Resumen</a>
+        <span aria-disabled="true">Parrilla</span>
+        <span aria-disabled="true">Grabaciones</span>
+        <span aria-disabled="true">Documentos</span>
+        <span aria-disabled="true">Reuniones</span>
+      </nav>
+      <div class="px__me"><span class="gx__ava" data-me-ava></span><span data-me-name></span><button class="mono gx__out" type="button" data-logout>Salir</button></div>
+    </header>
+
+    <main class="px__main">
+      <p class="gx__staff-note" data-staff-note hidden>Estás viendo el portal como alguien del equipo. <a href="admin.html">Ir al gestor →</a></p>
+      <p class="mono px__date" data-date></p>
+      <h1 class="px__hello">Hola, <em data-first></em></h1>
+
+      <section class="px__hero">
+        <div>
+          <p class="mono">Tu proyecto</p>
+          <h2 class="px__hero-title">Estamos preparando <em>tu tablero.</em></h2>
+          <p class="px__hero-p">Muy pronto vas a ver aquí en qué etapa va tu proyecto, quién está trabajando en lo tuyo, tu parrilla de contenido, tus grabaciones y todos tus documentos.</p>
+        </div>
+        <img src="assets/rakun-isotipo.svg" alt="" width="160" height="160">
+      </section>
+
+      <div class="px__grid">
+        <section class="px__box px__box--y">
+          <p class="mono">¿Tienes dudas?</p>
+          <h3>Hablemos 20 minutos</h3>
+          <p>Agenda una reunión con tu manager en RAKÜN.</p>
+          <a class="gx__btn gx__btn--dark" data-cal target="_blank" rel="noopener">Agendar reunión →</a>
+        </section>
+        <section class="px__box">
+          <p class="mono">Tu cuenta</p>
+          <h3 data-me-full></h3>
+          <p data-me-mail></p>
+          <a class="px__link mono" href="login.html" data-change-pass>Cambiar contraseña</a>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="app/portal.js"></script>
+</body>
+</html>

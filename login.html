@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión — RAKÜN Visual Design</title>
+  <meta name="description" content="Entra a tu portal de cliente o al gestor del equipo RAKÜN.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#010221">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="app/app.css">
+</head>
+<body class="auth">
+  <main class="auth__wrap">
+    <aside class="auth__side">
+      <a class="auth__brand" href="index.html" aria-label="Volver a la página de RAKÜN">RAKÜN</a>
+      <div>
+        <p class="mono auth__kicker">Clientes y equipo</p>
+        <p class="auth__big">Tu proyecto,<br><em>a la vista.</em></p>
+        <p class="auth__lede">Si eres cliente: el estado de tu proyecto, tu parrilla, tus documentos y tus reuniones. Si eres del equipo: el gestor.</p>
+      </div>
+      <img class="auth__eye" src="assets/rakun-isotipo.svg" alt="" width="220" height="220">
+    </aside>
+
+    <section class="auth__panel">
+      <form class="auth__form" data-login novalidate>
+        <p class="mono auth__kicker auth__kicker--dark">Iniciar sesión</p>
+        <h1 class="auth__title">Hola de <em>nuevo.</em></h1>
+        <label class="auth__f"><span>Correo</span><input name="email" type="email" autocomplete="email" required></label>
+        <label class="auth__f"><span>Contraseña</span>
+          <span class="auth__pass"><input name="password" type="password" autocomplete="current-password" required minlength="6"><button type="button" class="mono" data-toggle-pass aria-label="Mostrar contraseña">Ver</button></span>
+        </label>
+        <p class="mono auth__msg" data-msg aria-live="polite"></p>
+        <button class="auth__btn" type="submit">Entrar <span aria-hidden="true">→</span></button>
+        <button class="auth__link mono" type="button" data-show-forgot>¿Olvidaste tu contraseña?</button>
+      </form>
+
+      <form class="auth__form" data-forgot novalidate hidden>
+        <p class="mono auth__kicker auth__kicker--dark">Recuperar acceso</p>
+        <h1 class="auth__title">Te mandamos <em>un enlace.</em></h1>
+        <p class="auth__p">Escribe el correo con el que te registramos y te llega un enlace para crear una contraseña nueva.</p>
+        <label class="auth__f"><span>Correo</span><input name="email" type="email" autocomplete="email" required></label>
+        <p class="mono auth__msg" data-msg aria-live="polite"></p>
+        <button class="auth__btn" type="submit">Enviar enlace <span aria-hidden="true">→</span></button>
+        <button class="auth__link mono" type="button" data-show-login>← Volver a iniciar sesión</button>
+      </form>
+
+      <p class="auth__foot">¿Aún no trabajas con nosotros? <a href="index.html">Mira lo que hacemos</a></p>
+    </section>
+  </main>
+  <script type="module" src="app/login.js"></script>
+</body>
+</html>

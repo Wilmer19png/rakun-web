@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestor — RAKÜN</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#010221">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="app/app.css">
+</head>
+<body class="gx">
+  <p class="gx__boot mono" data-boot>Cargando el gestor…</p>
+
+  <div class="gx__app" data-app hidden>
+    <aside class="gx__side">
+      <a class="gx__brand" href="index.html" title="Ver la página">RAKÜN</a>
+      <p class="mono gx__sub">Gestor</p>
+      <nav class="gx__nav" aria-label="Secciones del gestor">
+        <button type="button" data-view="solicitudes"><i>01</i>Solicitudes <span class="gx__badge" data-badge-leads hidden></span></button>
+        <button type="button" data-view="clientes"><i>02</i>Clientes</button>
+        <button type="button" data-view="proyectos"><i>03</i>Proyectos</button>
+        <button type="button" data-view="parrillas"><i>04</i>Parrillas</button>
+        <button type="button" data-view="documentos"><i>05</i>Documentos</button>
+        <button type="button" data-view="planes"><i>06</i>Planes y precios</button>
+        <button type="button" data-view="equipo"><i>07</i>Equipo</button>
+      </nav>
+      <div class="gx__me">
+        <span class="gx__ava" data-me-ava></span>
+        <span><b data-me-name></b><span class="mono" data-me-role></span></span>
+        <button class="mono gx__out" type="button" data-logout>Salir</button>
+      </div>
+    </aside>
+    <main class="gx__main" data-main tabindex="-1"></main>
+  </div>
+
+  <!-- panel lateral (ficha de una solicitud) -->
+  <div class="gx__drawer" data-drawer hidden>
+    <div class="gx__drawer-scrim" data-close-drawer></div>
+    <aside class="gx__drawer-box" role="dialog" aria-modal="true" aria-label="Ficha de la solicitud" data-drawer-box></aside>
+  </div>
+
+  <!-- ventana (nuevo cliente, crear acceso) -->
+  <div class="gx__modal" data-modal hidden>
+    <div class="gx__drawer-scrim" data-close-modal></div>
+    <div class="gx__modal-box" role="dialog" aria-modal="true" data-modal-box></div>
+  </div>
+
+  <script type="module" src="app/admin.js"></script>
+</body>
+</html>

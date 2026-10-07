@@ -1509,3 +1509,16 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 .mega__head:hover .mega__go, .mega__head:focus-visible .mega__go, .mega__head[aria-current] .mega__go { opacity: 1; translate: 0 0; }
 .mega__head[aria-current] .mega__go { color: var(--yellow); }
 .mega__head:hover .mega__title { text-decoration: underline 3px var(--pink); text-underline-offset: 8px; }
+
+/* ---------- Iniciar sesión en el header ---------- */
+.hdr__login {
+  display: inline-flex; align-items: center; gap: 8px; flex: none;
+  padding: 9px 12px; border: 1px solid var(--line-dark);
+  font-size: var(--fs-label); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; color: var(--mist);
+  transition: color .2s, border-color .2s;
+}
+.hdr__login .ico { width: 16px; height: 16px; }
+.hdr__login:hover, .hdr__login:focus-visible { color: var(--white); border-color: var(--pink); }
+/* con el enlace de sesión, el reloj cede su lugar en pantallas medianas */
+@media (max-width: 1560px) { .hdr__clock { display: none; } }
+@media (max-width: 960px) { .hdr__login { padding: 8px; } .hdr__login span { display: none; } }
