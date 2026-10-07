@@ -282,18 +282,20 @@ function openInvite(person, role = 'cliente') {
       out.innerHTML = `<p class="gx__ok">✓ Le enviamos el correo de invitación a ${esc(person.email)}.</p>`;
     } else {
       const first = String(person.name || person.full_name || '').split(' ')[0];
-      const text = `Hola ${first}, este es tu acceso al ${isClient ? 'portal de clientes' : 'gestor'} de RAKÜN. Entra aquí para crear tu contraseña: ${data.link}`;
+      // el enlace pasa por cuenta.html: así las vistas previas de WhatsApp no gastan el enlace de un solo uso
+      const share = `${accountUrl()}?activar=${encodeURIComponent(data.link)}`;
+      const text = `Hola ${first}, este es tu acceso al ${isClient ? 'portal de clientes' : 'gestor'} de RAKÜN. Entra aquí para crear tu contraseña: ${share}`;
       const wa = waNumber(person.phone);
       out.innerHTML = `
         <p class="gx__ok">✓ Acceso creado${data.existed ? ' (ya tenía cuenta: este enlace le permite crear una contraseña nueva)' : ''}.</p>
         <p class="mono gx__kicker">Enlace de un solo uso · mándalo pronto, caduca</p>
-        <div class="gx__copy"><input readonly value="${esc(data.link)}" aria-label="Enlace de acceso"><button class="gx__btn" type="button" data-copy>Copiar</button></div>
+        <div class="gx__copy"><input readonly value="${esc(share)}" aria-label="Enlace de acceso"><button class="gx__btn" type="button" data-copy>Copiar</button></div>
         <div class="gx__btns">
           ${wa ? `<a class="gx__btn gx__btn--wa" href="https://wa.me/${wa}?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">Enviar por WhatsApp ↗</a>` : ''}
           <a class="gx__btn" href="mailto:${esc(person.email)}?subject=${encodeURIComponent('Tu acceso a RAKÜN')}&body=${encodeURIComponent(text)}">Enviar por correo ↗</a>
         </div>`;
       $('[data-copy]', out).addEventListener('click', async (ev) => {
-        try { await navigator.clipboard.writeText(data.link); ev.target.textContent = '✓ Copiado'; } catch { $('input', out).select(); }
+        try { await navigator.clipboard.writeText(share); ev.target.textContent = '✓ Copiado'; } catch { $('input', out).select(); }
       });
     }
     if (isClient && state.view === 'clientes') viewClients();

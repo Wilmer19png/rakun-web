@@ -1,6 +1,20 @@
 /* RAKÜN · crear contraseña (desde el enlace de invitación o de recuperación) */
 import { $, $$ } from './util.js';
 import { getClient, getProfile, homeFor, errorText, isConfigured } from './supa.js';
+import { SUPABASE_URL } from './config.js';
+
+/* Los enlaces que mandamos por WhatsApp llegan aquí como ?activar=<enlace de Supabase>.
+   Las vistas previas de WhatsApp o del correo "abren" los enlaces y gastarían el de un solo uso;
+   por eso primero se muestra un botón y el enlace real solo se usa cuando la persona lo toca. */
+function activationLink() {
+  const raw = new URLSearchParams(location.search).get('activar');
+  if (!raw || !SUPABASE_URL) return null;
+  try {
+    const u = new URL(raw);
+    const ok = u.origin === new URL(SUPABASE_URL).origin && u.pathname.startsWith('/auth/v1/verify');
+    return ok ? u.href : null;                    // nunca redirige a otro sitio
+  } catch { return null; }
+}
 
 const show = (name) => $$('[data-state]').forEach((el) => { el.hidden = el.dataset.state !== name; });
 const form = $('[data-state="form"]');
@@ -17,6 +31,12 @@ $$('[data-toggle-pass]').forEach((b) => b.addEventListener('click', () => {
   // Supabase devuelve los errores del enlace en la URL (#error=…)
   const hash = new URLSearchParams(location.hash.slice(1));
   if (hash.get('error') || !isConfigured()) { show('expired'); return; }
+  const go = activationLink();
+  if (go) {
+    show('activate');
+    $('[data-activate]').addEventListener('click', () => { location.href = go; });
+    return;
+  }
   try {
     const sb = await getClient();                 // aquí la librería lee el enlace y abre la sesión
     const { data: { session } } = await sb.auth.getSession();
