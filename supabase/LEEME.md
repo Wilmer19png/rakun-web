@@ -97,3 +97,17 @@ Cómo se usa:
 - **Proyectos → Nuevo proyecto**: elige el cliente y el tipo. La etapa que marques es la que ve el cliente en su portal.
 - **Parrillas**: elige el proyecto, toca un día para crear una pieza, márcala como "Lista" y luego **Enviar al cliente para aprobar**. El cliente la ve en su portal → pestaña **Parrilla**, y puede aprobar o pedir un cambio.
 - **Planes y precios**: edita, y cuando esté listo toca **Publicar en la página**. Mientras no publiques, la página sigue mostrando los precios base del Excel.
+
+---
+
+# Fase 3 · Documentos
+
+1. **SQL Editor → New query** → pega todo `supabase/fase3.sql` → **Run**. Crea:
+   - la tabla `documents` (contratos, recibos, estrategias, guiones, briefs, entregables, reportes y material del cliente);
+   - la carpeta privada de archivos `documentos` en **Storage** (máximo 25 MB por archivo), con una subcarpeta por cliente.
+2. Puedes comprobarlo en **Storage**: debe aparecer el bucket `documentos` marcado como privado.
+
+Cómo se usa:
+- **Gestor → Documentos → Subir documento**: elige cliente, proyecto, carpeta y estado, y sube un archivo o pega un link. Desmarca "Lo ve el cliente" si es solo para el equipo.
+- **Portal → Documentos**: el cliente ve sus documentos por carpeta, los abre o descarga y puede **subir su material** (archivo o link), que te aparece en "Material del cliente".
+- Los archivos se abren con un enlace temporal de 5 minutos: nadie puede compartirlos por fuera de la cuenta.

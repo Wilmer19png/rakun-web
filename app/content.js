@@ -52,3 +52,32 @@ export function monthCells(start) {
     return { date: n >= 1 && n <= days ? new Date(start.getFullYear(), start.getMonth(), n) : null };
   });
 }
+
+/* ---------- documentos ---------- */
+export const DOC_CATS = {
+  estrategia: 'Estrategias', contrato: 'Contratos', recibo: 'Recibos de pago', guion: 'Guiones',
+  brief: 'Briefs', entregable: 'Entregables', reporte: 'Reportes', material: 'Material del cliente',
+};
+// [clave, nombre, fondo, tinta]
+export const DOC_STATUS = [
+  ['por_firmar', 'Por firmar', '#FF2C68', '#fff'], ['firmado', 'Firmado', '#3C8C6E', '#fff'],
+  ['pagado', 'Pagado', '#3C8C6E', '#fff'], ['por_aprobar', 'Por aprobar', '#FFF02B', '#010221'],
+  ['aprobado', 'Aprobado', '#1B1A35', '#FFF02B'], ['entregado', 'Entregado', '#1B1A35', '#F3F0EA'],
+  ['recibido', 'Recibido', '#C3C0DD', '#010221'],
+];
+export const docStatus = (k) => DOC_STATUS.find((s) => s[0] === k);
+export const MAX_FILE = 25 * 1024 * 1024;
+
+/** Nombre de archivo seguro para la ruta: sin tildes ni espacios */
+export const safeFileName = (n) => String(n || 'archivo').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/-+/g, '-').slice(-80);
+
+export const fileSize = (b) => (!b ? '' : b < 1024 * 1024 ? `${Math.max(1, Math.round(b / 1024))} KB` : `${(b / 1024 / 1024).toFixed(1)} MB`);
+
+/** Abre un documento: link directo, o enlace temporal (5 min) para archivos privados */
+export async function openDocument(sb, d) {
+  if (d.kind === 'link') return d.url;
+  const { data, error } = await sb.storage.from('documentos').createSignedUrl(d.storage_path, 300, { download: false });
+  if (error) throw error;
+  return data.signedUrl;
+}

@@ -8,6 +8,7 @@ import { getClient, getProfile, isStaff, isConfigured, accountUrl, errorText } f
 import { viewProjects } from './admin-proyectos.js';
 import { viewParrilla } from './admin-parrilla.js';
 import { viewPlans } from './admin-planes.js';
+import { viewDocuments } from './admin-documentos.js';
 
 const WORLD = { marca: ['Marca', 'var(--yellow)'], produccion: ['Producción', 'var(--blue)'], web: ['Web', 'var(--pink)'] };
 const STATUS = [
@@ -371,18 +372,15 @@ async function viewTeam() {
 }
 
 /* ==========================================================================
-   Lo que llega en las siguientes fases
+   Secciones del gestor
    ========================================================================== */
-const soon = (n, title, text) => () => {
-  main.innerHTML = head(n, 'Próxima fase', title) + `<div class="gx__soon"><p>${text}</p><p class="mono">Ya está diseñado en el canvas · lo construimos en la siguiente fase.</p></div>`;
-};
 
 const VIEWS = {
   solicitudes: viewLeads,
   clientes: viewClients,
   proyectos: (o) => viewProjects(ctx(), o),
   parrillas: (o) => viewParrilla(ctx(), o),
-  documentos: soon('05', 'Documentos', 'Contratos, recibos, estrategias y guiones: archivo privado o link.'),
+  documentos: () => viewDocuments(ctx()),
   planes: (o) => viewPlans(ctx(), o),
   equipo: viewTeam,
 };

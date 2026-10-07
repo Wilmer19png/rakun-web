@@ -9,6 +9,7 @@ import { CALCOM_URL, CONTACT_EMAIL } from './config.js';
 import {
   STAGES, WORLD_NAME, WORLD_COLOR, netInfo, FORMATS, statusInfo, DOW,
   monthStart, addMonths, monthLabel, monthCells, ymd,
+  DOC_CATS, docStatus, MAX_FILE, safeFileName, fileSize, openDocument,
 } from './content.js';
 
 let sb, me;
@@ -57,7 +58,8 @@ const st = { projects: [], project: null, month: monthStart(new Date()), posts: 
 
 /* ---------- pestañas ---------- */
 function route() {
-  const tab = location.hash.slice(1) === 'parrilla' ? 'parrilla' : 'resumen';
+  const want = location.hash.slice(1);
+  const tab = ['parrilla', 'documentos'].includes(want) ? want : 'resumen';
   $$('[data-tab]').forEach((s) => { s.hidden = s.dataset.tab !== tab; });
   $$('[data-tab-link]').forEach((a) => {
     const on = a.dataset.tabLink === tab;
@@ -65,6 +67,115 @@ function route() {
     if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
   if (tab === 'parrilla') openParrilla();
+  if (tab === 'documentos') openDocs();
+}
+
+/* ---------- documentos ---------- */
+const docs = { cat: '', list: [], clientId: null, mode: 'file' };
+
+async function openDocs() {
+  const box = $('[data-docs]');
+  box.innerHTML = '<p class="mono gx__empty">Cargando tus documentos…</p>';
+  const [{ data: list, error }, { data: client }] = await Promise.all([
+    sb.from('documents').select('*').order('created_at', { ascending: false }),
+    sb.from('clients').select('id').eq('user_id', me.id).maybeSingle(),
+  ]);
+  if (error) { box.innerHTML = `<p class="gx__error">${esc(errorText(error))}</p>`; return; }
+  docs.list = list;
+  docs.clientId = client?.id || null;
+  renderDocs();
+}
+
+function renderDocs() {
+  const box = $('[data-docs]');
+  const shown = docs.list.filter((d) => !docs.cat || d.category === docs.cat);
+  const cats = Object.entries(DOC_CATS).filter(([k]) => k === 'material' || docs.list.some((d) => d.category === k));
+  box.innerHTML = `
+    <p class="mono px__date">Tus documentos</p>
+    <h1 class="px__hello">${docs.cat ? esc(DOC_CATS[docs.cat]) : 'Documentos'}</h1>
+    <div class="px__docs">
+      <nav class="px__folders" aria-label="Carpetas">
+        ${[['', 'Todos'], ...cats].map(([k, n]) => `<button type="button" class="${docs.cat === k ? 'is-on' : ''}" data-cat="${k}"><span>${n}</span><span class="mono">${docs.list.filter((d) => !k || d.category === k).length}</span></button>`).join('')}
+      </nav>
+      <div class="gx__table">
+        ${shown.map((d) => {
+          const s = docStatus(d.status);
+          return `<div class="gx__tr px__doc" data-id="${d.id}">
+            <span class="mono gx__tag gx__tag--type">${d.kind === 'file' ? esc((d.file_name || '').split('.').pop().toUpperCase().slice(0, 4) || 'ARCH') : 'LINK'}</span>
+            <span><b>${esc(d.title)}</b><br><small>${esc(DOC_CATS[d.category])} · ${new Date(d.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })}${d.file_size ? ` · ${fileSize(d.file_size)}` : ''}</small></span>
+            <span>${s ? `<span class="mono gx__tag" style="background:${s[2]};color:${s[3]}">${s[1]}</span>` : ''}</span>
+            <span><button class="gx__btn" type="button" data-open>${d.kind === 'file' ? 'Abrir ↓' : 'Abrir ↗'}</button></span>
+          </div>`;
+        }).join('') || '<p class="gx__empty">Aquí van a aparecer tus contratos, recibos, estrategias y entregas.</p>'}
+      </div>
+      <aside class="px__upload">
+        <p class="mono">Subir material</p>
+        <p class="px__upload-p">Fotos, textos, logos o referencias que necesitemos de ti.</p>
+        <div class="px__upload-seg">
+          <button type="button" data-mode="file" class="${docs.mode === 'file' ? 'is-on' : ''}">Archivo</button>
+          <button type="button" data-mode="link" class="${docs.mode === 'link' ? 'is-on' : ''}">Link</button>
+        </div>
+        <form data-upload novalidate>
+          ${docs.mode === 'file'
+            ? '<label class="px__drop"><input type="file" name="file"><span>Elige un archivo</span><small class="mono">PDF · JPG · PNG · DOCX · máx. 25 MB</small></label><p class="px__upload-hint">Para videos pesados usa la opción Link.</p>'
+            : '<input class="px__link-in" name="url" inputmode="url" placeholder="https://drive.google.com/…" aria-label="Link"><p class="px__upload-hint">Drive · Docs · Dropbox · WeTransfer · Vimeo · Figma</p>'}
+          <input class="px__link-in" name="title" maxlength="200" placeholder="¿Qué es? (p. ej. Fotos del consultorio)" aria-label="Nombre">
+          <p class="mono gx__saved" data-msg aria-live="polite"></p>
+          <button class="gx__btn gx__btn--hot" type="submit">Subir →</button>
+        </form>
+        <p class="mono px__lock">🔒 Contratos y recibos son privados: solo los ves tú y RAKÜN.</p>
+      </aside>
+    </div>`;
+
+  $$('[data-cat]', box).forEach((b) => b.addEventListener('click', () => { docs.cat = b.dataset.cat; renderDocs(); }));
+  $$('[data-mode]', box).forEach((b) => b.addEventListener('click', () => { docs.mode = b.dataset.mode; renderDocs(); }));
+  $$('[data-id]', box).forEach((row) => $('[data-open]', row).addEventListener('click', async () => {
+    const d = docs.list.find((x) => x.id === row.dataset.id);
+    const w = window.open('', '_blank');
+    if (w) w.opener = null;
+    try { const url = await openDocument(sb, d); if (w) w.location = url; else location.href = url; } catch (err) { w?.close(); alert(errorText(err)); }
+  }));
+  const f = $('[data-upload]', box);
+  const file = f.elements.file;
+  file?.addEventListener('change', () => {
+    const picked = file.files[0];
+    $('.px__drop span', f).textContent = picked ? picked.name : 'Elige un archivo';
+    if (picked && !f.elements.title.value.trim()) f.elements.title.value = picked.name.replace(/\.[^.]+$/, '');
+  });
+  f.addEventListener('submit', (e) => { e.preventDefault(); uploadMaterial(f); });
+}
+
+async function uploadMaterial(f) {
+  const msg = $('[data-msg]', f);
+  const btn = $('button[type="submit"]', f);
+  if (!docs.clientId) { msg.textContent = 'Tu cuenta aún no está ligada a un proyecto. Escríbenos.'; return; }
+  const title = f.elements.title.value.trim();
+  if (!title) { msg.textContent = 'Cuéntanos qué es (un nombre corto).'; f.elements.title.focus(); return; }
+  const row = { client_id: docs.clientId, category: 'material', title, status: 'recibido', visible: true, uploaded_by: me.id };
+  btn.disabled = true;
+  try {
+    if (docs.mode === 'link') {
+      const url = safeUrl(f.elements.url.value);
+      if (!url) throw new Error('Pega un link válido (https://…).');
+      Object.assign(row, { kind: 'link', url });
+    } else {
+      const picked = f.elements.file.files[0];
+      if (!picked) throw new Error('Elige un archivo.');
+      if (picked.size > MAX_FILE) throw new Error('Pesa más de 25 MB. Súbelo a Drive y mándanos el link.');
+      msg.textContent = 'Subiendo…';
+      const path = `${docs.clientId}/${crypto.randomUUID().slice(0, 8)}-${safeFileName(picked.name)}`;
+      const { error: upErr } = await sb.storage.from('documentos').upload(path, picked, { contentType: picked.type || undefined });
+      if (upErr) throw upErr;
+      Object.assign(row, { kind: 'file', storage_path: path, file_name: picked.name, file_size: picked.size });
+    }
+    const { error } = await sb.from('documents').insert(row);
+    if (error) throw error;
+    docs.cat = 'material';
+    await openDocs();
+  } catch (err) {
+    msg.textContent = errorText(err);
+    btn.disabled = false;
+  }
 }
 
 /* ---------- resumen: dónde va cada proyecto ---------- */

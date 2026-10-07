@@ -349,3 +349,37 @@
 .px__review-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 @media (max-width: 960px) { .px__gridwrap { grid-template-columns: minmax(0, 1fr); } .px__detail { position: static; } }
 .px textarea { resize: vertical; min-height: 80px; line-height: 1.45; }
+
+/* ---------- Documentos (gestor y portal) ---------- */
+.gx__count { margin-left: 4px; opacity: .6; }
+.gx__tag--type { min-width: 44px; text-align: center; background: var(--cream); color: var(--navy); border: 1px solid rgba(27, 26, 53, .25); }
+.gx__tr--doc { grid-template-columns: 64px minmax(0, 2fr) 1fr 150px 140px 150px; }
+.gx__tr--doc select { min-height: 38px; font-size: .85rem; }
+.gx__row-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.gx__row-actions .gx__btn { padding: 10px 12px; }
+
+.px__docs { display: grid; grid-template-columns: 200px minmax(0, 1fr) 300px; gap: 22px; align-items: start; }
+.px__folders { display: flex; flex-direction: column; }
+.px__folders button { display: flex; justify-content: space-between; gap: 10px; padding: 10px 12px; text-align: left; font-size: .92rem; }
+.px__folders button .mono { font-size: .56rem; opacity: .6; }
+.px__folders button:hover { background: rgba(27, 26, 53, .06); }
+.px__folders button.is-on { background: var(--navy); color: var(--cream); box-shadow: inset 4px 0 0 var(--pink); }
+.px__doc { grid-template-columns: 64px minmax(0, 1fr) auto auto; }
+.px__upload { padding: 20px; background: var(--ink-0); color: var(--cream); }
+.px__upload > .mono { margin: 0 0 6px; color: var(--yellow); }
+.px__upload-p { margin: 0 0 14px; font-size: .88rem; color: var(--mist); }
+.px__upload-seg { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 12px; }
+.px__upload-seg button { padding: 9px; font-family: var(--f-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--mist); border: 1px solid rgba(255, 255, 255, .2); }
+.px__upload-seg button.is-on { background: var(--cream); color: var(--ink-0); }
+.px__drop { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 22px 12px; border: 2px dashed rgba(255, 255, 255, .35); text-align: center; cursor: pointer; }
+.px__drop:hover, .px__drop:focus-within { border-color: var(--pink); }
+.px__drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.px__drop span { font-family: var(--f-display); font-weight: 900; font-size: 1.1rem; text-transform: uppercase; overflow-wrap: anywhere; }
+.px__drop small { font-size: .5rem; color: var(--mist); }
+.px__link-in { box-sizing: border-box; width: 100%; min-height: 42px; margin-top: 8px; padding: 8px 12px; border: 2px solid var(--cream); background: var(--white); font: inherit; font-size: .9rem; color: var(--navy); }
+.px__link-in:focus { outline: 3px solid var(--pink); }
+.px__upload-hint { margin: 8px 0 0; font-size: .78rem; color: #8B88AE; }
+.px__upload .gx__saved { color: var(--yellow); margin-top: 10px; }
+.px__upload .gx__btn--hot { width: 100%; }
+.px__upload > .px__lock { margin: 14px 0 0; font-size: .5rem; line-height: 1.7; color: #8B88AE; }
+@media (max-width: 960px) { .px__docs { grid-template-columns: minmax(0, 1fr); } }
