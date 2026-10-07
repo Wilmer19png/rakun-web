@@ -102,99 +102,118 @@
 <main id="main">
 
   <!-- ==============================================================
-       001 · MARCA PERSONAL
+       001 · MARCA PERSONAL — el celular scrollea y los seguidores suben
        ============================================================== -->
-  <section class="sec sec--navy pl-hero" id="inicio" aria-labelledby="mk-title">
+  <section class="sec sec--navy pl-hero mk-hero" id="inicio" aria-labelledby="mk-title">
     <div class="rail" aria-hidden="true"><span class="rail__num">001</span><span class="rail__label">Marca personal</span></div>
-    <div class="sec__body pl-hero__body">
-      <div class="pl-hero__head">
-        <div>
-          <p class="mono p-kicker">Mundo 01 / Marca personal</p>
-          <h1 class="pl-hero__title" id="mk-title">Hecho para<br>ser <span class="tag-label">visto.</span></h1>
+    <div class="sec__body pl-hero__body mk-hero__body">
+      <div class="mk-hero__copy">
+        <p class="mono p-kicker">Mundo 01 / Marca personal</p>
+        <h1 class="pl-hero__title" id="mk-title">Hecho para<br>ser <span class="tag-label">visto.</span></h1>
+        <p class="pl-hero__aside mk-hero__aside">Para quienes viven de su imagen: creadores, médicos y mentores. Contenido con estrategia, grabación, edición y pauta, con planes mensuales y sin letra pequeña.</p>
+        <div class="mk-actions">
+          <a class="mk-btn" href="#planes" data-eye-target>Ir a los planes <span aria-hidden="true">↓</span></a>
+          <a class="link" href="#ser-visto">Mira lo que puedes lograr <svg class="ico" aria-hidden="true"><use href="#i-se"/></svg></a>
         </div>
-        <p class="pl-hero__aside">Para quienes viven de su imagen: creadores, médicos y mentores. Contenido con estrategia, grabación, edición y pauta, con planes mensuales y sin letra pequeña.</p>
+        <p class="mono mk-hero__scroll"><span aria-hidden="true"></span>Baja: la historia sigue</p>
       </div>
-      <div class="mk-actions">
-        <a class="mk-btn" href="#planes" data-eye-target>Ir a los planes <span aria-hidden="true">↓</span></a>
-        <a class="link" href="#referencias">Ver referencias <svg class="ico" aria-hidden="true"><use href="#i-se"/></svg></a>
+
+      <!-- el celular (decorativo): lo anima planes/feed.js -->
+      <div class="mk-stage" aria-hidden="true" data-feed>
+        <div class="mk-count">
+          <p class="mono">Seguidores · en vivo</p>
+          <p class="mk-count__n" data-feed-count>12.480</p>
+          <p class="mono mk-count__d">▲ +<span data-feed-delta>320</span> hoy</p>
+        </div>
+        <div class="mk-phone">
+          <div class="mk-phone__screen">
+            <div class="mk-phone__bar">
+              <span class="mk-ava mk-ava--ring"><i></i></span>
+              <span class="mk-phone__who"><b>@tumarca</b><span class="mono"><span data-feed-count>12.480</span> seguidores</span></span>
+              <span class="mono mk-phone__follow">Siguiendo</span>
+            </div>
+            <div class="mk-feed" data-feed-list></div>
+            <span class="mk-phone__heart" data-feed-heart>♥</span>
+          </div>
+        </div>
+        <div class="mk-floats" data-feed-floats></div>
       </div>
-      <p class="mono pl-who">Ve directo a lo tuyo</p>
-      <ul class="mk-quick">
-        <li><a href="#creador" style="--t: var(--yellow)"><span class="mono">01</span>Soy creador <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-        <li><a href="#medico" style="--t: var(--blue)"><span class="mono">02</span>Soy médico <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-        <li><a href="#mentor" style="--t: var(--pink)"><span class="mono">03</span>Soy mentor <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-      </ul>
     </div>
   </section>
 
   <!-- ==============================================================
-       002 · REFERENCIAS (los reels que hacemos)
+       002 · SER VISTO — antes y después (simulación, sin cifras prometidas)
        ============================================================== -->
-  <section class="sec sec--cream mk-refs" id="referencias" aria-label="Referencias">
+  <section class="sec sec--cream mk-seen" id="ser-visto" aria-labelledby="seen-title" data-seen>
     <span class="lip" aria-hidden="true" style="--lip: var(--cream)"></span>
-    <div class="rail" aria-hidden="true"><span class="rail__num">002</span><span class="rail__label">Referencias</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">002</span><span class="rail__label">Ser visto</span></div>
     <div class="sec__body">
-      <!-- Videos de referencia.
-           Para cada video: pon el archivo en videos/ y escribe su ruta en data-src
-           (p. ej. data-src="videos/ref-01.mp4"). Opcional: data-poster="videos/ref-01.webp".
-           Los videos se cargan solo al acercarse, se reproducen en silencio y en bucle. -->
-      <div class="block reels" aria-labelledby="reels-title">
-        <div class="block__head">
-          <h2 class="display display--md reveal" id="reels-title">Referencias en <em>movimiento</em></h2>
-          <a class="link link--dark" href="mailto:rakundesigns@gmail.com?subject=Quiero%20ver%20el%20portafolio">Pide el portafolio completo <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      <div class="block__head">
+        <div>
+          <p class="mono fx-kicker">Ser visto · simulación</p>
+          <h2 class="display display--md" id="seen-title">De invisible a <em>imposible de ignorar.</em></h2>
         </div>
-        <ul class="reels__grid">
-          <li class="reel" style="--c: var(--pink)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 01: reel de lanzamiento"></video><button class="reel__play" type="button" aria-label="Reproducir video 01"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Reel de lanzamiento</span><span class="reel__meta mono">01 · Influencer · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--blue)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 02: consulta en 30 segundos"></video><button class="reel__play" type="button" aria-label="Reproducir video 02"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Consulta en 30 s</span><span class="reel__meta mono">02 · Médico · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--yellow)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 03: media kit animado"></video><button class="reel__play" type="button" aria-label="Reproducir video 03"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Media kit animado</span><span class="reel__meta mono">03 · Influencer · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--navy-deep)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 04: tráiler de curso"></video><button class="reel__play" type="button" aria-label="Reproducir video 04"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Tráiler de curso</span><span class="reel__meta mono">04 · Mentor · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--blue)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 05: identidad en movimiento"></video><button class="reel__play" type="button" aria-label="Reproducir video 05"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Identidad en movimiento</span><span class="reel__meta mono">05 · Médico · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--pink)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 06: campaña de contenido"></video><button class="reel__play" type="button" aria-label="Reproducir video 06"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Campaña de contenido</span><span class="reel__meta mono">06 · Influencer · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--navy-deep)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 07: webinar de autoridad"></video><button class="reel__play" type="button" aria-label="Reproducir video 07"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Webinar de autoridad</span><span class="reel__meta mono">07 · Mentor · 9:16</span></figcaption>
-            </figure>
-          </li>
-          <li class="reel" style="--c: var(--yellow)">
-            <figure>
-              <div class="reel__frame"><video muted loop playsinline preload="none" data-src="" aria-label="Video de referencia 08: detrás de cámaras"></video><button class="reel__play" type="button" aria-label="Reproducir video 08"><svg class="ico"><use href="#i-play"/></svg></button></div>
-              <figcaption><span class="reel__title">Detrás de cámaras</span><span class="reel__meta mono">08 · Estudio · 9:16</span></figcaption>
-            </figure>
-          </li>
-        </ul>
-        <p class="placeholder-note mono">* Espacios listos para tus videos de referencia: agrega cada archivo en data-src.</p>
+        <p class="block__aside">El mismo talento, la misma cara, el mismo celular. Lo que cambia es la estrategia, el gancho y la edición.</p>
       </div>
+
+      <div class="mk-vs">
+        <!-- antes: nadie mira -->
+        <figure class="mk-vs__side mk-vs__side--low">
+          <figcaption class="mono mk-vs__tag">Sin estrategia</figcaption>
+          <div class="mk-phone mk-phone--low" aria-hidden="true">
+            <div class="mk-phone__screen">
+              <div class="mk-prof">
+                <span class="mk-ava"></span>
+                <span class="mk-prof__stat"><b>38</b><span class="mono">Posts</span></span>
+                <span class="mk-prof__stat"><b data-seen-low>112</b><span class="mono">Seguidores</span></span>
+                <span class="mk-prof__stat"><b>87</b><span class="mono">Seguidos</span></span>
+              </div>
+              <p class="mk-prof__name">@tumarca</p>
+              <div class="mk-grid">
+                <i><span>▷ 23</span></i><i><span>▷ 41</span></i><i><span>▷ 12</span></i>
+                <i><span>▷ 38</span></i><i><span>▷ 9</span></i><i><span>▷ 17</span></i>
+                <i><span>▷ 26</span></i><i><span>▷ 14</span></i><i><span>▷ 31</span></i>
+              </div>
+              <div class="mk-empty"><span class="mono">Notificaciones</span>Sin actividad nueva</div>
+              <span class="mk-lost mono" data-seen-lost>−1</span>
+            </div>
+          </div>
+          <span class="mk-note mk-note--a mono" aria-hidden="true">3 días sin un like</span>
+          <span class="mk-note mk-note--b mono" aria-hidden="true" data-seen-cri>cri, cri…</span>
+          <p class="sr-only">Perfil sin estrategia: 112 seguidores, videos con menos de 50 vistas y sin notificaciones nuevas.</p>
+        </figure>
+
+        <div class="mk-vs__arrow" aria-hidden="true">
+          <svg viewBox="0 0 160 80"><path d="M6 46 C 50 10, 100 10, 140 38"/><polygon points="132,22 156,46 126,52"/></svg>
+          <p class="mono">Mismo talento.<br>Otra estrategia.</p>
+        </div>
+
+        <!-- después: todos miran -->
+        <figure class="mk-vs__side mk-vs__side--high">
+          <figcaption class="mk-vs__tag mk-vs__tag--hot">Con RAKÜN</figcaption>
+          <div class="mk-phone mk-phone--high" aria-hidden="true">
+            <div class="mk-phone__screen">
+              <div class="mk-prof">
+                <span class="mk-ava mk-ava--ring"><i></i></span>
+                <span class="mk-prof__stat"><b>38</b><span class="mono">Posts</span></span>
+                <span class="mk-prof__stat"><b class="is-hot" data-seen-high>112</b><span class="mono">Seguidores</span></span>
+                <span class="mk-prof__stat"><b>87</b><span class="mono">Seguidos</span></span>
+              </div>
+              <p class="mk-prof__name">@tumarca <span class="mk-check"></span></p>
+              <div class="mk-grid" data-seen-grid>
+                <i style="--c: var(--pink)"><span>▷ 1,2M</span></i><i style="--c: var(--blue)"><span>▷ 890K</span></i><i style="--c: var(--yellow)"><span>▷ 2,4M</span></i>
+                <i style="--c: #3C3A5C"><span>▷ 640K</span></i><i style="--c: var(--pink)"><span>▷ 3,1M</span></i><i style="--c: var(--blue)"><span>▷ 410K</span></i>
+                <i style="--c: var(--yellow)"><span>▷ 1,8M</span></i><i style="--c: var(--pink)"><span>▷ 720K</span></i><i style="--c: var(--blue)"><span>▷ 5,6M</span></i>
+              </div>
+              <div class="mk-toasts" data-seen-toasts></div>
+            </div>
+          </div>
+          <div class="mk-floats mk-floats--seen" aria-hidden="true" data-seen-floats></div>
+          <p class="sr-only">Perfil con estrategia: los seguidores suben, los videos superan el millón de vistas y llegan notificaciones de nuevos seguidores y marcas.</p>
+        </figure>
+      </div>
+
+      <p class="mono fx-fine">* Simulación ilustrativa. No es un resultado garantizado: depende de tu nicho, tu constancia y la pauta.</p>
     </div>
   </section>
 
@@ -543,5 +562,6 @@
 
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script type="module" src="planes/planes.js"></script>
+<script type="module" src="planes/feed.js"></script>
 </body>
 </html>
