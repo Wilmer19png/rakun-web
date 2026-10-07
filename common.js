@@ -1,6 +1,6 @@
 /* ==========================================================================
    RAKÜN — common.js
-   Lo que comparten todas las páginas: reloj de Bogotá, header (se esconde al
+   Lo que comparten todas las páginas: reloj (hora de Colombia), WhatsApp y redes, header (se esconde al
    bajar + menú móvil), menú "Lo que hacemos" y cursor personalizado.
    ========================================================================== */
 
@@ -10,7 +10,27 @@ export const root = document.documentElement;
 export const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 export const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-/* ---------- Reloj de Bogotá ---------- */
+/* ---------- Contacto: WhatsApp y redes (se cambian solo aquí) ---------- */
+export const WHATSAPP = '573504461460';                      // +57 350 446 1460
+export const SOCIAL = {
+  instagram: 'https://www.instagram.com/rakun.designs/',
+  tiktok: 'https://www.tiktok.com/@rakn.design',
+  behance: 'https://www.behance.net/rakundesign',
+};
+export const waLink = (text = 'Hola RAKÜN, quiero más información.') => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+
+// Todo enlace a wa.me sale con el número de RAKÜN; data-whatsapp="…" pone el mensaje ya escrito.
+export function initContact(scope = document) {
+  $$('a[href^="https://wa.me/"], a[data-whatsapp]', scope).forEach((a) => {
+    a.href = waLink(a.dataset.whatsapp);
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
+  $$('a[data-social]', scope).forEach((a) => { if (SOCIAL[a.dataset.social]) a.href = SOCIAL[a.dataset.social]; });
+}
+initContact();
+
+/* ---------- Reloj (hora de Colombia) ---------- */
 export function initClock() {
   const fmt = new Intl.DateTimeFormat('es-CO', { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', hour12: false });
   const els = $$('[data-clock]');

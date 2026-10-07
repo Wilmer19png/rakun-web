@@ -344,12 +344,12 @@
         <p class="p-head__aside">Apagamos la luz para que los encuentres tú. Mueve la linterna: así trabajamos en el set.</p>
       </div>
       <ul class="crew">
-        <!-- TODO: nombres y fotos reales de la crew -->
-        <li class="pola" style="--x: 6.5%; --y: 330px; --r: -4deg; --tone: var(--pink)"><span class="pola__photo"><span>DR</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Dirección</span></li>
-        <li class="pola" style="--x: 25.4%; --y: 450px; --r: 3deg; --tone: var(--blue)"><span class="pola__photo"><span>DF</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Dirección de fotografía</span></li>
-        <li class="pola" style="--x: 44.3%; --y: 320px; --r: -2deg; --tone: var(--yellow)"><span class="pola__photo"><span>MC</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Montaje y color</span></li>
-        <li class="pola" style="--x: 63.2%; --y: 440px; --r: 4deg; --tone: var(--blue)"><span class="pola__photo"><span>SD</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Sonido</span></li>
-        <li class="pola" style="--x: 81.4%; --y: 300px; --r: -3deg; --tone: var(--pink)"><span class="pola__photo"><span>DA</span></span><span class="pola__name">[Nombre Apellido]</span><span class="pola__role mono">Dirección de arte</span></li>
+        <li class="pola" style="--x: 3%; --y: 290px; --r: -4deg; --tone: var(--pink)"><span class="pola__photo"><span>WB</span></span><span class="pola__name">Wilmer Alejandro Buriticá Alvira</span><span class="pola__role mono">Director<br>Montaje y color</span></li>
+        <li class="pola" style="--x: 19%; --y: 430px; --r: 3deg; --tone: var(--blue)"><span class="pola__photo"><span>AP</span></span><span class="pola__name">Alexander Pino Caro</span><span class="pola__role mono">Dirección de fotografía<br>Sonido</span></li>
+        <li class="pola" style="--x: 35%; --y: 300px; --r: -2deg; --tone: var(--yellow)"><span class="pola__photo"><span>SM</span></span><span class="pola__name">Sofía Moncada</span><span class="pola__role mono">Dirección de arte<br>Diseñadora crossmedia</span></li>
+        <li class="pola" style="--x: 51%; --y: 440px; --r: 4deg; --tone: var(--pink)"><span class="pola__photo"><span>AA</span></span><span class="pola__name">Alejandra Aguirre</span><span class="pola__role mono">Dirección de arte<br>Diseñadora crossmedia</span></li>
+        <li class="pola" style="--x: 67%; --y: 290px; --r: -3deg; --tone: var(--blue)"><span class="pola__photo"><span>SS</span></span><span class="pola__name">Santiago Sosa Granados</span><span class="pola__role mono">Mánager</span></li>
+        <li class="pola" style="--x: 83%; --y: 420px; --r: 3deg; --tone: var(--yellow)"><span class="pola__photo"><span>MH</span></span><span class="pola__name">Mariana Hoyos Giraldo</span><span class="pola__role mono">Productora general</span></li>
       </ul>
       <!-- el ojo de RAKÜN escondido en la oscuridad: solo se ve si lo alumbras -->
       <svg class="wall__eye" data-crew-eye aria-label="El ojo de RAKÜN vigila escondido en la oscuridad" role="img"></svg>
@@ -369,18 +369,15 @@
       <div class="p-tapes__copy">
         <p class="mono p-kicker p-kicker--dark">Proyectos · la videoteca</p>
         <h2 class="display reveal" id="tapes-title">Lo que ya <em>rodamos.</em></h2>
-        <p class="p-head__aside">Saca un casete de la estantería y dale play. Cada uno guarda una historia que hicimos para que la miraran.</p>
-        <!-- TODO: proyectos reales. Para cada casete: data-name, data-kind, data-client, data-year, data-did y data-src (ruta del video) -->
+        <p class="p-head__aside">Saca un casete de la estantería y dale play. Cada uno guarda una historia que hicimos para que la miraran. El último está vacío: es el tuyo.</p>
         <div class="shelf">
           <ul class="shelf__row" data-shelf>
-            <li><button class="spine is-out" type="button" aria-pressed="true" style="--body: #1B1A35; --label: var(--pink)" data-name="[Proyecto 01]" data-kind="Videoclip" data-client="[Cliente]" data-year="[Año]" data-did="Dirección · Foto · Post" data-src=""><span class="mono spine__code">RK-01</span><span class="spine__label"><span>[Proyecto 01]</span></span><span class="mono spine__kind">Videoclip</span></button></li>
-            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--yellow)" data-name="[Proyecto 02]" data-kind="Comercial" data-client="[Cliente]" data-year="[Año]" data-did="Producción completa" data-src=""><span class="mono spine__code">RK-02</span><span class="spine__label"><span>[Proyecto 02]</span></span><span class="mono spine__kind">Comercial</span></button></li>
-            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--blue)" data-name="[Proyecto 03]" data-kind="Cortometraje" data-client="[Cliente]" data-year="[Año]" data-did="Guion · Rodaje · Color" data-src=""><span class="mono spine__code">RK-03</span><span class="spine__label"><span>[Proyecto 03]</span></span><span class="mono spine__kind">Cortometraje</span></button></li>
-            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--cream)" data-name="[Proyecto 04]" data-kind="Videoclip" data-client="[Cliente]" data-year="[Año]" data-did="Rodaje · Montaje" data-src=""><span class="mono spine__code">RK-04</span><span class="spine__label"><span>[Proyecto 04]</span></span><span class="mono spine__kind">Videoclip</span></button></li>
-            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--pink)" data-name="[Proyecto 05]" data-kind="Largometraje" data-client="[Cliente]" data-year="[Año]" data-did="Postproducción" data-src=""><span class="mono spine__code">RK-05</span><span class="spine__label"><span>[Proyecto 05]</span></span><span class="mono spine__kind">Largometraje</span></button></li>
-            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--blue)" data-name="[Proyecto 06]" data-kind="Comercial" data-client="[Cliente]" data-year="[Año]" data-did="Dirección · Foto" data-src=""><span class="mono spine__code">RK-06</span><span class="spine__label"><span>[Proyecto 06]</span></span><span class="mono spine__kind">Comercial</span></button></li>
-            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--yellow)" data-name="[Proyecto 07]" data-kind="Videoclip" data-client="[Cliente]" data-year="[Año]" data-did="Producción completa" data-src=""><span class="mono spine__code">RK-07</span><span class="spine__label"><span>[Proyecto 07]</span></span><span class="mono spine__kind">Videoclip</span></button></li>
-            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--cream)" data-name="[Proyecto 08]" data-kind="Cortometraje" data-client="[Cliente]" data-year="[Año]" data-did="Guion · Rodaje" data-src=""><span class="mono spine__code">RK-08</span><span class="spine__label"><span>[Proyecto 08]</span></span><span class="mono spine__kind">Cortometraje</span></button></li>
+            <li><button class="spine is-out" type="button" aria-pressed="true" style="--body: #1B1A35; --label: var(--pink)" data-name="Amor de calle" data-kind="Videoclip" data-client="Apostol" data-year="2026" data-did="Dirección · Foto · Post" data-yt="4RtfGuRQXYw" data-desc="&quot;Amor de calle&quot; es un videoclip que nace de plasmar la crudeza urbana como una narrativa visual directa y sin filtros. En RAKÜN asumimos el control absoluto del proyecto: la dirección creativa, la coescritura del guion, la fotografía y la postproducción, cuidando cada detalle técnico, desde la iluminación en set hasta un montaje dinámico con color grading cinematográfico."><span class="mono spine__code">RK-01</span><span class="spine__label"><span>Amor de calle</span></span><span class="mono spine__kind">Videoclip</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--yellow)" data-name="Otro amanecer" data-kind="Videoclip" data-client="Apostol" data-year="2026" data-did="Dirección · Foto · Post" data-yt="Yv687H7gZnk" data-desc="&quot;Otro amanecer&quot; es un videoclip que nace de explorar el paso de la oscuridad a la luz como un despertar visceral y lleno de contrastes. En RAKÜN asumimos el control absoluto del proyecto: la dirección creativa, la fotografía y la postproducción, cuidando cada detalle técnico, desde la iluminación en set hasta un montaje dinámico con color grading cinematográfico."><span class="mono spine__code">RK-02</span><span class="spine__label"><span>Otro amanecer</span></span><span class="mono spine__kind">Videoclip</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--blue)" data-name="Nos fui ¡Pues mijo!" data-kind="Magazine" data-client="—" data-year="2025" data-did="Dirección · Cámara · Post" data-yt="pH4I3-CPcwU" data-desc="Una propuesta audiovisual que reestructura el concepto clásico del magazine. El objetivo fue crear una pieza sobre la vida del campo que no se sintiera episódica, sino cohesiva, gracias a una historia central que conecta las temáticas. Asumimos la dirección, la cámara y la edición, para que la transición entre la ficción y el contenido documental mantuviera una estética visual unificada y atractiva."><span class="mono spine__code">RK-03</span><span class="spine__label"><span>Nos fui ¡Pues mijo!</span></span><span class="mono spine__kind">Magazine</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #010221; --label: var(--cream)" data-name="Creative Mornings" data-kind="Podcast" data-client="CreativeMornings Pereira" data-year="2025" data-did="Cámara · Sonido · Post" data-yt="x8bgyfs9UeE" data-desc="Colaboración técnica para el capítulo local de la comunidad global CreativeMornings, un espacio mensual de desayunos, charlas y conexiones. Producimos un episodio especial del podcast: grabamos el audio en sitio y nos encargamos de la edición y la postproducción, para que el mensaje de la charla llegara con la máxima claridad y calidad sonora a la audiencia digital."><span class="mono spine__code">RK-04</span><span class="spine__label"><span>Creative Mornings</span></span><span class="mono spine__kind">Podcast</span></button></li>
+            <li><button class="spine" type="button" aria-pressed="false" style="--body: #1B1A35; --label: var(--pink)" data-name="Donde la música muere" data-kind="Cortometraje" data-client="Proyecto de semestre" data-year="2024" data-did="Dirección · Foto · Cámara · Post" data-yt="dAaUGrENSRQ" data-desc="Una reinterpretación visual inspirada en el universo frenético de ¡Que viva la música! de Andrés Caicedo. Este cortometraje explora la decadencia y la euforia urbana a través de una narrativa experimental. Asumimos un rol multidisciplinario (dirección, cámara y edición) para que la visión estética y el ritmo del montaje transmitieran fielmente la atmósfera caicediana, desde el rodaje hasta el corte final."><span class="mono spine__code">RK-05</span><span class="spine__label"><span>Donde la música muere</span></span><span class="mono spine__kind">Cortometraje</span></button></li>
+            <li><button class="spine spine--empty" type="button" aria-pressed="false" data-empty data-name="Tu proyecto" data-kind="El que imagines" data-client="Tú" data-year="2026" data-did="Lo que necesites" data-desc="Este casete está vacío y lleva tu nombre. Cuéntanos la idea: nosotros la escribimos, la rodamos y la dejamos lista para que la miren."><span class="mono spine__code">RK-??</span><span class="spine__label"><span>Tu proyecto</span></span><span class="mono spine__kind">Por grabar</span></button></li>
           </ul>
         </div>
       </div>
@@ -392,9 +389,9 @@
             <span class="player__scan" aria-hidden="true"></span>
             <span class="player__play mono" aria-hidden="true">PLAY ▶</span>
             <span class="player__tc mono" aria-hidden="true" data-player-tc>00:00:00:00</span>
-            <button class="player__btn" type="button" data-player-btn aria-label="Reproducir [Proyecto 01]"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg></button>
-            <p class="player__name" data-player-name>[Proyecto 01]</p>
-            <p class="player__ph mono" data-player-ph>[video del proyecto]</p>
+            <button class="player__btn" type="button" data-player-btn aria-label="Reproducir Amor de calle"><svg class="ico" aria-hidden="true"><use href="#i-play"/></svg></button>
+            <p class="player__name" data-player-name>Amor de calle</p>
+            <p class="player__ph mono" data-player-ph hidden>Casete vacío · esperando tu historia</p>
             <span class="player__noise" aria-hidden="true"></span>
             <span class="player__black" aria-hidden="true"></span>
           </div>
@@ -402,10 +399,12 @@
         </div>
         <dl class="player__info">
           <div><dt class="mono">Tipo</dt><dd data-player-kind>Videoclip</dd></div>
-          <div><dt class="mono">Cliente</dt><dd data-player-client>[Cliente]</dd></div>
-          <div><dt class="mono">Año</dt><dd data-player-year>[Año]</dd></div>
+          <div><dt class="mono">Cliente</dt><dd data-player-client>Apostol</dd></div>
+          <div><dt class="mono">Año</dt><dd data-player-year>2026</dd></div>
           <div><dt class="mono">Hicimos</dt><dd data-player-did>Dirección · Foto · Post</dd></div>
         </dl>
+        <p class="player__desc" data-player-desc></p>
+        <a class="player__cta" href="#guion" data-guion-open aria-controls="guion" hidden>Cotizar mi proyecto <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
       </div>
     </div>
   </section>
@@ -549,8 +548,13 @@
       <div class="ftr__col">
         <h2 class="mono">Contacto</h2>
         <a class="link" href="mailto:rakundesigns@gmail.com">rakundesigns@gmail.com <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
-        <!-- TODO: número real de WhatsApp -->
-        <a class="link" href="https://wa.me/" rel="noopener">WhatsApp <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="link" href="https://wa.me/573504461460" rel="noopener" data-whatsapp="Hola RAKÜN, quiero cotizar una producción audiovisual.">WhatsApp <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </div>
+      <div class="ftr__col">
+        <h2 class="mono">Redes</h2>
+        <a class="link" href="https://www.instagram.com/rakun.designs/" data-social="instagram" target="_blank" rel="noopener">Instagram <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="link" href="https://www.tiktok.com/@rakn.design" data-social="tiktok" target="_blank" rel="noopener">TikTok <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="link" href="https://www.behance.net/rakundesign" data-social="behance" target="_blank" rel="noopener">Behance <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
       </div>
       <div class="ftr__col">
         <h2 class="mono">Mundos</h2>

@@ -257,7 +257,7 @@
 .crew { position: absolute; inset: 0; pointer-events: none; }
 .pola {
   position: absolute; left: var(--x); top: var(--y);
-  width: clamp(170px, 16vw, 220px);
+  width: clamp(150px, 13.4vw, 190px);
   display: flex; flex-direction: column; gap: 4px;
   padding: 12px 12px 14px;
   background: var(--cream); color: var(--navy);
@@ -277,8 +277,8 @@
   background-size: 6px 6px;
 }
 .pola__photo span { font-family: var(--f-display); font-weight: 900; font-size: 3.4rem; color: var(--cream); }
-.pola__name { font-family: "Permanent Marker", cursive; font-size: 1.2rem; line-height: 1.1; }
-.pola__role { font-size: 10px; color: var(--ink-soft); }
+.pola__name { font-family: "Permanent Marker", cursive; font-size: 1.1rem; line-height: 1.1; }
+.pola__role { font-size: 10px; line-height: 1.5; color: var(--ink-soft); }
 .wall__eye { position: absolute; left: 78.5%; top: 770px; width: 170px; height: 112px; overflow: visible; --eye-lid: var(--ink-0); }
 .js .wall__dark {
   position: absolute; inset: 0; pointer-events: none;
@@ -361,6 +361,26 @@ html:not(.js) .wall__lights { display: none; }
 .player__info { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding-top: 14px; border-top: 1px solid var(--line-light); }
 .player__info dt { color: var(--ink-soft); }
 .player__info dd { margin: 4px 0 0; font-weight: 500; }
+/* casetes reales en YouTube: la miniatura es la portada, el reproductor entra al dar play */
+.player__screen { background-size: cover; background-position: center; }
+.player__screen::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(1, 2, 33, .55) 0%, rgba(1, 2, 33, .1) 40%, rgba(1, 2, 33, .75) 100%); pointer-events: none; }
+.player__yt { inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; background: #000; }
+.player.is-playing .player__tc, .player.is-playing .player__scan { display: none; }
+.player__desc { margin: 0; max-width: 62ch; font-weight: 300; line-height: 1.6; color: var(--ink-soft); }
+.player__desc:empty { display: none; }
+.player__cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 14px 20px 11px; background: var(--pink); color: var(--ink-0); font: 900 1.2rem/1 var(--f-display); text-transform: uppercase; box-shadow: 5px 5px 0 var(--navy); transition: translate .15s steps(2), box-shadow .15s steps(2); }
+.player__cta:hover, .player__cta:focus-visible { translate: -3px -3px; box-shadow: 8px 8px 0 var(--navy); }
+.player__cta .ico { width: .7em; height: .7em; }
+
+/* el casete vacío: "Tu proyecto" */
+.spine--empty { background: transparent; box-shadow: none; outline: 2px dashed var(--navy); outline-offset: -2px; }
+.spine--empty .spine__code { color: var(--ink-soft); }
+.spine--empty .spine__label { background: transparent; border: 2px dashed var(--pink); }
+.spine--empty .spine__label span { color: var(--pink); }
+.spine--empty .spine__kind { color: var(--pink); }
+.player.is-empty .player__screen { background: repeating-linear-gradient(-45deg, #17162c 0 14px, #1d1c36 14px 28px); }
+.player.is-empty .player__name { font-size: 2.2rem; color: var(--pink); }
+.player.is-empty .player__ph { color: var(--yellow); }
 
 /* ==========================================================================
    006 · CTA
@@ -399,7 +419,7 @@ html:not(.js) .wall__lights { display: none; }
 .p-cta__btn .ico { width: .8em; height: .8em; }
 
 /* Footer de producción (sobre navy) */
-.p-ftr__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
+.p-ftr__cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gutter); }
 .p-ftr .ftr__col h2, .p-ftr .ftr__bottom { color: var(--mist); }
 .p-ftr .ftr__top-link { color: var(--white); }
 

@@ -466,3 +466,20 @@
 .pl-pick__list li[aria-selected="true"], .pl-pick__list li[data-i]:hover { background: var(--yellow); }
 .pl-pick__credit { padding: 5px 12px; font-family: var(--f-mono); font-size: .5rem; color: var(--ink-soft); text-align: right; }
 .pl-pick__map { display: inline-block; font-size: .56rem; color: var(--pink); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Cambiar contraseña (portal y gestor) ---------- */
+button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
+.pw { width: min(440px, calc(100vw - 32px)); padding: 0; border: 0; background: var(--cream); color: var(--navy); box-shadow: 10px 12px 0 rgba(1, 2, 33, .5); }
+.pw::backdrop { background: rgba(1, 2, 33, .7); }
+.pw__form { display: flex; flex-direction: column; gap: 14px; padding: 28px 28px 24px; }
+.pw__k { margin: 0; font-size: .56rem; color: var(--ink-soft); }
+.pw__title { margin: 0 0 6px; font-family: var(--f-display); font-weight: 900; font-size: 2rem; line-height: .95; text-transform: uppercase; }
+.pw__title em { font-style: normal; color: var(--pink); }
+.pw__f { display: flex; flex-direction: column; gap: 6px; font-size: .86rem; font-weight: 500; }
+.pw__f input { padding: 12px; border: 2px solid var(--navy); background: var(--white); font: inherit; font-weight: 400; }
+.pw__f input:focus { outline: none; border-color: var(--pink); }
+.pw__show { display: flex; align-items: center; gap: 8px; font-size: .56rem; cursor: pointer; }
+.pw__msg { margin: 0; font-size: .86rem; color: var(--ink-soft); }
+.pw__msg.is-error { color: #C8173F; font-weight: 500; }
+.pw__act { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+.pw__show input { all: revert; width: 16px; height: 16px; margin: 0; accent-color: var(--pink); }

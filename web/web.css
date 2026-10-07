@@ -34,7 +34,7 @@
   rotate: -2.5deg; box-shadow: .1em .1em 0 rgba(0, 0, 0, .5); text-shadow: none;
 }
 .p-hero__lede { max-width: 32rem; font-size: var(--fs-lead); line-height: 1.5; }
-.p-ftr__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
+.p-ftr__cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gutter); }
 .p-ftr .ftr__col h2, .p-ftr .ftr__bottom { color: var(--mist); }
 .p-ftr .ftr__top-link { color: var(--white); }
 

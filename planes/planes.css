@@ -10,7 +10,7 @@
   background: var(--pink); color: var(--ink-0);
   rotate: -2deg; box-shadow: .1em .1em 0 rgba(0, 0, 0, .5); text-shadow: none;
 }
-.p-ftr__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
+.p-ftr__cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gutter); }
 .p-ftr .ftr__col h2, .p-ftr .ftr__bottom { color: var(--mist); }
 .p-ftr .ftr__top-link { color: var(--white); }
 .pl-head {

@@ -10,6 +10,7 @@ import { viewParrilla } from './admin-parrilla.js';
 import { viewPlans } from './admin-planes.js';
 import { viewDocuments } from './admin-documentos.js';
 import { viewShoots, viewMeetings } from './admin-agenda.js';
+import { openPasswordDialog } from './password.js';
 
 const WORLD = { marca: ['Marca', 'var(--yellow)'], produccion: ['Producción', 'var(--blue)'], web: ['Web', 'var(--pink)'] };
 const STATUS = [
@@ -38,6 +39,7 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, leads: [
   $('[data-me-name]').textContent = me.full_name || me.email;
   $('[data-me-role]').textContent = me.area || ROLE[me.role];
   $('[data-logout]').addEventListener('click', async () => { await sb.auth.signOut(); location.replace('login.html'); });
+  $('[data-change-pass]').addEventListener('click', () => openPasswordDialog(sb, me));
   $$('[data-view]').forEach((b) => b.addEventListener('click', () => go(b.dataset.view)));
   $$('[data-close-drawer]').forEach((b) => b.addEventListener('click', closeDrawer));
   $$('[data-close-modal]').forEach((b) => b.addEventListener('click', closeModal));

@@ -9,10 +9,8 @@ import { RakunEye } from '../eye.js';
 import { initFormats, setFormatsProfile } from './formatos.js';
 import { DATA, SESSION_PRICE } from './data.js';
 import { loadCatalog } from '../app/catalog.js';
-import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
+import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu, waLink } from '../common.js';
 
-// TODO: número real de WhatsApp en formato internacional, sin "+" ni espacios (ej. '573001234567').
-const WHATSAPP = '';
 
 
 
@@ -21,7 +19,6 @@ const cop = (n) => (typeof n === 'number' ? `$${n.toLocaleString('es-CO')}` : n)
 // en tipografía display el "$" de Knuckle Down parece una barra: va en la tipografía de texto
 const copBig = (n) => (typeof n === 'number' ? `<span class="cur">$</span>${n.toLocaleString('es-CO')}` : n);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const waLink = (text) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
 
 /* ---------- estado ---------- */
 const state = { profile: 'creador', line: 'flujo', mode: 'edicion', quarterly: false };
@@ -268,10 +265,6 @@ function initPillars() {
   });
 }
 
-/* ---------- WhatsApp: enlaces con mensaje ya escrito ---------- */
-function initWhatsapp() {
-  $$('[data-whatsapp]').forEach((a) => { a.href = waLink(a.dataset.whatsapp); a.target = '_blank'; a.rel = 'noopener'; });
-}
 
 /* ---------- smooth scroll + anclas ---------- */
 let lenis = null;
@@ -317,7 +310,6 @@ initFormats((p) => setProfile(p));
 initPlans();
 initSos();
 initPillars();
-initWhatsapp();
 
 const hdrEye = $('[data-eye="eye-hdr"]');
 if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).followCursor();

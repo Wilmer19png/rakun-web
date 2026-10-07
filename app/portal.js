@@ -4,8 +4,9 @@
    El cliente solo ve sus propios datos: lo garantizan las reglas de la base de datos.
    ========================================================================== */
 import { $, $$, esc, initials, safeUrl } from './util.js';
-import { getClient, getProfile, isStaff, isConfigured, accountUrl, errorText } from './supa.js';
+import { getClient, getProfile, isStaff, isConfigured, errorText } from './supa.js';
 import { CALCOM_URL, CONTACT_EMAIL } from './config.js';
+import { openPasswordDialog } from './password.js';
 import {
   STAGES, WORLD_NAME, WORLD_COLOR, netInfo, FORMATS, statusInfo, DOW,
   monthStart, addMonths, monthLabel, monthCells, ymd,
@@ -39,11 +40,7 @@ const st = { projects: [], project: null, month: monthStart(new Date()), posts: 
   cal.href = CALCOM_URL || `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Quiero agendar una reunión')}`;
   if (!CALCOM_URL) cal.removeAttribute('target');
 
-  $('[data-change-pass]').addEventListener('click', async (e) => {
-    e.preventDefault();
-    const { error } = await sb.auth.resetPasswordForEmail(me.email, { redirectTo: accountUrl() });
-    e.target.textContent = error ? errorText(error) : '✓ Te enviamos un enlace a tu correo';
-  });
+  $('[data-change-pass]').addEventListener('click', (e) => { e.preventDefault(); openPasswordDialog(sb, me); });
   $('[data-logout]').addEventListener('click', async () => { await sb.auth.signOut(); location.replace('login.html'); });
 
   // sus proyectos (las reglas de la base de datos solo devuelven los suyos)

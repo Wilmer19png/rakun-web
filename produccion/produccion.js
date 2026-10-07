@@ -334,48 +334,81 @@ function initTapes() {
   const spines = $$('.spine');
   const player = $('[data-player]');
   if (!spines.length || !player) return;
+  const screen = $('.player__screen', player);
   const video = $('[data-player-video]');
   const btn = $('[data-player-btn]');
   const tc = $('[data-player-tc]');
+  const ph = $('[data-player-ph]');
+  const cta = $('.player__cta', player);
   const set = (key, text) => { $(`[data-player-${key}]`).textContent = text; };
   let timers = [];
   let tcStart = performance.now();
   let visible = false;
+  let frame = null;                                      // el reproductor de YouTube, solo mientras suena
+  let current = spines.find((s) => s.classList.contains('is-out')) || spines[0];
 
-  const select = (spine) => {
+  // YouTube: la miniatura hace de portada; el reproductor se carga solo al dar play
+  const thumb = (id) => `url("https://i.ytimg.com/vi/${id}/hqdefault.jpg")`;
+  const stop = () => {
+    frame?.remove();
+    frame = null;
+    video.pause();
+    video.removeAttribute('controls');
+    player.classList.remove('is-playing');
+  };
+
+  const select = (spine, animate = true) => {
+    current = spine;
     spines.forEach((s) => {
       const on = s === spine;
       s.classList.toggle('is-out', on);
       s.setAttribute('aria-pressed', String(on));
     });
     const d = spine.dataset;
-    video.pause();
-    video.removeAttribute('controls');
-    player.classList.remove('is-playing', 'has-video');
-    if (d.src) { video.src = d.src; player.classList.add('has-video'); } else { video.removeAttribute('src'); video.load(); }
-    set('name', d.name); set('kind', d.kind); set('client', d.client); set('year', d.year); set('did', d.did);
-    $('[data-player-ph]').hidden = !!d.src;
+    stop();
+    player.classList.toggle('has-video', !!d.src);
+    player.classList.toggle('is-empty', 'empty' in d);
+    if (d.src) video.src = d.src; else { video.removeAttribute('src'); video.load(); }
+    screen.style.backgroundImage = d.yt ? thumb(d.yt) : '';
+    set('name', d.name); set('kind', d.kind); set('client', d.client); set('year', d.year); set('did', d.did); set('desc', d.desc || '');
+    ph.hidden = !('empty' in d);
+    cta.hidden = !('empty' in d);
+    btn.hidden = 'empty' in d;
     btn.setAttribute('aria-label', `Reproducir ${d.name}`);
     // cambio de casete: negro, estática y PLAY, a pocos cuadros
     timers.forEach(clearTimeout);
     timers = [];
-    if (reduced) { tcStart = performance.now(); return; }
+    if (reduced || !animate) { tcStart = performance.now(); return; }
     [0, 1, 2, 3].forEach((s, k) => timers.push(setTimeout(() => { player.dataset.step = String(s); }, k * 80)));
     timers.push(setTimeout(() => { player.removeAttribute('data-step'); tcStart = performance.now(); }, 4 * 80));
   };
   spines.forEach((s) => s.addEventListener('click', () => select(s)));
+  select(current, false);
 
   btn.addEventListener('click', () => {
-    if (!video.getAttribute('src')) return;              // TODO: sin video aún, solo el placeholder
+    const d = current.dataset;
+    if (d.yt) {
+      frame = document.createElement('iframe');
+      frame.className = 'player__yt';
+      frame.src = `https://www.youtube-nocookie.com/embed/${d.yt}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      frame.title = d.name;
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.allowFullscreen = true;
+      screen.append(frame);
+      player.classList.add('is-playing');
+      tcStart = performance.now();
+      return;
+    }
+    if (!video.getAttribute('src')) return;
     video.controls = true;
     video.play().then(() => player.classList.add('is-playing')).catch(() => {});
   });
-  video.addEventListener('pause', () => player.classList.remove('is-playing'));
+  video.addEventListener('pause', () => { if (!frame) player.classList.remove('is-playing'); });
 
   let lastTc = '';
   const loop = (now) => {
     if (!visible) return;
-    const sec = player.classList.contains('is-playing') ? video.currentTime : Math.max(0, now - tcStart) / 1000;
+    const sec = player.classList.contains('is-playing') && !frame ? video.currentTime : Math.max(0, now - tcStart) / 1000;
     const t = timecode(sec);
     if (t !== lastTc) { tc.textContent = t; lastTc = t; }
     requestAnimationFrame(loop);
@@ -383,7 +416,7 @@ function initTapes() {
   new IntersectionObserver(([e]) => {
     visible = e.isIntersecting;
     if (visible) requestAnimationFrame(loop);
-    else if (!video.paused) video.pause();
+    else stop();                                         // al salir de la vista, el video se detiene
   }).observe(player);
 }
 
