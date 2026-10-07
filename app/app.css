@@ -443,3 +443,26 @@
   .gx__ev { grid-template-columns: 64px minmax(0, 1fr); }
   .gx__ev-act { grid-column: 1 / -1; }
 }
+
+/* ---------- Eliminar (solo admin) ---------- */
+.gx__danger { display: block; margin-top: 22px; padding: 6px 0; font-size: .58rem; color: var(--pink); text-decoration: underline; text-underline-offset: 4px; }
+.gx__danger:hover { color: var(--navy); }
+.gx__btn--danger { background: var(--pink); border-color: var(--pink); color: var(--white); }
+.gx__btn--danger:hover:not(:disabled) { background: #C8103F; border-color: #C8103F; color: var(--white); }
+.gx__btn--danger:disabled { opacity: .35; cursor: not-allowed; }
+.gx__del-list { margin: 0 0 16px; padding: 14px 18px; background: var(--white); border-left: 4px solid var(--pink); display: grid; gap: 4px; font-size: .92rem; }
+.gx__del-list b { font-weight: 500; }
+
+/* ---------- Buscador de lugares ---------- */
+.pl-pick { position: relative; margin: -4px 0 14px; }
+.pl-pick__k { margin: 0 0 6px; font-size: .55rem; color: var(--ink-soft); }
+.pl-pick__prev { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.pl-pick__chip { padding: 6px 10px; border: 1px solid rgba(27, 26, 53, .3); background: var(--white); font-size: .82rem; }
+.pl-pick__chip:hover { background: var(--navy); color: var(--cream); border-color: var(--navy); }
+.pl-pick__list { position: absolute; left: 0; right: 0; top: -12px; z-index: 5; margin: 0; padding: 0; list-style: none; background: var(--white); border: 2px solid var(--navy); box-shadow: 6px 7px 0 rgba(27, 26, 53, .2); max-height: 300px; overflow-y: auto; }
+.pl-pick__list li[data-i] { display: flex; flex-direction: column; gap: 2px; padding: 9px 12px; cursor: pointer; border-bottom: 1px solid rgba(27, 26, 53, .08); }
+.pl-pick__list li[data-i] b { font-weight: 500; font-size: .92rem; }
+.pl-pick__list li[data-i] span { font-size: .78rem; color: var(--ink-soft); }
+.pl-pick__list li[aria-selected="true"], .pl-pick__list li[data-i]:hover { background: var(--yellow); }
+.pl-pick__credit { padding: 5px 12px; font-family: var(--f-mono); font-size: .5rem; color: var(--ink-soft); text-align: right; }
+.pl-pick__map { display: inline-block; font-size: .56rem; color: var(--pink); text-decoration: underline; text-underline-offset: 3px; }

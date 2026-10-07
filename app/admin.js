@@ -175,7 +175,8 @@ function openLead(id) {
       ${wa ? `<a class="gx__btn gx__btn--wa" href="https://wa.me/${wa}?text=${encodeURIComponent(`Hola ${l.name.split(' ')[0]}, te escribimos de RAKÜN por tu solicitud del plan ${l.plan || ''}.`)}" target="_blank" rel="noopener">WhatsApp ↗</a>` : ''}
       <a class="gx__btn" href="mailto:${esc(l.email)}?subject=${encodeURIComponent('RAKÜN · tu solicitud')}">Correo ↗</a>
       <button class="gx__btn gx__btn--hot" type="button" data-convert>Convertir en cliente →</button>
-    </div>`;
+    </div>
+    ${me.role === 'admin' ? '<button class="gx__danger mono" type="button" data-del-lead>Eliminar solicitud</button>' : ''}`;
   $$('[data-close-drawer]', box).forEach((b) => b.addEventListener('click', closeDrawer));
 
   const saved = $('[data-saved]', box);
@@ -192,6 +193,14 @@ function openLead(id) {
   let t;
   $('[data-notes]', box).addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => patch({ notes: e.target.value }, 'Notas guardadas'), 700); });
   $('[data-convert]', box).addEventListener('click', () => convertLead(l));
+  $('[data-del-lead]', box)?.addEventListener('click', async () => {
+    if (!confirm(`¿Eliminar la solicitud de ${l.name}? No se puede deshacer.`)) return;
+    const { error } = await sb.from('leads').delete().eq('id', l.id);
+    if (error) { saved.textContent = errorText(error); return; }
+    state.leads = state.leads.filter((x) => x.id !== l.id);
+    closeDrawer();
+    renderLeads();
+  });
 
   $('[data-drawer]').hidden = false;
   $('.gx__x', box).focus();
@@ -231,11 +240,54 @@ async function viewClients() {
           <span>${esc(c.email)}<br><small>${esc(c.phone || '')}</small></span>
           <span>${esc(c.city || '—')}</span>
           <span><span class="mono gx__tag" style="background:${c.user_id ? '#3C8C6E' : 'var(--mist)'};color:${c.user_id ? '#fff' : 'var(--navy)'}">${c.user_id ? 'Con acceso' : 'Sin acceso'}</span></span>
-          <span><button class="gx__btn" type="button" data-invite="${c.id}">${c.user_id ? 'Nuevo enlace' : 'Crear acceso'}</button></span>
+          <span class="gx__row-actions"><button class="gx__btn" type="button" data-invite="${c.id}">${c.user_id ? 'Nuevo enlace' : 'Crear acceso'}</button>${me.role === 'admin' ? `<button class="gx__mini" type="button" data-del-client="${c.id}" aria-label="Eliminar a ${esc(c.name)}" title="Eliminar cliente">✕</button>` : ''}</span>
         </div>`).join('') || '<p class="gx__empty">Aún no hay clientes. Convierte una solicitud o crea uno nuevo.</p>'}
     </div>`;
   $('[data-new-client]', main).addEventListener('click', newClientForm);
   $$('[data-invite]', main).forEach((b) => b.addEventListener('click', () => openInvite(state.clients.find((c) => c.id === b.dataset.invite))));
+  $$('[data-del-client]', main).forEach((b) => b.addEventListener('click', () => deleteClient(state.clients.find((c) => c.id === b.dataset.delClient))));
+}
+
+/* ---------- eliminar un cliente: muestra qué se borra y pide escribir su nombre ---------- */
+async function deleteClient(c) {
+  if (!c) return;
+  const count = async (table) => (await sb.from(table).select('id', { count: 'exact', head: true }).eq('client_id', c.id)).count || 0;
+  const [projects, posts, docs, shoots, meets] = await Promise.all(['projects', 'posts', 'documents', 'shoots', 'meetings'].map(count));
+  openModal(`
+    <p class="mono gx__kicker">Eliminar cliente</p>
+    <h2 class="gx__modal-title">¿Eliminar a <em>${esc(c.name)}?</em></h2>
+    <p class="gx__p">Se borra para siempre, junto con todo lo suyo:</p>
+    <ul class="gx__del-list">
+      <li><b>${projects}</b> proyectos</li><li><b>${posts}</b> piezas de parrilla</li><li><b>${docs}</b> documentos (y sus archivos)</li>
+      <li><b>${shoots}</b> grabaciones</li><li><b>${meets}</b> reuniones</li>
+      ${c.user_id ? '<li>Su <b>acceso al portal</b>: ya no podrá iniciar sesión</li>' : ''}
+    </ul>
+    <p class="gx__p">La solicitud original, si la hay, se conserva en <b>Solicitudes</b>.</p>
+    <label class="gx__f"><span>Para confirmar, escribe el nombre: ${esc(c.name)}</span><input data-confirm-name autocomplete="off"></label>
+    <p class="mono gx__saved" data-msg aria-live="polite"></p>
+    <button class="gx__btn gx__btn--danger" type="button" data-go disabled>Eliminar para siempre</button>`);
+  const box = $('[data-modal-box]');
+  const input = $('[data-confirm-name]', box);
+  const go = $('[data-go]', box);
+  input.focus();
+  input.addEventListener('input', () => { go.disabled = input.value.trim().toLowerCase() !== c.name.trim().toLowerCase(); });
+  go.addEventListener('click', async () => {
+    const msg = $('[data-msg]', box);
+    go.disabled = true;
+    msg.textContent = 'Eliminando…';
+    // primero los archivos privados (la base de datos no puede borrarlos sola)
+    const { data: files } = await sb.from('documents').select('storage_path').eq('client_id', c.id).not('storage_path', 'is', null);
+    const paths = (files || []).map((f) => f.storage_path);
+    if (paths.length) await sb.storage.from('documentos').remove(paths);
+    const { error } = await sb.rpc('delete_client', { target: c.id });
+    if (error) {
+      msg.textContent = /delete_client/.test(error.message) ? 'Falta correr supabase/fase5.sql en Supabase.' : errorText(error);
+      go.disabled = false;
+      return;
+    }
+    closeModal();
+    viewClients();
+  });
 }
 
 function newClientForm() {

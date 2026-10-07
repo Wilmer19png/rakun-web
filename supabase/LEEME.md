@@ -125,3 +125,14 @@ Cómo se usa:
 - **Gestor → Grabaciones → Programar grabación**. El cliente la ve en su portal, marca su lista de "para ese día" y toca **Confirmo** o **Necesito otra fecha** (con los días que le sirven). Su respuesta te aparece en la grabación.
 - **Gestor → Reuniones → Agendar reunión**, con el link de Google Meet. El cliente también puede **pedir una reunión** desde su portal: te aparece arriba en rojo, con el número en el menú, y la confirmas poniéndole fecha y link.
 - Después de cada reunión, escribe los **acuerdos**: el cliente los ve en su historial.
+
+---
+
+# Fase 5 · Eliminar clientes y solicitudes, buscador de lugares
+
+1. **SQL Editor → New query** → pega todo `supabase/fase5.sql` → **Run**. Crea `delete_client()`, que solo puede usar el administrador.
+
+Cómo se usa:
+- **Gestor → Clientes → ✕**: muestra cuánto se va a borrar (proyectos, parrilla, documentos, grabaciones, reuniones) y pide escribir el nombre del cliente para confirmar. Borra todo lo suyo, sus archivos y su acceso al portal. **No se puede deshacer.**
+- **Gestor → Solicitudes → abrir una → Eliminar solicitud** (solo administrador).
+- **Gestor → Grabaciones → Programar grabación**: al escribir en "Lugar" o "Dirección" aparecen sugerencias (buscador gratuito de OpenStreetMap, sin clave). También salen los **lugares anteriores** como atajos y un enlace "Ver en el mapa". La dirección siempre se puede corregir a mano.

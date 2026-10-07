@@ -8,6 +8,7 @@
 import { $, $$, esc, safeUrl, initials } from './util.js';
 import { errorText } from './supa.js';
 import { MEET_KIND, MEET_STATUS, SHOOT_STATUS, fmtTime, ymd, hm } from './content.js';
+import { attachPlacePicker } from './places.js';
 
 const st = { pastShoots: false, pastMeets: false };
 
@@ -105,6 +106,19 @@ function shootForm(ctx, refs, s) {
   };
   fill();
   f.elements.client_id.addEventListener('change', fill);
+
+  // buscador de lugares + atajos con los lugares donde ya se grabó
+  sb.from('shoots').select('location, address').not('location', 'is', null).order('starts_at', { ascending: false }).limit(60)
+    .then(({ data }) => {
+      const seen = new Set();
+      const previous = (data || []).filter((p) => {
+        const k = `${p.location}|${p.address || ''}`.toLowerCase();
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      }).map((p) => ({ name: p.location, address: p.address || '' }));
+      attachPlacePicker(f.elements.location, f.elements.address, previous);
+    });
   f.addEventListener('submit', async (e) => {
     e.preventDefault();
     const msg = $('[data-msg]', f);
