@@ -954,7 +954,7 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
   gap: var(--gutter); align-items: end;
   margin-bottom: clamp(40px, 6vw, 80px);
 }
-.strategy__aside { display: grid; gap: 22px; justify-items: start; }
+.strategy__aside { display: grid; gap: 22px; justify-items: end; justify-self: end; }
 .strategy__lede { color: var(--mist); font-size: var(--fs-lead); line-height: 1.45; max-width: 34ch; }
 .pillars { border-top: 1px solid var(--line); }
 
