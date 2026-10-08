@@ -1544,3 +1544,15 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 /* con el enlace de sesión, el reloj cede su lugar en pantallas medianas */
 @media (max-width: 1560px) { .hdr__clock { display: none; } }
 @media (max-width: 960px) { .hdr__login { padding: 8px; } .hdr__login span { display: none; } }
+
+/* ==========================================================================
+   Textos laterales (a la derecha de los títulos): recuadro punteado para que
+   no se pierdan en la página. Mismo estilo que "La letra pequeña, en grande".
+   ========================================================================== */
+body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-carta__aside) {
+  box-sizing: border-box; max-width: 28rem; margin: 0; padding: 18px 22px 18px 20px;
+  border: 2px dashed var(--navy); background: rgba(255, 255, 255, .55); color: var(--navy);
+}
+:is(.sec--navy, .pl-carta, .p-crew) :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-carta__aside) {
+  border-color: rgba(243, 240, 234, .55); background: rgba(255, 255, 255, .04); color: var(--cream);
+}
