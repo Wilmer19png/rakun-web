@@ -240,8 +240,8 @@
 .mk-btn:hover, .mk-btn:focus-visible { translate: -3px -3px; box-shadow: 9px 9px 0 rgba(0, 0, 0, .5); }
 
 /* encabezado de planes + pestañas "¿Quién eres?" sobre crema */
-.mk-plans-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; flex-wrap: wrap; margin-bottom: 8px; }
-.mk-plans-title { text-shadow: none; }
+.mk-plans-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap; margin-bottom: 8px; }
+.mk-plans-title { text-shadow: none; font-size: clamp(2.8rem, 5.6vw, 5.2rem); }
 .pl-who--dark { color: var(--ink-soft); margin-top: 40px; }
 .pl-plans .ptk { background: var(--white); }
 .pl-plans .ptk::after { background: var(--cream); }
@@ -257,7 +257,6 @@
    ========================================================================== */
 .mk-fx .block__head { align-items: end; }
 .fx-kicker { margin: 0 0 14px; color: var(--ink-soft); }
-.fx-label { margin: 44px 0 12px; }
 .fx-who { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 64px; }
 .fx-who__btn {
   display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
@@ -272,7 +271,6 @@
 .fx-who__btn[aria-pressed="true"] { background: var(--navy); color: var(--cream); }
 
 .fx-head { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin: 0 0 30px; padding-top: 18px; border-top: 2px solid var(--navy); }
-.fx-head--more { margin-top: 96px; align-items: center; }
 .fx-head__title { margin: 0; font-family: var(--f-display); font-weight: 900; font-size: clamp(1.8rem, 2.8vw, 2.5rem); line-height: .95; text-transform: uppercase; }
 .fx-head__title em { font-style: normal; color: var(--pink); }
 .fx-head__note { margin: 0; color: var(--ink-soft); }
@@ -311,21 +309,7 @@
 .fx-btn:hover, .fx-btn.is-on { background: var(--navy); color: var(--cream); }
 .fx-btn.is-on span { display: inline-block; transform: rotate(135deg); }
 
-/* --- más formatos: carrusel de tarjetas de texto --- */
-.fx-arrows { display: flex; align-items: center; gap: 10px; }
-.fx-arrows .fx-head__note { margin-right: 10px; }
-.fx-arrow {
-  width: 44px; height: 44px; cursor: pointer; border: 2px solid var(--navy); background: transparent; color: var(--navy);
-  font-size: 1.1rem; transition: background .2s, color .2s, opacity .2s;
-}
-.fx-arrow:hover:not(:disabled) { background: var(--navy); color: var(--cream); }
-.fx-arrow:disabled { opacity: .3; cursor: default; }
-.fx-rail {
-  display: flex; gap: 16px; margin: 0; padding: 2px 0 22px; list-style: none;
-  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
-  scrollbar-width: thin; scrollbar-color: var(--pink) rgba(27, 26, 53, .1);
-}
-.fx-rail li { flex: none; width: 222px; scroll-snap-align: start; }
+/* --- tarjetas de formato (las usa la librería) --- */
 .fx-card {
   display: flex; flex-direction: column; gap: 8px; width: 100%; min-height: 210px; box-sizing: border-box;
   padding: 16px 16px 14px; border: 0; border-top: 5px solid var(--t, var(--yellow)); cursor: pointer; text-align: left;
@@ -377,7 +361,6 @@
 .fx-vid__dur { position: absolute; left: 10px; top: 10px; padding: 4px 6px; background: var(--ink-0); color: var(--cream); font-size: .56rem; }
 .fx-vid figcaption { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; font-size: .9rem; }
 .fx-vid figcaption .mono { color: var(--pink); }
-.fx-fine { margin: 40px 0 0; color: var(--ink-soft); }
 
 @media (max-width: 960px) {
   /* TODO responsive: se rediseña aparte */
@@ -646,3 +629,73 @@
 .carta li.is-out .carta__name, .carta li.is-out .carta__price b { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--pink); }
 .carta__out { display: inline-block; flex: none; order: 2; padding: 3px 7px; border: 2px solid var(--pink); color: var(--pink); font-size: .58rem; letter-spacing: .1em; text-decoration: none; rotate: -6deg; }
 .carta li.is-out .carta__name::after { order: 1; }
+
+/* ==========================================================================
+   005 · Formatos → entrada a la librería ("el fichero")
+   ========================================================================== */
+.fx-lib {
+  position: relative; display: flex; align-items: flex-start; min-height: 330px; margin-top: 120px;
+  background: var(--navy); color: var(--cream); box-shadow: 10px 12px 0 rgba(27, 26, 53, .25);
+}
+.fx-lib__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; width: min(600px, 48%); padding: 48px; }
+.fx-lib__k { margin: 0; color: var(--yellow); }
+.fx-lib__title { margin: 0; font-family: var(--f-display); font-weight: 900; font-size: clamp(2.6rem, 4.3vw, 3.9rem); line-height: .88; text-transform: uppercase; }
+.fx-lib__title em { font-style: normal; color: var(--pink); }
+.fx-lib__text { margin: 0; max-width: 46ch; color: var(--mist); font-weight: 300; line-height: 1.5; }
+.fx-lib__go {
+  display: inline-flex; align-items: center; gap: 12px; padding: 16px 22px 13px;
+  background: var(--yellow); color: var(--navy); font: 900 1.25rem/1 var(--f-display); text-transform: uppercase;
+  box-shadow: 6px 6px 0 var(--pink); transition: translate .15s steps(2), box-shadow .15s steps(2);
+}
+.fx-lib__go:hover, .fx-lib__go:focus-visible { translate: -3px -3px; box-shadow: 9px 9px 0 var(--pink); }
+.fx-lib__cards { position: relative; flex: 1; align-self: stretch; margin: 0; padding: 0; list-style: none; }
+.fx-lib__card {
+  position: absolute; left: var(--x); top: var(--y); width: 250px; padding-bottom: 16px;
+  display: flex; flex-direction: column; background: var(--white); color: var(--navy);
+  rotate: var(--r); box-shadow: 8px 9px 0 rgba(1, 2, 33, .45);
+  transition: translate .2s var(--ease-out), rotate .2s var(--ease-out);
+}
+.fx-lib__card:hover, .fx-lib__card:focus-visible { translate: 0 -12px; rotate: 0deg; z-index: 2; }
+.fx-lib__tab { display: flex; justify-content: space-between; padding: 10px 14px; background: var(--t); color: var(--navy); font-weight: 500; }
+.fx-lib__name { margin: 14px 14px 10px; font-family: var(--f-display); font-weight: 900; font-size: 1.9rem; line-height: .88; text-transform: uppercase; }
+.fx-lib__item { margin: 0 14px; padding: 7px 0; border-top: 1px dashed rgba(27, 26, 53, .25); font-size: .82rem; }
+.fx-lib__more { margin: 8px 14px 0; font-size: .56rem; color: var(--ink-soft); }
+
+/* ==========================================================================
+   006 · Planes → la letra pequeña, en grande (recuadro punteado)
+   ========================================================================== */
+.pl-fine { position: relative; flex: none; width: min(380px, 100%); box-sizing: border-box; padding: 30px 26px 12px; border: 2px dashed var(--navy); background: rgba(255, 255, 255, .55); }
+.pl-fine__tag { position: absolute; left: 20px; top: -15px; margin: 0; padding: 6px 10px 5px; background: var(--yellow); color: var(--navy); rotate: -2deg; box-shadow: 3px 3px 0 var(--navy); }
+.pl-fine__row { display: flex; align-items: flex-start; gap: 14px; margin: 0; padding: 12px 0; border-top: 1px dashed rgba(27, 26, 53, .3); line-height: 1.45; }
+.pl-fine__row:first-of-type { border-top: 0; }
+.pl-fine__row b { font-weight: 500; }
+.pl-fine__ic { flex: none; display: grid; place-items: center; width: 30px; height: 30px; background: var(--navy); color: var(--yellow); }
+.pl-fine__ic svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+
+/* ==========================================================================
+   Librería de formatos (libreria.html)
+   ========================================================================== */
+.lib__back { display: inline-block; color: var(--navy); border-bottom: 1px solid currentColor; padding-bottom: 3px; }
+.lib__back:hover { color: var(--pink); }
+.lib__head { margin-top: 56px; }
+.lib__title { margin: 0; font-family: var(--f-display); font-weight: 900; font-size: clamp(3.2rem, 6.6vw, 6rem); line-height: .88; text-transform: uppercase; }
+.lib__title em { font-style: normal; color: var(--pink); }
+.lib__idx { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 48px 0 84px; }
+.lib__idx .fx-who__btn { text-decoration: none; }
+.lib__count { margin-left: 18px; color: var(--ink-soft); }
+.lib__sec { margin-bottom: 88px; scroll-margin-top: calc(var(--hdr-h) + 24px); }
+.lib__sec .fx-head__title mark { padding: 0 .15em; background: var(--t); color: var(--navy); }
+.lib__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.lib__grid .fx-card { min-height: 196px; }
+.lib__end { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; padding: 30px 36px; border: 2px dashed var(--navy); }
+.lib__end p { margin: 0; font-family: var(--f-display); font-weight: 900; font-size: clamp(1.8rem, 2.6vw, 2.3rem); line-height: .9; text-transform: uppercase; }
+.lib__end a { display: inline-flex; gap: 12px; padding: 16px 22px 13px; background: var(--pink); color: var(--ink-0); font: 900 1.25rem/1 var(--f-display); text-transform: uppercase; box-shadow: 6px 6px 0 var(--navy); }
+.lib__end a:hover { translate: -3px -3px; box-shadow: 9px 9px 0 var(--navy); }
+
+@media (max-width: 960px) {
+  .fx-lib { flex-direction: column; }
+  .fx-lib__copy { width: auto; padding: 36px 24px 24px; }
+  .fx-lib__cards { display: flex; gap: 12px; overflow-x: auto; width: 100%; padding: 8px 24px 28px; box-sizing: border-box; }
+  .fx-lib__card { position: relative; left: auto; top: auto; flex: none; width: 220px; rotate: 0deg; }
+  .lib__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

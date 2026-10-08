@@ -434,40 +434,36 @@
         </div>
       </div>
 
-      <p class="mono fx-label" id="fx-who-label">¿Quién eres?</p>
-      <div class="fx-who" role="group" aria-labelledby="fx-who-label">
-        <button class="fx-who__btn" type="button" data-fx-profile="creador" aria-pressed="true" style="--t: var(--yellow)"><span class="mono">Influencers · creadores</span>Creador</button>
-        <button class="fx-who__btn" type="button" data-fx-profile="medico" aria-pressed="false" style="--t: var(--blue)"><span class="mono">Médicos · salud</span>Médico</button>
-        <button class="fx-who__btn" type="button" data-fx-profile="mentor" aria-pressed="false" style="--t: var(--pink)"><span class="mono">Mentores · coaches</span>Mentor</button>
-      </div>
-
-      <!-- 2 · más formatos: tarjetas de texto en carrusel -->
-      <div class="fx-head fx-head--more">
-        <h3 class="fx-head__title">Más formatos para <em data-fx-who>creadores</em></h3>
-        <div class="fx-arrows">
-          <span class="mono fx-head__note">Toca uno para ver sus ejemplos</span>
-          <button class="fx-arrow" type="button" data-fx-prev aria-label="Formatos anteriores">←</button>
-          <button class="fx-arrow" type="button" data-fx-next aria-label="Más formatos">→</button>
+      <!-- 2 · la librería: todos los formatos viven en una página aparte (libreria.html) -->
+      <section class="fx-lib" aria-labelledby="lib-title">
+        <div class="fx-lib__copy">
+          <p class="mono fx-lib__k">La librería · 24 formatos</p>
+          <h3 class="fx-lib__title" id="lib-title">¿Buscas otro <em>formato?</em></h3>
+          <p class="fx-lib__text">Reacciones, POV, podcasts, carruseles, VSL… Todo lo que podemos hacer por tu marca, ordenado por perfil y con ejemplos.</p>
+          <a class="fx-lib__go" href="libreria.html" data-eye-target>Abrir la librería <span aria-hidden="true">→</span></a>
         </div>
-      </div>
-      <ul class="fx-rail" data-fx-formats aria-label="Formatos"></ul>
-      <div class="fx-drawer" id="fx-drawer-formats" data-fx-drawer="formats" inert>
-        <div class="fx-drawer__in">
-          <div class="fx-drawer__panel">
-            <div class="fx-drawer__head">
-              <div>
-                <p class="mono fx-drawer__kicker" data-fx-kicker></p>
-                <h4 class="fx-drawer__title" data-fx-title></h4>
-                <p class="fx-drawer__desc" data-fx-desc></p>
-              </div>
-              <div class="fx-drawer__side"><span class="mono" data-fx-count></span><button class="fx-x" type="button" data-fx-close aria-label="Cerrar ejemplos">✕</button></div>
-            </div>
-            <div class="fx-videos" data-fx-videos></div>
-          </div>
-        </div>
-      </div>
-
-      <p class="mono fx-fine">* Los videos son espacios listos: cada ejemplo se reemplaza por un trabajo real de RAKÜN.</p>
+        <!-- el fichero: una ficha por perfil, se asoman por encima del bloque -->
+        <ul class="fx-lib__cards" aria-label="Formatos por perfil">
+          <li><a class="fx-lib__card" href="libreria.html#creador" style="--t: var(--yellow); --r: -7deg; --x: 0px; --y: -40px">
+            <span class="fx-lib__tab mono"><span>Creador</span><span>8 formatos</span></span>
+            <span class="fx-lib__name">Creador</span>
+            <span class="fx-lib__item">Reacción comentada</span><span class="fx-lib__item">Formato POV</span><span class="fx-lib__item">Tú vs. tú</span>
+            <span class="fx-lib__more mono">+ 5 más</span>
+          </a></li>
+          <li><a class="fx-lib__card" href="libreria.html#medico" style="--t: var(--blue); --r: 2deg; --x: 180px; --y: -64px">
+            <span class="fx-lib__tab mono"><span>Médico</span><span>8 formatos</span></span>
+            <span class="fx-lib__name">Médico</span>
+            <span class="fx-lib__item">Preguntas y respuestas</span><span class="fx-lib__item">POV de consulta</span><span class="fx-lib__item">Carrusel educativo</span>
+            <span class="fx-lib__more mono">+ 5 más</span>
+          </a></li>
+          <li><a class="fx-lib__card" href="libreria.html#mentor" style="--t: var(--pink); --r: 8deg; --x: 350px; --y: -28px">
+            <span class="fx-lib__tab mono"><span>Mentor</span><span>8 formatos</span></span>
+            <span class="fx-lib__name">Mentor</span>
+            <span class="fx-lib__item">Video de ventas (VSL)</span><span class="fx-lib__item">Podcast en video</span><span class="fx-lib__item">Webinar recortado</span>
+            <span class="fx-lib__more mono">+ 5 más</span>
+          </a></li>
+        </ul>
+      </section>
     </div>
   </section>
 
@@ -482,7 +478,13 @@
           <p class="mono pl-head__kicker">Planes · Mundo 01</p>
           <h2 class="pl-hero__title mk-plans-title" id="plans-title">Elige tu plan.<br>Sin letra <span class="tag-label">pequeña.</span></h2>
         </div>
-        <p class="p-head__aside">Precios mensuales en pesos colombianos, antes de IVA. Sin permanencia: cancelas avisando antes del siguiente ciclo de pago.</p>
+        <!-- la letra pequeña, en grande: recuadro punteado para que no se pierda -->
+        <aside class="pl-fine" aria-labelledby="fine-title">
+          <p class="mono pl-fine__tag" id="fine-title">La letra pequeña, en grande</p>
+          <p class="pl-fine__row"><span class="pl-fine__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M16.5 7.5c-.8-1.3-2.5-2-4.5-2-2.8 0-4.5 1.3-4.5 3.2 0 4.6 9.5 2.4 9.5 7 0 2-1.9 3.3-5 3.3-2.2 0-4-.8-5-2.3"/></svg></span><span><b>Precios mensuales</b> en pesos colombianos (COP).</span></p>
+          <p class="pl-fine__row"><span class="pl-fine__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20 20 4"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></span><span><b>Antes de IVA.</b></span></p>
+          <p class="pl-fine__row"><span class="pl-fine__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></span><span><b>Sin permanencia:</b> cancelas avisando antes del siguiente ciclo de pago.</span></p>
+        </aside>
       </div>
       <p class="mono pl-who pl-who--dark" id="who-label">¿Quién eres?</p>
       <div class="pl-profiles" role="tablist" aria-labelledby="who-label" data-tabs>

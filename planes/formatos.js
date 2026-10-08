@@ -1,6 +1,7 @@
 /* ==========================================================================
    Marca personal · ¿Qué es cada cosa?
-   Tres niveles de edición dibujados como líneas de tiempo + carrusel de formatos.
+   Tres niveles de edición dibujados como líneas de tiempo. Los formatos (FORMATS)
+   viven aquí, pero se muestran en la librería (libreria.html · planes/libreria.js).
    Cada uno abre una pestaña con sus ejemplos; los videos solo se cargan al abrirla.
    ========================================================================== */
 import { $, $$, reduced } from '../common.js';
@@ -12,7 +13,7 @@ const WHO = {
   medico: ['Dra. · odontología', 'Dr. · dermatología', 'Dra. · nutrición', 'Dr. · cirugía plástica'],
   mentor: ['Mentora · finanzas', 'Coach · ventas', 'Mentor · negocios', 'Coach · liderazgo'],
 };
-const placeholders = (profile, n = 4) => Array.from({ length: n }, (_, i) => ({ src: '', who: WHO[profile][i % 4], dur: `0:${String(18 + (i * 7) % 40).padStart(2, '0')}` }));
+export const placeholders = (profile, n = 4) => Array.from({ length: n }, (_, i) => ({ src: '', who: WHO[profile][i % 4], dur: `0:${String(18 + (i * 7) % 40).padStart(2, '0')}` }));
 
 // Ejemplos reales de cada nivel de edición (videos verticales en YouTube o Vimeo).
 // El reproductor solo se carga cuando tocan el video; antes se ve la portada.
@@ -41,8 +42,6 @@ const embedUrl = (v) => (v.yt
   ? `https://www.youtube-nocookie.com/embed/${v.yt}?autoplay=1&rel=0&playsinline=1&modestbranding=1`
   : `https://player.vimeo.com/video/${v.vimeo}?autoplay=1&badge=0&title=0&byline=0&portrait=0`);
 
-const PROFILES = { creador: 'creadores', medico: 'médicos', mentor: 'mentores' };
-const TONE = { creador: 'var(--yellow)', medico: 'var(--blue)', mentor: 'var(--pink)' };
 
 /* ---------- los 3 niveles: pistas de la línea de tiempo (en % de 30 s) ---------- */
 const C = { v: 'var(--blue)', v2: '#1E9FCB', sub: 'var(--cream)', key: 'var(--yellow)', gfx: 'var(--pink)', sfx: 'var(--yellow)', zoom: 'var(--cream)', mus: '#8B6CF0', aud: '#3C8C6E', col: 'linear-gradient(90deg, var(--pink), #8B6CF0, var(--blue))' };
@@ -74,7 +73,7 @@ const TIERS = [
 ];
 
 /* ---------- más formatos por perfil (nombres y descripciones de Tarifas_RAKUN_2026) ---------- */
-const FORMATS = {
+export const FORMATS = {
   creador: [
     ['Reacción comentada', 'Reaccionas a un video, noticia o tendencia y das tu opinión en pantalla.', 'Por video'],
     ['Sketch de humor', 'Mini escena actuada y graciosa, pensada para compartirse.', 'Por video'],
@@ -107,11 +106,11 @@ const FORMATS = {
   ],
 };
 
-const MAX_EXAMPLES = 8;
+export const MAX_EXAMPLES = 8;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const pad = (n) => String(n).padStart(2, '0');
 
-const fx = { profile: 'creador', open: null }; // open = { kind: 'tier'|'format', i }
+const fx = { open: null };                      // nivel abierto (índice) o null
 let root;
 
 /* ---------- render ---------- */
@@ -138,16 +137,6 @@ function tierHTML(t, i) {
   </article>`;
 }
 
-function formatCardHTML([name, desc, unit], i) {
-  return `
-  <li><button class="fx-card" type="button" data-fx-open="format" data-i="${i}" aria-expanded="false" aria-controls="fx-drawer-formats">
-    <span class="fx-card__meta mono">${pad(i + 1)} · ${unit}</span>
-    <span class="fx-card__name">${esc(name)}</span>
-    <span class="fx-card__desc">${esc(desc)}</span>
-    <span class="fx-card__foot mono"><span>4 ejemplos</span><span class="fx-card__arrow" aria-hidden="true">↓</span></span>
-  </button></li>`;
-}
-
 function videoHTML(v, i) {
   let frame;
   if (v.yt || v.vimeo) {
@@ -168,16 +157,8 @@ function videoHTML(v, i) {
   </figure>`;
 }
 
-function renderFormats() {
-  $('[data-fx-who]', root).textContent = PROFILES[fx.profile];
-  root.style.setProperty('--t', TONE[fx.profile]);
-  $('[data-fx-formats]', root).innerHTML = FORMATS[fx.profile].map(formatCardHTML).join('');
-  $('[data-fx-formats]', root).scrollLeft = 0;
-  bindOpeners();
-  updateArrows();
-}
-
-function fillDrawer(drawer, { kicker, title, desc, examples }) {
+/* ---------- la pestaña de ejemplos (también la usa la librería) ---------- */
+export function fillDrawer(drawer, { kicker, title, desc, examples }) {
   $('[data-fx-kicker]', drawer).textContent = kicker;
   $('[data-fx-title]', drawer).textContent = title;
   const d = $('[data-fx-desc]', drawer);
@@ -196,34 +177,15 @@ function fillDrawer(drawer, { kicker, title, desc, examples }) {
   }));
 }
 
-function closeDrawers() {
-  $$('[data-fx-drawer]', root).forEach((d) => {
-    d.classList.remove('is-open');
-    d.inert = true;
-    // al cerrar, se detienen y descargan los videos
-    $$('video', d).forEach((v) => v.pause());
-    $$('iframe', d).forEach((f) => f.remove());           // YouTube y Vimeo: se quitan para que dejen de sonar
-  });
-  $$('[data-fx-open]', root).forEach((b) => { b.setAttribute('aria-expanded', 'false'); b.classList.remove('is-on'); });
-  fx.open = null;
+export function shutDrawer(drawer) {
+  drawer.classList.remove('is-open');
+  drawer.inert = true;
+  // al cerrar, se detienen y descargan los videos
+  $$('video', drawer).forEach((v) => v.pause());
+  $$('iframe', drawer).forEach((f) => f.remove());        // YouTube y Vimeo: se quitan para que dejen de sonar
 }
 
-function open(kind, i) {
-  const same = fx.open && fx.open.kind === kind && fx.open.i === i;
-  closeDrawers();
-  if (same) return;
-  fx.open = { kind, i };
-  const btn = $(`[data-fx-open="${kind}"][data-i="${i}"]`, root);
-  btn.setAttribute('aria-expanded', 'true');
-  btn.classList.add('is-on');
-  const who = { creador: 'Creador', medico: 'Médico', mentor: 'Mentor' }[fx.profile];
-  const drawer = $(`[data-fx-drawer="${kind === 'tier' ? 'tiers' : 'formats'}"]`, root);
-  if (kind === 'tier') {
-    fillDrawer(drawer, { kicker: 'Tipos de edición · trabajos reales', title: TIERS[i].name, desc: TIERS[i].desc, examples: TIER_VIDEOS[TIERS[i].id] || placeholders(fx.profile) });
-  } else {
-    const [name, desc, unit] = FORMATS[fx.profile][i];
-    fillDrawer(drawer, { kicker: `${unit} · ${who}`, title: name, desc, examples: placeholders(fx.profile) });
-  }
+export function showDrawer(drawer) {
   drawer.classList.add('is-open');
   drawer.inert = false;
   if (!reduced) setTimeout(() => {
@@ -232,47 +194,31 @@ function open(kind, i) {
   }, 360);
 }
 
-function bindOpeners() {
-  $$('[data-fx-open]', root).forEach((b) => {
-    if (b.dataset.bound) return;
-    b.dataset.bound = '1';
-    b.addEventListener('click', () => open(b.dataset.fxOpen, Number(b.dataset.i)));
-  });
+/* ---------- los tres niveles en Marca personal ---------- */
+function closeTier() {
+  shutDrawer($('[data-fx-drawer="tiers"]', root));
+  $$('[data-fx-open]', root).forEach((b) => { b.setAttribute('aria-expanded', 'false'); b.classList.remove('is-on'); });
+  fx.open = null;
 }
 
-/* ---------- flechas del carrusel ---------- */
-function updateArrows() {
-  const rail = $('[data-fx-formats]', root);
-  const max = rail.scrollWidth - rail.clientWidth - 2;
-  $('[data-fx-prev]', root).disabled = rail.scrollLeft <= 2;
-  $('[data-fx-next]', root).disabled = rail.scrollLeft >= max;
+function openTier(i) {
+  const same = fx.open === i;
+  closeTier();
+  if (same) return;
+  fx.open = i;
+  const btn = $(`[data-fx-open="tier"][data-i="${i}"]`, root);
+  btn.setAttribute('aria-expanded', 'true');
+  btn.classList.add('is-on');
+  const drawer = $('[data-fx-drawer="tiers"]', root);
+  fillDrawer(drawer, { kicker: 'Tipos de edición · trabajos reales', title: TIERS[i].name, desc: TIERS[i].desc, examples: TIER_VIDEOS[TIERS[i].id] || placeholders('creador') });
+  showDrawer(drawer);
 }
 
-export function setFormatsProfile(p) {
-  if (!root || !FORMATS[p] || p === fx.profile) return;
-  fx.profile = p;
-  closeDrawers();
-  $$('[data-fx-profile]', root).forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.fxProfile === p)));
-  renderFormats();
-}
-
-export function initFormats(onProfile) {
+export function initFormats() {
   root = $('[data-fx]');
   if (!root) return;
   $('[data-fx-tiers]', root).innerHTML = TIERS.map(tierHTML).join('');
-  renderFormats();
-
-  $$('[data-fx-profile]', root).forEach((t) => t.addEventListener('click', () => {
-    setFormatsProfile(t.dataset.fxProfile);
-    onProfile?.(t.dataset.fxProfile);   // los planes de abajo cambian al mismo perfil
-  }));
-  $$('[data-fx-close]', root).forEach((b) => b.addEventListener('click', closeDrawers));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && fx.open) closeDrawers(); });
-
-  const rail = $('[data-fx-formats]', root);
-  const step = () => (rail.querySelector('li')?.offsetWidth || 220) * 2 + 32;
-  $('[data-fx-prev]', root).addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: reduced ? 'auto' : 'smooth' }));
-  $('[data-fx-next]', root).addEventListener('click', () => rail.scrollBy({ left: step(), behavior: reduced ? 'auto' : 'smooth' }));
-  rail.addEventListener('scroll', updateArrows, { passive: true });
-  window.addEventListener('resize', updateArrows);
+  $$('[data-fx-open="tier"]', root).forEach((b) => b.addEventListener('click', () => openTier(Number(b.dataset.i))));
+  $$('[data-fx-close]', root).forEach((b) => b.addEventListener('click', closeTier));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && fx.open !== null) closeTier(); });
 }

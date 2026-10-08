@@ -6,7 +6,7 @@
    ========================================================================== */
 
 import { RakunEye } from '../eye.js';
-import { initFormats, setFormatsProfile } from './formatos.js';
+import { initFormats } from './formatos.js';
 import { DATA, SESSION_PRICE } from './data.js';
 import { loadCatalog } from '../app/catalog.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu, waLink } from '../common.js';
@@ -155,7 +155,6 @@ function setProfile(p, focusTab = false) {
   });
   $('[data-panel]').setAttribute('aria-labelledby', `tab-${p}`);
   history.replaceState(null, '', `#${p}`);
-  setFormatsProfile(p);
   render();
 }
 
@@ -306,7 +305,7 @@ initHeader(() => lenis);
 initMegaMenu();
 initCursor();
 initAnchors();
-initFormats((p) => setProfile(p));
+initFormats();
 initPlans();
 initSos();
 initPillars();
