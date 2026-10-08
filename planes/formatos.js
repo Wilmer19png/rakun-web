@@ -5,7 +5,7 @@
    ========================================================================== */
 import { $, $$, reduced } from '../common.js';
 
-// TODO: reemplazar por videos reales de RAKÜN. src vacío = espacio de muestra.
+// Formatos sin video todavía: src vacío = espacio de muestra.
 //   { src: 'assets/videos/archivo.mp4', poster: 'assets/videos/archivo.jpg', who: 'Dra. · odontología', dur: '0:32' }
 const WHO = {
   creador: ['@creadora · lifestyle', '@creador · humor', '@creadora · moda', '@creador · gaming'],
@@ -13,6 +13,31 @@ const WHO = {
   mentor: ['Mentora · finanzas', 'Coach · ventas', 'Mentor · negocios', 'Coach · liderazgo'],
 };
 const placeholders = (profile, n = 4) => Array.from({ length: n }, (_, i) => ({ src: '', who: WHO[profile][i % 4], dur: `0:${String(18 + (i * 7) % 40).padStart(2, '0')}` }));
+
+// Ejemplos reales de cada nivel de edición (videos verticales en YouTube o Vimeo).
+// El reproductor solo se carga cuando tocan el video; antes se ve la portada.
+const VIMEO_THUMB = (path) => `https://i.vimeocdn.com/video/${path}-d_640?region=us`;
+const TIER_VIDEOS = {
+  esencial: [
+    { vimeo: '1142122804', poster: VIMEO_THUMB('2089764880-15b0d7811c9f361464f4b1658e8a7a2dc8fce2ba89b45e0d94c364e781bcdd48'), who: 'AIOM · medicina', dur: '2:02' },
+    { yt: 'b1nMUxqFXoo', who: 'Doctora Paola · psicóloga' },
+    { yt: 'NWRpuQLf0AQ', who: 'Pedro · coach' },
+  ],
+  pro: [
+    { vimeo: '1142126583', poster: VIMEO_THUMB('2089769988-09c0452951382ad35acc04589a7c36a7626d3f747ec02fcfe43195345a4f2967'), who: 'Santi Fit · coach', dur: '0:33' },
+    { yt: 'u0QM_uwYp_c', who: 'Doctora Lucía · odontóloga' },
+    { yt: 'jPJ-sKQIe0U', who: 'La Cepa · restaurante español' },
+  ],
+  premium: [
+    { yt: 'u6wRut-pz0s', who: 'Doc Mariana Hoyos · veterinaria' },
+    { yt: 'fKQqtjsGtWk', who: 'Boncho · coach' },
+    { yt: '8SYcDjpq3lU', who: 'Nyurkis Cabrera · coach' },
+    { yt: 'd-VCyiDCuzM', who: 'Marco · coach' },
+  ],
+};
+const embedUrl = (v) => (v.yt
+  ? `https://www.youtube-nocookie.com/embed/${v.yt}?autoplay=1&rel=0&playsinline=1&modestbranding=1`
+  : `https://player.vimeo.com/video/${v.vimeo}?autoplay=1&badge=0&title=0&byline=0&portrait=0`);
 
 const PROFILES = { creador: 'creadores', medico: 'médicos', mentor: 'mentores' };
 const TONE = { creador: 'var(--yellow)', medico: 'var(--blue)', mentor: 'var(--pink)' };
@@ -122,12 +147,21 @@ function formatCardHTML([name, desc, unit], i) {
 }
 
 function videoHTML(v, i) {
-  const frame = v.src
-    ? `<video src="${esc(v.src)}"${v.poster ? ` poster="${esc(v.poster)}"` : ''} controls playsinline preload="none"></video>`
-    : '<span class="fx-vid__play" aria-hidden="true"></span><span class="fx-vid__soon mono">Espacio para video</span>';
+  let frame;
+  if (v.yt || v.vimeo) {
+    // portada: de YouTube la vertical (oardefault); si no existe (o es la imagen gris de 120 px), la normal
+    const img = v.yt
+      ? `<img src="https://i.ytimg.com/vi/${v.yt}/oardefault.jpg" onload="if(this.naturalWidth<200)this.src='https://i.ytimg.com/vi/${v.yt}/hqdefault.jpg'" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${v.yt}/hqdefault.jpg'" alt="" loading="lazy">`
+      : `<img src="${esc(v.poster)}" alt="" loading="lazy">`;
+    frame = `<button class="fx-vid__poster" type="button" data-embed="${esc(embedUrl(v))}" aria-label="Reproducir: ${esc(v.who)}">${img}<span class="fx-vid__play" aria-hidden="true"></span></button>`;
+  } else if (v.src) {
+    frame = `<video src="${esc(v.src)}"${v.poster ? ` poster="${esc(v.poster)}"` : ''} controls playsinline preload="none"></video>`;
+  } else {
+    frame = '<span class="fx-vid__play" aria-hidden="true"></span><span class="fx-vid__soon mono">Espacio para video</span>';
+  }
   return `
   <figure class="fx-vid">
-    <div class="fx-vid__f">${frame}<span class="fx-vid__dur mono">${esc(v.dur)}</span></div>
+    <div class="fx-vid__f">${frame}${v.dur ? `<span class="fx-vid__dur mono">${esc(v.dur)}</span>` : ''}</div>
     <figcaption><span class="mono">Ejemplo ${pad(i + 1)}</span>${esc(v.who)}</figcaption>
   </figure>`;
 }
@@ -149,6 +183,15 @@ function fillDrawer(drawer, { kicker, title, desc, examples }) {
   d.hidden = !desc;
   $('[data-fx-count]', drawer).textContent = `${examples.length} ejemplos`;
   $('[data-fx-videos]', drawer).innerHTML = examples.slice(0, MAX_EXAMPLES).map(videoHTML).join('');
+  // al tocar la portada entra el reproductor (YouTube o Vimeo) y arranca
+  $$('[data-embed]', drawer).forEach((b) => b.addEventListener('click', () => {
+    const f = document.createElement('iframe');
+    f.src = b.dataset.embed;
+    f.title = b.getAttribute('aria-label');
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    b.replaceWith(f);
+  }));
 }
 
 function closeDrawers() {
@@ -157,6 +200,7 @@ function closeDrawers() {
     d.inert = true;
     // al cerrar, se detienen y descargan los videos
     $$('video', d).forEach((v) => v.pause());
+    $$('iframe', d).forEach((f) => f.remove());           // YouTube y Vimeo: se quitan para que dejen de sonar
   });
   $$('[data-fx-open]', root).forEach((b) => { b.setAttribute('aria-expanded', 'false'); b.classList.remove('is-on'); });
   fx.open = null;
@@ -173,7 +217,7 @@ function open(kind, i) {
   const who = { creador: 'Creador', medico: 'Médico', mentor: 'Mentor' }[fx.profile];
   const drawer = $(`[data-fx-drawer="${kind === 'tier' ? 'tiers' : 'formats'}"]`, root);
   if (kind === 'tier') {
-    fillDrawer(drawer, { kicker: `Tipos de edición · ${who}`, title: TIERS[i].name, desc: TIERS[i].desc, examples: placeholders(fx.profile) });
+    fillDrawer(drawer, { kicker: 'Tipos de edición · trabajos reales', title: TIERS[i].name, desc: TIERS[i].desc, examples: TIER_VIDEOS[TIERS[i].id] || placeholders(fx.profile) });
   } else {
     const [name, desc, unit] = FORMATS[fx.profile][i];
     fillDrawer(drawer, { kicker: `${unit} · ${who}`, title: name, desc, examples: placeholders(fx.profile) });
