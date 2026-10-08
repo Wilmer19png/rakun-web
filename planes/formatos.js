@@ -19,9 +19,9 @@ const placeholders = (profile, n = 4) => Array.from({ length: n }, (_, i) => ({ 
 const VIMEO_THUMB = (path) => `https://i.vimeocdn.com/video/${path}-d_640?region=us`;
 const TIER_VIDEOS = {
   esencial: [
+    { yt: 'NqQEHzXv3pU', who: 'Blue · coach' },
     { vimeo: '1142122804', poster: VIMEO_THUMB('2089764880-15b0d7811c9f361464f4b1658e8a7a2dc8fce2ba89b45e0d94c364e781bcdd48'), who: 'AIOM · medicina', dur: '2:02' },
     { yt: 'b1nMUxqFXoo', who: 'Doctora Paola · psicóloga' },
-    { yt: 'NWRpuQLf0AQ', who: 'Pedro · coach' },
   ],
   pro: [
     { vimeo: '1142126583', poster: VIMEO_THUMB('2089769988-09c0452951382ad35acc04589a7c36a7626d3f747ec02fcfe43195345a4f2967'), who: 'Santi Fit · coach', dur: '0:33' },
@@ -30,6 +30,8 @@ const TIER_VIDEOS = {
   ],
   premium: [
     { yt: 'u6wRut-pz0s', who: 'Doc Mariana Hoyos · veterinaria' },
+    { yt: 'rlkpU8R4dfY', who: 'Doc Mariana Hoyos · veterinaria' },
+    { yt: 'Dr49vCa60ug', who: 'Doc Mariana Hoyos · veterinaria' },
     { yt: 'fKQqtjsGtWk', who: 'Boncho · coach' },
     { yt: '8SYcDjpq3lU', who: 'Nyurkis Cabrera · coach' },
     { yt: 'd-VCyiDCuzM', who: 'Marco · coach' },
@@ -105,7 +107,7 @@ const FORMATS = {
   ],
 };
 
-const MAX_EXAMPLES = 4;
+const MAX_EXAMPLES = 8;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -142,7 +144,7 @@ function formatCardHTML([name, desc, unit], i) {
     <span class="fx-card__meta mono">${pad(i + 1)} · ${unit}</span>
     <span class="fx-card__name">${esc(name)}</span>
     <span class="fx-card__desc">${esc(desc)}</span>
-    <span class="fx-card__foot mono"><span>${MAX_EXAMPLES} ejemplos</span><span class="fx-card__arrow" aria-hidden="true">↓</span></span>
+    <span class="fx-card__foot mono"><span>4 ejemplos</span><span class="fx-card__arrow" aria-hidden="true">↓</span></span>
   </button></li>`;
 }
 
