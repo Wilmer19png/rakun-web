@@ -136,3 +136,21 @@ Cómo se usa:
 - **Gestor → Clientes → ✕**: muestra cuánto se va a borrar (proyectos, parrilla, documentos, grabaciones, reuniones) y pide escribir el nombre del cliente para confirmar. Borra todo lo suyo, sus archivos y su acceso al portal. **No se puede deshacer.**
 - **Gestor → Solicitudes → abrir una → Eliminar solicitud** (solo administrador).
 - **Gestor → Grabaciones → Programar grabación**: al escribir en "Lugar" o "Dirección" aparecen sugerencias (buscador gratuito de OpenStreetMap, sin clave). También salen los **lugares anteriores** como atajos y un enlace "Ver en el mapa". La dirección siempre se puede corregir a mano.
+
+---
+
+# Correo propio (para "¿Olvidaste tu contraseña?")
+
+El correo gratis de Supabase solo le escribe a tu equipo y muy pocas veces por hora. Se conecta el Gmail de RAKÜN:
+
+1. **Cuenta de Google de rakundesigns@gmail.com → Seguridad →** activa la **Verificación en 2 pasos** (si no está).
+2. Entra a **https://myaccount.google.com/apppasswords**, crea una contraseña de aplicación con el nombre `Supabase RAKÜN` y copia las 16 letras. (No es tu contraseña de Gmail; nunca la pongas en la página.)
+3. **Supabase → Authentication → Emails → SMTP Settings → Enable custom SMTP**:
+   - Sender email: `rakundesigns@gmail.com` · Sender name: `RAKÜN`
+   - Host: `smtp.gmail.com` · Port: `465`
+   - Username: `rakundesigns@gmail.com` · Password: las 16 letras del paso 2
+   - Guardar.
+4. **Authentication → Rate Limits →** "Rate limit for sending emails": súbelo a **30 por hora**.
+5. **Authentication → Emails → Templates → Reset password**: asunto `Crea tu nueva contraseña · RAKÜN` y en el cuerpo pega todo `supabase/correos/recuperar-contrasena.html`.
+
+Gmail permite hasta unos 500 correos al día: de sobra para recuperar contraseñas. Si algún día tienen dominio propio (rakun.co), se cambia a un servicio como Resend.

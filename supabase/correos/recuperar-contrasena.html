@@ -1,0 +1,29 @@
+<!-- RAKÜN · plantilla del correo "Reset password" (Supabase → Authentication → Emails → Reset password)
+     Asunto: Crea tu nueva contraseña · RAKÜN
+     Pega todo esto en "Message body". {{ .ConfirmationURL }} lo reemplaza Supabase por el enlace. -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3F0EA;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#FFFFFF;border:2px solid #1B1A35;">
+        <tr>
+          <td style="background:#010221;padding:22px 28px;">
+            <span style="font-size:24px;font-weight:900;letter-spacing:1px;color:#FFFFFF;">RAK<span style="color:#FF2C68;">Ü</span>N</span>
+            <span style="font-size:11px;letter-spacing:2px;color:#C3C0DD;margin-left:8px;">VISUAL DESIGN</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px 28px 8px;color:#1B1A35;">
+            <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;color:#FF2C68;">TU CUENTA</p>
+            <h1 style="margin:0 0 16px;font-size:26px;line-height:1.1;text-transform:uppercase;">Crea tu nueva contraseña</h1>
+            <p style="margin:0 0 24px;font-size:15px;line-height:1.55;color:#3C3A5C;">Pediste cambiar la contraseña de tu acceso a RAKÜN. Toca el botón y escribe la nueva. El enlace sirve una sola vez y vence en una hora.</p>
+            <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:14px 22px;background:#FF2C68;color:#010221;font-size:15px;font-weight:700;text-decoration:none;text-transform:uppercase;border:2px solid #1B1A35;">Crear contraseña →</a>
+            <p style="margin:28px 0 0;padding:14px 16px;border:2px dashed #1B1A35;font-size:13px;line-height:1.5;color:#3C3A5C;">¿No fuiste tú? Ignora este correo: tu contraseña sigue igual.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 28px 28px;font-size:12px;color:#8B88AE;">RAKÜN Visual Design · Pereira, Colombia · WhatsApp +57 350 446 1460</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
