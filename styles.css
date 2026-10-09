@@ -1637,22 +1637,21 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
    Celular · Inicio (lienzo "3. Inicio")
    ========================================================================== */
 @media (max-width: 700px) {
-  /* portada: ocupa la pantalla; el mapache grande abajo a la izquierda, sin bloques detrás */
+  /* portada: título → el mapache grande (recortado por la izquierda, sin bloques detrás) → el texto debajo */
   .hero__bg { display: none; }
-  .hero__grid { display: block; position: relative; overflow: hidden; min-height: calc(100svh - var(--hdr-h)); padding: 36px 20px 0; box-sizing: border-box; }
-  .hero__copy { position: static; display: block; }
-  .hero__title, .hero__lede, .hero__meta { position: relative; z-index: 2; }
-  .hero__foot { gap: 14px; margin-top: 22px; }
+  .hero__grid { display: flex; flex-direction: column; position: relative; overflow: hidden; min-height: 0; padding: 36px 20px 64px; box-sizing: border-box; }
+  .hero__copy { display: contents; }
+  .hero__title { order: 1; position: relative; z-index: 2; }
+  .collage { order: 2; position: relative; left: auto; bottom: auto; width: min(104vw, 420px); max-width: none; aspect-ratio: 1; margin: -44px 0 0 -28px; z-index: 1; }
+  .hero__foot { order: 3; position: relative; z-index: 2; gap: 14px; margin-top: -40px; }
   .hero__lede { max-width: 330px; font-size: 1rem; color: var(--mist); }
   .hero__meta { font-size: .56rem; gap: 4px 12px; }
-  .hero__foot .link { position: absolute; right: 16px; bottom: 52px; z-index: 3; padding: 10px 12px; background: var(--cream); color: var(--ink-0); box-shadow: 4px 4px 0 var(--pink); font-size: .62rem; }
+  .hero__foot .link { justify-self: start; margin-top: 6px; padding: 12px 14px; background: var(--cream); color: var(--ink-0); box-shadow: 4px 4px 0 var(--pink); font-size: .62rem; }
   .hero__foot .link::after { display: none; }
-  .collage { position: absolute; left: -28px; bottom: 26px; width: 400px; max-width: none; aspect-ratio: 1; margin: 0; z-index: 1; }
   .collage__blk, .collage__tape, .collage__burst, .collage__tag, .collage .cross { display: none; }
   .collage__logo { inset: 0; width: 100%; height: 100%; }
-  .collage__cap { position: absolute; inset: 0 6px auto auto; width: auto; height: auto; display: block; padding: 5px 8px; background: var(--yellow); color: var(--ink-0); rotate: 3deg; font-size: .5rem; }
+  .collage__cap { position: absolute; inset: 15% 8px auto auto; width: auto; height: auto; display: block; padding: 5px 8px; background: var(--yellow); color: var(--ink-0); rotate: 3deg; font-size: .5rem; }
   .collage__cap span:first-child::after { content: " — "; }
-
   /* papel rasgado entre la portada y Enfoque */
   .focus::before {
     content: ""; position: absolute; left: 0; right: 0; top: -22px; height: 26px; z-index: 7; pointer-events: none;
