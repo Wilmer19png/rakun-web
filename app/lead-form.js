@@ -71,7 +71,7 @@ function build() {
         <p class="mono lf__k lf__k--y">¿Qué pasa después?</p>
         <ol class="lf__steps">
           <li><b>01</b><span>Te escribimos en menos de <strong>24 h hábiles</strong>.</span></li>
-          <li><b>02</b><span>Una reunión de <strong>20 minutos</strong> para conocerte y revisar tu perfil.</span></li>
+          <li><b>02</b><span>Una reunión de <strong>15 minutos</strong> para conocerte y revisar tu perfil.</span></li>
           <li><b>03</b><span>Te damos acceso a <strong>tu portal</strong> y arrancamos.</span></li>
         </ol>
         <p class="mono lf__fine">Sin pago todavía.<br>Primero hablamos.</p>
@@ -131,7 +131,7 @@ function build() {
           <h2 class="lf__title">¡Listo, <em data-lf-first></em>!</h2>
           <p class="lf__lede">Te escribimos en menos de 24 h hábiles por el medio que elegiste.</p>
           <div class="lf__cal" data-lf-cal hidden>
-            <p>Si prefieres no esperar, agenda de una vez una reunión de 20 minutos:</p>
+            <p>Si prefieres no esperar, agenda de una vez una reunión de 15 minutos:</p>
             <a class="lf__btn" data-lf-cal-link target="_blank" rel="noopener">Agendar reunión <span aria-hidden="true">↗</span></a>
           </div>
           <button class="lf__close-done mono" type="button" data-lf-close>Volver a la página</button>
