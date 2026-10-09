@@ -7,6 +7,9 @@
 
 import { RakunEye } from '../eye.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
+
+// celular: lo decorativo queda quieto y lo que se recorre con el cursor se muestra abierto
+const small = window.matchMedia('(max-width: 700px)').matches;
 import { loadCatalog } from '../app/catalog.js';
 
 /* ---------- Smooth scroll + anclas ---------- */
@@ -64,7 +67,7 @@ function initTerminal() {
 
   const run = () => {
     clearInterval(timer);
-    if (reduced) { render(Infinity); return; }
+    if (reduced || small) { render(Infinity); return; }
     let chars = 0;
     render(0);
     timer = setInterval(() => {
@@ -102,9 +105,17 @@ function initCompare() {
   };
   const setManual = (m) => {
     manual = m;
+    if (small) return;
     mode.textContent = m ? 'el ojo en tu mano' : 'el ojo barre solo';
   };
   set(50);
+
+  // celular: el control deslizante sale debajo del dibujo, a la vista, y el ojo no barre solo
+  if (small) {
+    box.after(range);
+    range.classList.add('is-visible');
+    mode.parentElement.textContent = 'Mueve el ojo · garabato ← → diseño';
+  }
 
   // con el mouse basta pasar por encima; con teclado o táctil, el control deslizante
   if (fine) {
@@ -121,7 +132,7 @@ function initCompare() {
 
   // sin interacción, el ojo barre solo de un lado a otro (a saltos)
   setInterval(() => {
-    if (!visible || manual || reduced) return;
+    if (!visible || manual || reduced || small) return;
     t += 1;
     set(50 + Math.sin(t * 0.09) * 40);
   }, 110);
@@ -133,6 +144,11 @@ function initCompare() {
    ========================================================================== */
 function initCommits() {
   const commits = $$('[data-commits] .commit');
+  // celular: todos abiertos, se leen de corrido
+  if (small) {
+    commits.forEach((c) => { c.classList.add('is-open'); $('.commit__head', c).setAttribute('aria-expanded', 'true'); });
+    return;
+  }
   const open = (c) => {
     commits.forEach((k) => {
       const on = k === c;
@@ -238,6 +254,14 @@ initCompare();
 initCommits();
 initDesk();
 initWebPlans();
+
+// celular: los textos que hablaban del cursor, del dock o de las ventanas
+if (small) {
+  const say = (sel, txt) => { const el = $(sel); if (el) el.textContent = txt; };
+  say('.w-process__lede', 'Así trabajamos: un historial claro, paso a paso. Esto es lo que entregamos en cada uno.');
+  say('.desk__lede', 'Rescatadas de la plantilla aburrida: landings, tiendas, apps y el código detrás.');
+  say('#boceto .p-head__aside', 'Todo empieza con un rayón en una servilleta y termina en una web que vende mientras duermes. Mueve el ojo y mira el camino.');
+}
 
 const hdrEye = $('[data-eye="eye-hdr"]');
 if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).followCursor();

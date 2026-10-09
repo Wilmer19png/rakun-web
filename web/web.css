@@ -365,3 +365,27 @@
   .term__cursor { animation: none; }
   .win--404.is-shaking { animation: none; }
 }
+
+/* ==========================================================================
+   Celular · Web y apps (lienzo "6. Web y apps")
+   ========================================================================== */
+@media (max-width: 700px) {
+  /* portada: sin la fila de secciones (están en el menú); la terminal sola, ya escrita */
+  .p-subnav { display: none; }
+  .mini-browser, .term-replay { display: none; }
+  .term-wrap { margin: 32px 0 40px; }
+
+  /* boceto: el control deslizante a la vista, debajo del dibujo */
+  .bx__range.is-visible { position: static; display: block; width: 100%; height: 28px; margin: 16px 0 0; opacity: 1; accent-color: var(--pink); cursor: pointer; }
+  .bx__hint { margin-top: 8px; }
+
+  /* proceso: los commits se leen de corrido; el árbol de servicios ya está en los planes */
+  .tree { display: none; }
+  .commit__body { margin-left: 44px; }
+
+  /* pantallas: ventanas apiladas, sin barra del sistema, dock ni fondo */
+  .desk { padding-bottom: 56px; gap: 24px; }
+  .desk__menubar, .desk__wall, .dock, .desk__tip { display: none; }
+  .win--app { height: 300px; }
+  .win__tape { left: auto; right: 14px; top: -17px; width: 64px; }
+}
