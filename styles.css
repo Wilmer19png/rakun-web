@@ -1485,6 +1485,33 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
   .door__frame { height: 40vh; }
   .door__ask { max-width: none; }
 }
+/* ---------- Celular · la entrada (opción B del lienzo) ----------
+   Arriba el letrero, la pregunta y los 3 boletos (se ven sin bajar);
+   la tapa abajo, asomada: se ve su mitad de arriba con la rejilla y el ojo. */
+@media (max-width: 700px) {
+  .door-on .door { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 22px 20px 0; align-content: normal; overflow-x: hidden; }
+  .door__neon { order: 1; align-self: flex-start; font-size: 1.75rem; animation: none; }
+  .door__ask { order: 2; gap: 10px; max-width: none; margin-top: 14px; }
+  .door__q { font-size: clamp(2.6rem, 13vw, 3.2rem); margin-bottom: 6px; }
+  .door__picks { gap: 10px; margin-top: 0; }
+  .ticket { gap: 2px 12px; padding: 12px 18px 12px 14px; border-left-width: 8px; box-shadow: 6px 6px 0 rgba(0, 0, 0, .5); }
+  .ticket::after { right: -7px; width: 14px; height: 14px; }
+  .ticket__n { display: none; }
+  .ticket__tags { order: -1; font-size: .56rem; }
+  .ticket__name { font-size: 1.5rem; }
+  .ticket__line { font-size: .82rem; line-height: 1.3; }
+  .ticket__ico { width: 22px; height: 22px; grid-row: 1 / span 3; }
+  .door__enter { align-self: flex-start; min-height: 44px; }
+  .door__fine { display: none; }
+  /* la tapa: un círculo del ancho de la pantalla, recortado: se ve su parte de arriba con la rejilla */
+  .door__frame { order: 3; flex: none; align-self: center; margin-top: auto; padding-top: 28px; width: min(100vw, 420px); height: auto; aspect-ratio: 100 / 62; box-sizing: content-box; overflow: hidden; }
+  .door__inside, .door__leaf { inset: auto; left: 0; top: 28px; width: 100%; height: auto; aspect-ratio: 1; }
+  .door__sticker { left: 4%; top: 2%; font-size: .62rem; z-index: 1; }
+  .door__plate { top: 56%; bottom: auto; font-size: .56rem; }
+  .door__bolt--2 { display: none; }
+  /* sin la entrada escalonada: todo aparece de una */
+  .door.is-staging .door__kicker, .door.is-staging .door__q, .door.is-staging .ticket, .door.is-staging .door__fine { opacity: 1; translate: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .door__neon { animation: none; }
 }

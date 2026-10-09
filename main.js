@@ -564,6 +564,7 @@ function runDoor() {
   lenis?.stop();
   const eye = new RakunEye($('[data-door-eye]', door), { prefix: 'eye-door', openness: 0 });
   const staged = $$('.door__kicker, .door__q, .ticket, .door__enter, .door__fine', door);
+  const small = window.matchMedia('(max-width: 700px)').matches;
   door.tabIndex = -1;
   door.focus({ preventScroll: true });
 
@@ -587,6 +588,12 @@ function runDoor() {
       door.classList.add('is-peeking');
       eye.open$.snap(1);
       eye.followCursor();
+    } else if (small) {
+      // celular: todo a la vista de una; solo la rejilla se abre y el ojo mira hacia los boletos
+      later(250, () => { door.dataset.hatch = '1'; });
+      later(370, () => { door.dataset.hatch = '2'; });
+      later(490, () => { delete door.dataset.hatch; door.classList.add('is-peeking'); });
+      later(600, () => eye.open().then(() => { eye.look(0, -0.9); setTimeout(() => eye.followCursor(), 900); }));
     } else {
       door.classList.add('is-staging');
       later(350, () => { door.dataset.hatch = '1'; });
@@ -607,7 +614,7 @@ function runDoor() {
       door.classList.remove('is-staging');
       try { sessionStorage.setItem('rakun:door', '1'); } catch (e) { /* modo privado */ }
       eye.blink();                                            // guiño cómplice
-      if (reduced) {
+      if (reduced || small) {                                 // en celular, sin tapa que se levanta ni corte: va directo
         if (kind === 'page') location.href = href; else done();
         return;
       }
