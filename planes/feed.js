@@ -4,6 +4,8 @@
    ========================================================================== */
 import { $, $$, reduced } from '../common.js';
 
+// celular: los celulares decorativos quedan quietos (solo cuentan lo que tienen que contar)
+const small = window.matchMedia('(max-width: 700px)').matches;
 const fmt = (n) => Math.round(n).toLocaleString('es-CO');
 const short = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 100000 ? 0 : 1).replace('.', ',')}K` : String(Math.round(n)));
 const pick = (arr, i) => arr[i % arr.length];
@@ -71,7 +73,7 @@ function initFeed() {
     delta.textContent = fmt(today);
   };
   paint();
-  if (reduced) return;
+  if (reduced || small) return;
 
   let timers = [];
   const every = (ms, fn) => timers.push(setInterval(fn, ms));
@@ -121,6 +123,25 @@ function initSeen() {
   };
   [0, 1, 2].forEach((i) => toast(2 - i));
 
+  // celular: un celular a la vez, con un interruptor "Sin estrategia / Con RAKÜN"
+  if (small) {
+    const vs = $('.mk-vs', sec);
+    const seg = document.createElement('div');
+    seg.className = 'mk-seg';
+    seg.setAttribute('role', 'group');
+    seg.setAttribute('aria-label', 'Antes o después');
+    seg.innerHTML = '<button type="button" class="mono" data-side="low">Sin estrategia</button><button type="button" class="mono" data-side="high">Con RAKÜN</button>';
+    vs.before(seg);
+    const show = (side) => {
+      vs.dataset.side = side;
+      $$('button', seg).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.side === side)));
+    };
+    $$('button', seg).forEach((b) => b.addEventListener('click', () => show(b.dataset.side)));
+    show('high');
+    high.textContent = short(GROW_TO);
+    return;
+  }
+
   if (reduced) { high.textContent = short(GROW_TO); return; }
 
   let timers = [], raf = 0, n = 3, b = 0;
@@ -158,7 +179,7 @@ function initSeen() {
 const REC_SUBS = ['esto nadie', 'te lo dice', 'pero funciona', 'mira esto'];
 function initRec() {
   const sec = $('[data-rec]');
-  if (!sec || reduced) return;
+  if (!sec || reduced || small) return;
   const tc = $('[data-rec-tc]', sec);
   const sub = $('[data-rec-sub]', sec);
   let s = 0, k = 0, timers = [];

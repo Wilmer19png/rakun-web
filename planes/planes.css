@@ -699,3 +699,83 @@
   .fx-lib__card { position: relative; left: auto; top: auto; flex: none; width: 220px; rotate: 0deg; }
   .lib__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ==========================================================================
+   Celular · Marca personal (lienzo "4. Marca personal")
+   ========================================================================== */
+.plc__fold, .mk-seg { display: none; }
+@media (max-width: 700px) {
+  /* portada: texto y botón primero; el celular debajo, quieto y más pequeño */
+  .mk-hero__body { display: flex; flex-direction: column; gap: 30px; }
+  .mk-hero__scroll { display: none; }
+  .mk-stage { width: 100%; height: 470px; }
+  .mk-stage .mk-phone { left: auto; right: 6px; top: 10px; height: 440px; rotate: 3deg; }
+  .mk-count { left: 0; top: auto; bottom: 30px; }
+  .mk-floats { display: none; }
+
+  /* ser visto: un celular a la vez con el interruptor (lo arma planes/feed.js) */
+  .mk-seg { display: flex; margin-top: 26px; border: 2px solid var(--navy); }
+  .mk-seg button { flex: 1; min-height: 48px; border: 0; background: transparent; color: var(--navy); cursor: pointer; }
+  .mk-seg button[aria-pressed="true"] { background: var(--navy); color: var(--cream); }
+  .mk-seg button[data-side="high"][aria-pressed="true"] { background: var(--pink); color: var(--ink-0); }
+  .mk-vs { display: block; margin-top: 18px; }
+  .mk-vs__arrow, .mk-vs__tag, .mk-note, .mk-floats--seen { display: none; }
+  .mk-vs[data-side="high"] .mk-vs__side--low, .mk-vs[data-side="low"] .mk-vs__side--high { display: none; }
+  .mk-vs__side { padding: 0; }
+
+  /* estrategia: cada pilar en dos renglones (ícono + título; el texto y el botón debajo) */
+  .pillar__row { grid-template-columns: 52px minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 6px 12px; padding: 16px 0; align-items: center; }
+  .pillar__icon { grid-row: 1 / span 2; width: 52px; height: 52px; align-self: start; }
+  .pillar__icon svg { width: 32px; height: 32px; }
+  .pillar__n { display: none; }
+  .pillar__title { grid-column: 2; font-size: 1.35rem; }
+  .pillar__short { grid-column: 2; grid-row: 2; font-size: .9rem; }
+  .pillar__more { grid-column: 3; grid-row: 1 / span 2; padding: 0; width: 44px; height: 44px; justify-content: center; font-size: 0; gap: 0; }
+
+  /* también grabamos: tres pasos en tarjetas, sin las mini animaciones */
+  .mk-rec__step { grid-template-columns: 46px minmax(0, 1fr); gap: 14px; }
+  .mk-mini { display: none; }
+
+  /* la librería: las fichas apiladas y completas (sin abanico) */
+  .fx-lib__copy { padding: 28px 20px 18px; }
+  .fx-lib__cards { display: flex; flex-direction: column; gap: 12px; overflow: visible; padding: 0 26px 24px 20px; }
+  .fx-lib__card { display: block; position: relative; left: auto; top: auto; width: auto; rotate: 0deg; }
+  .fx-lib__card .fx-lib__name, .fx-lib__card .fx-lib__more { display: none; }
+  .fx-lib__item { display: inline; margin: 0; padding: 0; border: 0; }
+  .fx-lib__item + .fx-lib__item::before { content: " · "; }
+  .fx-lib__card { padding-bottom: 12px; }
+  .fx-lib__card { line-height: 1.5; padding: 0 14px 12px; }
+  .fx-lib__tab { margin: 0 -14px 10px; }
+
+  /* tipos de edición: el título arriba y la nota debajo */
+  .fx-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  /* ¿quién eres?: los 3 perfiles en una fila compacta */
+  .pl-profiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .ptk { padding: 10px 8px 9px 10px; border-left-width: 6px; }
+  .ptk::after, .ptk__line { display: none; }
+  .ptk__n { font-size: .48rem; }
+  .ptk__name { font-size: 1.05rem; }
+
+  /* planes (opción B): lista; cerrada se ve el nombre y el precio, abierta lo que incluye */
+  .pl-cards { gap: 14px; }
+  .plc { position: relative; padding: 16px 52px 16px 16px; }
+  .plc__fold { display: block; position: absolute; inset: 0; z-index: 2; border: 0; background: transparent; cursor: pointer; }
+  .plc__fold::after { content: "+"; position: absolute; right: 16px; top: 18px; font: 500 1.6rem/1 var(--f-body); color: currentColor; }
+  .plc.is-open .plc__fold { bottom: auto; height: 92px; }
+  .plc.is-open .plc__fold::after { content: "−"; }
+  .plc:not(.is-open) :is(.plc__ideal, .plc__label, .plc__was, .plc__note, .plc__rows, .plc__cta) { display: none; }
+  .plc__name { font-size: 1.7rem; }
+  .plc__price-box { padding-top: 10px; }
+  .plc__price { font-size: 1.6rem; }
+  .plc.is-open { padding-right: 16px; }
+  .plc__row { grid-template-columns: 92px minmax(0, 1fr); }
+
+  /* ¿ningún plan te cuadra?: se toca; el mensaje sale debajo, no flotando */
+  .sos { width: 100%; justify-content: space-between; padding: 8px 0; flex-wrap: wrap; }
+  .sos__hint { text-align: left; font-size: 1.5rem; }
+  .sos__hatch { width: 140px; height: 70px; }
+  .sos__eye { width: 92px; height: 61px; }
+  .sos__dialog { position: static; width: 100%; margin-top: 16px; rotate: 0deg; }
+  .sos__dialog::after, .sos__dialog::before { display: none; }
+}

@@ -10,6 +10,7 @@ import { initFormats } from './formatos.js';
 import { DATA, SESSION_PRICE } from './data.js';
 import { loadCatalog } from '../app/catalog.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu, waLink } from '../common.js';
+const small = window.matchMedia('(max-width: 700px)').matches;
 
 
 
@@ -61,7 +62,8 @@ function cardHTML(p, color) {
     price: `${cop(pr.price)} / mes`,
   };
   return `
-    <li class="plc${p.hot ? ' plc--hot' : ''}" style="--c: ${color}">
+    <li class="plc${p.hot ? ' plc--hot' : ''}${small && p.hot ? ' is-open' : ''}" style="--c: ${color}">
+      <button class="plc__fold" type="button" aria-expanded="${small && p.hot}" aria-label="Ver qué incluye ${esc(p.tag)} ${esc(p.name)}"></button>
       ${p.hot ? '<span class="plc__badge mono">★ Más elegido</span>' : ''}
       <p class="mono plc__tag">${esc(p.tag)}</p>
       <h3 class="plc__name">${esc(p.name)}</h3>
@@ -115,6 +117,16 @@ function specialHTML(profile) {
 
 /* ---------- render ---------- */
 const cards = $('[data-cards]');
+// celular (opción B del lienzo): los planes son una lista; se abre uno a la vez para ver qué incluye
+cards?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.plc__fold');
+  if (!btn) return;
+  const card = btn.closest('.plc');
+  const open = !card.classList.contains('is-open');
+  $$('.plc', cards).forEach((c) => { c.classList.remove('is-open'); $('.plc__fold', c).setAttribute('aria-expanded', 'false'); });
+  card.classList.toggle('is-open', open);
+  btn.setAttribute('aria-expanded', String(open));
+});
 let swapTimers = [];
 
 function render(animate = true) {
@@ -138,7 +150,7 @@ function render(animate = true) {
   // las tarjetas entran a saltos, una tras otra
   swapTimers.forEach(clearTimeout);
   swapTimers = [];
-  if (!animate || reduced) return;
+  if (!animate || reduced || small) return;
   cards.classList.add('is-swapping');
   $$('.plc', cards).forEach((c, i) => swapTimers.push(setTimeout(() => c.classList.add('is-in'), 60 + i * 110)));
   swapTimers.push(setTimeout(() => cards.classList.remove('is-swapping'), 60 + 3 * 110 + 200));
