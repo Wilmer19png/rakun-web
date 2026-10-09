@@ -21,8 +21,10 @@ const STATUS = [
 const ROLE = { admin: 'Admin', equipo: 'Equipo', cliente: 'Cliente' };
 
 let sb, me, staff = [];
+// celular: el menú de secciones se despliega y las solicitudes se ven por estado (una lista a la vez)
+const small = window.matchMedia('(max-width: 700px)').matches;
 const main = $('[data-main]');
-const state = { view: 'solicitudes', world: '', q: '', showLost: false, leads: [], clients: [] };
+const state = { view: 'solicitudes', world: '', q: '', showLost: false, col: 'nueva', leads: [], clients: [] };
 
 /* ---------- arranque: solo entra el equipo ---------- */
 (async () => {
@@ -42,6 +44,13 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, leads: [
   $('[data-logout]').addEventListener('click', async () => { await sb.auth.signOut(); location.replace('login.html'); });
   $('[data-change-pass]').addEventListener('click', () => openPasswordDialog(sb, me));
   $$('[data-view]').forEach((b) => b.addEventListener('click', () => go(b.dataset.view)));
+  const side = $('.gx__side');
+  const navBtn = $('[data-nav-toggle]');
+  navBtn.addEventListener('click', () => {
+    const open = !side.classList.contains('is-open');
+    side.classList.toggle('is-open', open);
+    navBtn.setAttribute('aria-expanded', String(open));
+  });
   $$('[data-close-drawer]').forEach((b) => b.addEventListener('click', closeDrawer));
   $$('[data-close-modal]').forEach((b) => b.addEventListener('click', closeModal));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); closeDrawer(); } });
@@ -65,6 +74,10 @@ function go(view, opts = {}) {
   state.view = view;
   history.replaceState(null, '', `#${view}`);
   $$('[data-view]').forEach((b) => b.classList.toggle('is-on', b.dataset.view === view));
+  const cur = $(`[data-view="${view}"]`);
+  $('[data-nav-cur]').textContent = `${$('i', cur).textContent} ${cur.childNodes[1].textContent.trim()}`;
+  $('.gx__side').classList.remove('is-open');
+  $('[data-nav-toggle]').setAttribute('aria-expanded', 'false');
   closeDrawer();
   closeModal();
   return VIEWS[view](opts);
@@ -107,6 +120,7 @@ function renderLeads() {
   const list = state.leads.filter((l) => (!state.world || l.world === state.world)
     && (!q || [l.name, l.email, l.city, l.plan, l.occupation, ...(l.links || [])].join(' ').toLowerCase().includes(q)));
   const cols = STATUS.filter(([k]) => state.showLost || k !== 'perdido');
+  if (!cols.some(([k]) => k === state.col)) state.col = 'nueva';
   const nuevas = state.leads.filter((l) => l.status === 'nueva').length;
   const badge = $('[data-badge-leads]');
   badge.hidden = !nuevas; badge.textContent = nuevas;
@@ -115,7 +129,13 @@ function renderLeads() {
     <input class="gx__search" type="search" placeholder="Buscar nombre, ciudad, link…" value="${esc(state.q)}" data-q aria-label="Buscar solicitudes">
     ${[['', 'Todos'], ['marca', 'Marca'], ['produccion', 'Producción'], ['web', 'Web']].map(([k, n]) => `<button class="gx__chip${state.world === k ? ' is-on' : ''}" type="button" data-world="${k}">${n}</button>`).join('')}
     <button class="gx__chip${state.showLost ? ' is-on' : ''}" type="button" data-lost>Perdidas</button>
-    <button class="gx__chip" type="button" data-reload title="Actualizar">↻</button>`) + `
+    <button class="gx__chip" type="button" data-reload title="Actualizar">↻</button>`) + (small ? `
+    <div class="gx__states" role="group" aria-label="Estado de la solicitud">
+      ${cols.map(([k, name, color]) => `<button class="gx__state" type="button" data-col="${k}" aria-pressed="${state.col === k}" style="--c:${color}">${name} <b>${list.filter((l) => l.status === k).length}</b></button>`).join('')}
+    </div>
+    <div class="gx__col gx__col--one">
+      ${list.filter((l) => l.status === state.col).map(leadCard).join('') || '<p class="gx__col-empty">Nadie en este estado.</p>'}
+    </div>` : `
     <div class="gx__board" style="--cols:${cols.length}">
       ${cols.map(([k, name, color]) => {
         const items = list.filter((l) => l.status === k);
@@ -124,7 +144,7 @@ function renderLeads() {
           ${items.map(leadCard).join('') || '<p class="gx__col-empty">—</p>'}
         </section>`;
       }).join('')}
-    </div>
+    </div>`) + `
     ${state.leads.length ? '' : '<p class="gx__empty">Todavía no llegan solicitudes. Cuando alguien toque "Quiero este plan", aparece aquí.</p>'}`;
 
   const search = $('[data-q]', main);
@@ -132,6 +152,7 @@ function renderLeads() {
   $$('[data-world]', main).forEach((b) => b.addEventListener('click', () => { state.world = b.dataset.world; renderLeads(); }));
   $('[data-lost]', main).addEventListener('click', () => { state.showLost = !state.showLost; renderLeads(); });
   $('[data-reload]', main).addEventListener('click', viewLeads);
+  $$('[data-col]', main).forEach((b) => b.addEventListener('click', () => { state.col = b.dataset.col; renderLeads(); }));
   $$('[data-lead-id]', main).forEach((c) => c.addEventListener('click', () => openLead(c.dataset.leadId)));
 }
 

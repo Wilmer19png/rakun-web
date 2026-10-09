@@ -19,7 +19,8 @@
     <aside class="gx__side">
       <a class="gx__brand" href="index.html" title="Ver la página">RAKÜN</a>
       <p class="mono gx__sub">Gestor</p>
-      <nav class="gx__nav" aria-label="Secciones del gestor">
+      <button class="gx__navbtn" type="button" aria-expanded="false" aria-controls="gx-nav" data-nav-toggle><span data-nav-cur>Secciones</span><b aria-hidden="true">▾</b></button>
+      <nav class="gx__nav" id="gx-nav" aria-label="Secciones del gestor">
         <button type="button" data-view="solicitudes"><i>01</i>Solicitudes <span class="gx__badge" data-badge-leads hidden></span></button>
         <button type="button" data-view="clientes"><i>02</i>Clientes</button>
         <button type="button" data-view="proyectos"><i>03</i>Proyectos</button>
