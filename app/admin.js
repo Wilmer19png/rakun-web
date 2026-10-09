@@ -300,7 +300,7 @@ function newClientForm() {
       <label class="gx__f"><span>Nombre *</span><input name="name" required maxlength="160"></label>
       <label class="gx__f"><span>Empresa o marca</span><input name="company" maxlength="160"></label>
       <label class="gx__f"><span>Correo * (con este entra al portal)</span><input name="email" type="email" required></label>
-      <label class="gx__f"><span>WhatsApp</span><input name="phone" type="tel"></label>
+      <label class="gx__f"><span>WhatsApp</span><input name="phone" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="15" placeholder="3001234567" data-digits></label>
       <label class="gx__f"><span>Ciudad</span><input name="city"></label>
       <p class="mono gx__saved" data-msg></p>
       <button class="gx__btn gx__btn--hot" type="submit">Guardar y crear acceso →</button>
@@ -414,7 +414,7 @@ async function viewTeam() {
       <form class="gx__form" data-form novalidate>
         <label class="gx__f"><span>Nombre *</span><input name="name" required></label>
         <label class="gx__f"><span>Correo *</span><input name="email" type="email" required></label>
-        <label class="gx__f"><span>WhatsApp (para mandarle el enlace)</span><input name="phone" type="tel"></label>
+        <label class="gx__f"><span>WhatsApp (para mandarle el enlace)</span><input name="phone" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="15" placeholder="3001234567" data-digits></label>
         <p class="mono gx__saved" data-msg></p>
         <button class="gx__btn gx__btn--hot" type="submit">Continuar →</button>
       </form>`);

@@ -92,7 +92,9 @@
 
 /* una etapa abierta: ocupa todo; las otras quedan como pestañas verticales */
 .stages.has-open { grid-template-columns: minmax(0, 1fr) 76px 76px; gap: 14px; }
-.stages.has-open .stage.is-active { order: -1; }
+/* la etapa abierta se ensancha en su lugar: el orden 01 · 02 · 03 no cambia */
+.stages.has-open[data-open="1"] { grid-template-columns: 76px minmax(0, 1fr) 76px; }
+.stages.has-open[data-open="2"] { grid-template-columns: 76px 76px minmax(0, 1fr); }
 .stages.has-open .stage__card { display: none; }
 .stage__tab {
   min-height: 460px;
@@ -430,7 +432,7 @@ html:not(.js) .wall__lights { display: none; }
   .p-subnav__types { display: none; }
   .p-hero__grid, .p-head, .p-set__body, .p-tapes__body, .p-cta__body, .p-ftr__cols { grid-template-columns: minmax(0, 1fr); }
   .stages { grid-template-columns: minmax(0, 1fr); }
-  .stages.has-open { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .stages.has-open, .stages.has-open[data-open] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .stages.has-open .stage.is-active { grid-column: 1 / -1; }
   .stage__tab { min-height: 0; flex-direction: row; padding: 14px 18px; }
   .stage__tab-name { writing-mode: initial; rotate: none; font-size: 1.2rem; }

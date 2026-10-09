@@ -483,3 +483,7 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 .pw__msg.is-error { color: #C8173F; font-weight: 500; }
 .pw__act { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
 .pw__show input { all: revert; width: 16px; height: 16px; margin: 0; accent-color: var(--pink); }
+
+/* campos obligatorios del gestor */
+.gx__req { color: var(--pink); font-weight: 500; }
+.gx__fs.is-missing { outline: 2px dashed var(--pink); outline-offset: 6px; }

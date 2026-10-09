@@ -88,7 +88,7 @@ function shootForm(ctx, refs, s) {
       </div>
       <label class="gx__f"><span>Lugar</span><input name="location" maxlength="160" value="${esc(s?.location || '')}" placeholder="Consultorio, estudio, casa del cliente…"></label>
       <label class="gx__f"><span>Dirección</span><input name="address" maxlength="300" value="${esc(s?.address || '')}" placeholder="Cra. 43A #1-50, Medellín"></label>
-      <fieldset class="gx__f gx__fs"><legend>Quién va del equipo</legend>
+      <fieldset class="gx__f gx__fs"><legend>Quién va del equipo <b class="gx__req">*</b></legend>
         <div class="gx__netpick">${staff.map((p) => `<label><input type="checkbox" name="crew" value="${p.id}"${s?.crew?.includes(p.id) ? ' checked' : ''}><span><b style="background:${esc(p.color)};color:var(--ink-0)">${esc(initials(p.full_name))}</b>${esc(p.full_name.split(' ')[0])}</span></label>`).join('')}</div>
       </fieldset>
       <label class="gx__f"><span>Qué debe preparar el cliente (una cosa por línea)</span><textarea name="prep" rows="4" placeholder="3 cambios de ropa en colores lisos&#10;Revisar los guiones que te enviamos">${esc((s?.prep || []).join('\n'))}</textarea></label>
@@ -124,6 +124,11 @@ function shootForm(ctx, refs, s) {
     const msg = $('[data-msg]', f);
     const fd = new FormData(f);
     if (!fd.get('date')) { msg.textContent = 'Elige la fecha.'; return; }
+    // obligatorio: al menos una persona del equipo va a la grabación (salvo si se cancela)
+    const crewBox = $('.gx__fs', f);
+    const noCrew = !fd.getAll('crew').length && fd.get('status') !== 'cancelada';
+    crewBox.classList.toggle('is-missing', noCrew);
+    if (noCrew) { msg.textContent = 'Elige quién va del equipo a la grabación.'; crewBox.scrollIntoView({ block: 'nearest' }); return; }
     const row = {
       client_id: fd.get('client_id'), project_id: fd.get('project_id') || null,
       starts_at: toISO(fd.get('date'), fd.get('time')), duration_hours: Number(fd.get('duration_hours')) || 3,

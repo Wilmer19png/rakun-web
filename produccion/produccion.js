@@ -6,6 +6,7 @@
    ========================================================================== */
 
 import { RakunEye } from '../eye.js';
+import '../app/util.js';                                 // campos de WhatsApp: solo números
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -59,6 +60,7 @@ function stageIn(stage) {
 
 function openStage(i, focus = false) {
   stagesBox.classList.add('has-open');
+  stagesBox.dataset.open = String(i);
   stages.forEach((st, k) => {
     const active = k === i;
     st.classList.toggle('is-active', active);
@@ -72,6 +74,7 @@ function openStage(i, focus = false) {
 
 function closeStage(from) {
   stagesBox.classList.remove('has-open');
+  delete stagesBox.dataset.open;
   stages.forEach((st) => {
     st.classList.remove('is-active');
     $('.stage__tab', st).hidden = true;

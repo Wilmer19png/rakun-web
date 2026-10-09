@@ -263,7 +263,7 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 .has-cursor .cursor { display: block; }
 .has-cursor, .has-cursor * { cursor: none !important; }
 .cursor__dot, .cursor__ring {
-  position: fixed; left: 0; top: 0; z-index: 180;
+  position: fixed; left: 0; top: 0; z-index: 300;           /* encima de intro, alcantarilla y formularios */
   pointer-events: none; border-radius: 50%;
   will-change: transform;
 }
@@ -1343,11 +1343,12 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 .door-on body { overflow: hidden; }
 .door-on .door {
   position: fixed; inset: 0; z-index: 140;
+  overflow-y: auto; overscroll-behavior: contain;      /* en pantallas bajas, la entrada se puede bajar */
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   grid-template-rows: auto auto;
   grid-template-areas: "neon ask" "frame ask";
-  align-content: center;                            /* puerta y pregunta centradas juntas en la pantalla */
+  align-content: safe center;                            /* centradas; si no caben, empiezan arriba y se bajan */
   align-items: center; column-gap: clamp(32px, 5vw, 96px); row-gap: 18px;
   padding: 5vh clamp(24px, 7vw, 120px);
   overflow-y: auto;

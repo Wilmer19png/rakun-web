@@ -28,5 +28,16 @@ export function ago(iso) {
   return new Date(iso).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });
 }
 
-/** Solo dígitos para wa.me */
-export const waNumber = (phone) => String(phone || '').replace(/\D/g, '');
+/** Solo dígitos para wa.me. Un celular colombiano de 10 dígitos (3xx…) lleva el 57 delante. */
+export const waNumber = (phone) => {
+  const d = String(phone || '').replace(/\D/g, '');
+  return d.length === 10 && d.startsWith('3') ? `57${d}` : d;
+};
+
+/* Campos de WhatsApp o teléfono (data-digits): solo aceptan números, también al pegar. */
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (!el.matches?.('[data-digits]')) return;
+  const v = el.value.replace(/\D/g, '');
+  if (v !== el.value) el.value = v;
+});

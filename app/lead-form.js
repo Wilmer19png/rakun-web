@@ -90,7 +90,7 @@ function build() {
             <div class="lf__f"><span class="lf__l" id="lf-phone-l">WhatsApp <b>*</b></span>
               <div class="lf__phone">
                 <select name="code" aria-label="Indicativo del país">${CODES.map(([c, n]) => `<option value="${c}">${n} ${c}</option>`).join('')}</select>
-                <input name="phone" type="tel" autocomplete="tel-national" required maxlength="20" aria-labelledby="lf-phone-l" inputmode="tel">
+                <input name="phone" type="tel" autocomplete="tel-national" required minlength="7" maxlength="15" pattern="[0-9]*" aria-labelledby="lf-phone-l" inputmode="numeric" placeholder="3001234567" data-digits>
               </div>
             </div>
             <label class="lf__f"><span class="lf__l">Ciudad y país <b>*</b></span><input name="city" autocomplete="address-level2" required maxlength="120" placeholder="Medellín, Colombia"></label>
