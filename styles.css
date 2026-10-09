@@ -1703,3 +1703,13 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
   .logo-h__word { font-size: 2.4rem; }
   .logo-h__sub { font-size: 1rem; letter-spacing: .2em; }
 }
+
+/* pie: el logo en caja (RAKÜN grande + barra "Visual Design"), como el del encabezado */
+.badge--ftr { --bs: clamp(60px, 6.6vw, 104px); }
+.badge--ftr .badge__bar { justify-content: center; gap: .4em; font-size: .3em; letter-spacing: .2em; padding: .22em .3em .16em .5em; }
+.ftr .badge--ftr { border-color: var(--navy); }
+.ftr .badge--ftr .badge__word { color: var(--navy); }
+.ftr .badge--ftr .badge__u { color: var(--pink); }
+@media (max-width: 700px) {
+  .badge--ftr { --bs: 46px; }
+}
