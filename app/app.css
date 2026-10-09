@@ -487,3 +487,4 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 /* campos obligatorios del gestor */
 .gx__req { color: var(--pink); font-weight: 500; }
 .gx__fs.is-missing { outline: 2px dashed var(--pink); outline-offset: 6px; }
+.gx__loc { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

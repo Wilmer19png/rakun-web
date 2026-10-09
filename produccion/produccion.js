@@ -7,6 +7,7 @@
 
 import { RakunEye } from '../eye.js';
 import '../app/util.js';                                 // campos de WhatsApp: solo números
+import { mountLocation } from '../app/ubicacion.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -458,6 +459,7 @@ function initGuion() {
   const sendBtn = $('.g-send__btn', form);
   const again = $('.g-send__again', form);
   const intro = msg.textContent;
+  mountLocation($('[data-g-loc]', form), { name: 'locacion', selectClass: 'g-f g-f--sel' });   // departamento → ciudad
   const date = form.elements.fecha;
   sec.classList.add('is-closed');
   status.textContent = 'Llena los espacios en rosado.';

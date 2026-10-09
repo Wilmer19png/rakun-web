@@ -507,6 +507,11 @@ html:not(.js) .wall__lights { display: none; }
 .g-f--date { width: 168px; color-scheme: light; cursor: pointer; }
 .g-f--date::-webkit-calendar-picker-indicator { cursor: pointer; opacity: .7; }
 .g-f--place { width: 180px; }
+/* "lo rodaríamos en [departamento] [ciudad]": listas con la misma tinta rosa del guion */
+.g-loc { display: inline-flex; flex-wrap: wrap; gap: 4px 10px; vertical-align: baseline; }
+.g-f--sel { max-width: 210px; padding-right: 4px; cursor: pointer; appearance: auto; }
+.g-f--sel:disabled { color: rgba(27, 26, 53, .35); cursor: default; }
+.g-f--sel option { color: var(--navy); }
 .g-f--mail { width: 230px; }
 .g-f--tel { width: 150px; }
 .g-f--refs { width: 300px; }

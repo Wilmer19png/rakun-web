@@ -11,6 +11,7 @@ import { viewPlans } from './admin-planes.js';
 import { viewDocuments } from './admin-documentos.js';
 import { viewShoots, viewMeetings } from './admin-agenda.js';
 import { openPasswordDialog } from './password.js';
+import { mountLocation } from './ubicacion.js';
 
 const WORLD = { marca: ['Marca', 'var(--yellow)'], produccion: ['Producción', 'var(--blue)'], web: ['Web', 'var(--pink)'] };
 const STATUS = [
@@ -301,11 +302,12 @@ function newClientForm() {
       <label class="gx__f"><span>Empresa o marca</span><input name="company" maxlength="160"></label>
       <label class="gx__f"><span>Correo * (con este entra al portal)</span><input name="email" type="email" required></label>
       <label class="gx__f"><span>WhatsApp</span><input name="phone" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="15" placeholder="3001234567" data-digits></label>
-      <label class="gx__f"><span>Ciudad</span><input name="city"></label>
+      <div class="gx__f"><span>Ciudad</span><div class="gx__loc" data-loc></div></div>
       <p class="mono gx__saved" data-msg></p>
       <button class="gx__btn gx__btn--hot" type="submit">Guardar y crear acceso →</button>
     </form>`);
   const f = $('[data-form]', $('[data-modal-box]'));
+  mountLocation($('[data-loc]', f), { name: 'city' });   // departamento → ciudad, sin escribir
   f.elements.name.focus();
   f.addEventListener('submit', async (e) => {
     e.preventDefault();

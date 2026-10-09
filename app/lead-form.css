@@ -98,3 +98,9 @@
   .lf__main { padding: 28px 20px; }
   .lf__grid { grid-template-columns: minmax(0, 1fr); }
 }
+.lf__loc { display: grid; grid-template-columns: 1fr 1fr; }
+.lf__loc select + select { border-left: 0; }
+.lf__loc select:disabled { color: rgba(27, 26, 53, .4); background: #F3F0EA; }
+.lf__loc { display: grid; grid-template-columns: 1fr 1fr; }
+.lf__loc select + select { border-left: 0; }
+.lf__loc select:disabled { color: rgba(27, 26, 53, .4); background: #F3F0EA; }

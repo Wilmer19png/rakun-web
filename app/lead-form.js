@@ -7,6 +7,7 @@
 import { $, $$, safeUrl } from './util.js';
 import { isConfigured, getClient, errorText } from './supa.js';
 import { CALCOM_URL, CONTACT_EMAIL } from './config.js';
+import { mountLocation } from './ubicacion.js';
 
 const CODES = [['+57', 'CO'], ['+1', 'US'], ['+52', 'MX'], ['+34', 'ES'], ['+51', 'PE'], ['+56', 'CL'], ['+54', 'AR'], ['+593', 'EC'], ['+58', 'VE'], ['+507', 'PA']];
 const WORLD_NAME = { marca: 'Marca personal', produccion: 'Producción audiovisual', web: 'Web y apps' };
@@ -93,7 +94,7 @@ function build() {
                 <input name="phone" type="tel" autocomplete="tel-national" required minlength="7" maxlength="15" pattern="[0-9]*" aria-labelledby="lf-phone-l" inputmode="numeric" placeholder="3001234567" data-digits>
               </div>
             </div>
-            <label class="lf__f"><span class="lf__l">Ciudad y país <b>*</b></span><input name="city" autocomplete="address-level2" required maxlength="120" placeholder="Medellín, Colombia"></label>
+            <div class="lf__f"><span class="lf__l" id="lf-city-l">Ciudad <b>*</b></span><div class="lf__loc" data-lf-loc role="group" aria-labelledby="lf-city-l"></div></div>
             <label class="lf__f lf__f--wide"><span class="lf__l">¿A qué te dedicas?</span><input name="occupation" maxlength="200" placeholder="Odontóloga estética, creadora de lifestyle, banda de rock…"></label>
 
             <div class="lf__f lf__f--wide">
@@ -139,6 +140,7 @@ function build() {
       </div>
     </div>`;
   document.body.append(root);
+  mountLocation($('[data-lf-loc]', root), { name: 'city', required: true });   // departamento → ciudad, sin escribir
 
   const links = $('[data-lf-links]', root);
   const addLink = (value = '') => {
@@ -208,7 +210,11 @@ async function onSubmit(e) {
   if (fd.get('empresa_web')) return;                               // robot
 
   const req = ['name', 'email', 'phone', 'city'].map((n) => form.elements[n]).find((el) => !el.value.trim() || !el.checkValidity());
-  if (req) { msg.textContent = `Falta: ${req.closest('.lf__f').querySelector('.lf__l').firstChild.textContent.trim()}.`; msg.classList.add('is-error'); req.focus(); return; }
+  if (req) { msg.textContent = `Falta: ${req.closest('.lf__f').querySelector('.lf__l').firstChild.textContent.trim()}.`; msg.classList.add('is-error');
+    // la ciudad es un campo oculto: el foco va a la lista que falta
+    (req.type === 'hidden' ? $('[data-loc-city]:not([disabled])', req.parentElement) || $('[data-loc-dep]', req.parentElement) : req).focus();
+    return;
+  }
   if (!form.elements.consent.checked) { msg.textContent = 'Necesitamos tu autorización para contactarte.'; msg.classList.add('is-error'); form.elements.consent.focus(); return; }
 
   const lead = {
