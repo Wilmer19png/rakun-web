@@ -1584,3 +1584,51 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
 :is(.sec--navy, .pl-carta, .p-crew) :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-carta__aside) {
   border-color: rgba(243, 240, 234, .55); background: rgba(255, 255, 255, .04); color: var(--cream);
 }
+
+/* ==========================================================================
+   Celular · menú (opción C del lienzo). Lo arma common.js → buildMobileNav()
+   ========================================================================== */
+.mnav { display: none; }
+@media (max-width: 960px) {
+  .menu-open .hdr__nav { display: none; }                  /* el menú viejo apilado ya no se usa */
+  .menu-open .mnav {
+    position: fixed; inset: 0; z-index: 120;
+    display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain;
+    background: var(--cream); color: var(--navy);
+  }
+  .mnav__top { flex: none; display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 16px; border-bottom: 2px solid var(--navy); }
+  .mnav__logo { padding: 7px 9px 5px; border: 2px solid var(--navy); box-shadow: 3px 3px 0 var(--pink); font: 900 1.2rem/1 var(--f-display); text-transform: uppercase; color: var(--navy); }
+  .mnav__logo span { color: var(--pink); }
+  .mnav__close { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; background: var(--navy); color: var(--cream); cursor: pointer; }
+  .mnav__body { flex: 1 0 auto; padding: 22px 20px 26px; }
+  .mnav__k { margin: 0 0 12px; color: var(--ink-soft); }
+  .mnav__k + .mnav__secs { margin-bottom: 0; }
+  .mnav__worlds { display: flex; flex-direction: column; gap: 12px; margin-bottom: 26px; }
+  .mnav__ticket {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 3px 12px;
+    padding: 12px 16px 12px 12px; border-left: 10px solid var(--t);
+    background: var(--white); color: var(--navy); box-shadow: 5px 5px 0 rgba(27, 26, 53, .22);
+  }
+  .mnav__ticket:active { background: var(--navy); color: var(--cream); }
+  .mnav__tags { grid-column: 1 / 3; font-size: .56rem; color: var(--ink-soft); }
+  .mnav__name { grid-column: 1; font: 900 1.35rem/.9 var(--f-display); text-transform: uppercase; }
+  .mnav__here { grid-column: 2; grid-row: 2; padding: 4px 7px; background: var(--yellow); color: var(--navy); font-size: .5rem; }
+  .mnav__ticket .ico { grid-column: 3; grid-row: 1 / span 2; width: 18px; height: 18px; }
+  .mnav__secs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .mnav__sec { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 54px; padding: 0 12px; border: 2px solid var(--navy); font-size: 1rem; color: var(--navy); }
+  .mnav__sec .mono { color: var(--pink); }
+  .mnav__sec:active { background: var(--navy); color: var(--cream); }
+  .mnav__foot { flex: none; display: flex; flex-direction: column; gap: 12px; padding: 18px 20px calc(22px + env(safe-area-inset-bottom)); background: var(--navy); color: var(--cream); }
+  .mnav__cta { display: flex; justify-content: center; align-items: center; gap: 10px; height: 54px; background: var(--yellow); color: var(--ink-0); font: 900 1.3rem/1 var(--f-display); text-transform: uppercase; box-shadow: 5px 5px 0 var(--pink); }
+  .mnav__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .mnav__ghost { display: flex; align-items: center; justify-content: center; min-height: 48px; border: 1px solid rgba(255, 255, 255, .35); color: var(--cream); }
+  .mnav__end { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .mnav__back { padding: 10px 0 4px; border-bottom: 1px solid rgba(195, 192, 221, .4); color: var(--mist); }
+  .mnav__clock { color: #8B88AE; }
+}
+/* encabezado en celular: solo RAKÜN, el ojo y Menú (iniciar sesión y el reloj van dentro del menú) */
+@media (max-width: 700px) {
+  .hdr .badge__bar { display: none; }
+  .hdr__login { display: none; }
+  .hdr__home-tip { display: none; }
+}
