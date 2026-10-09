@@ -570,3 +570,41 @@ html:not(.js) .wall__lights { display: none; }
 .g-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .g-consent { display: flex; gap: 12px; align-items: flex-start; margin-top: 22px; text-align: left; text-transform: none; font-size: 13px; line-height: 1.5; color: rgba(27, 26, 53, .75); cursor: pointer; }
 .g-consent input { flex: none; width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--pink); }
+
+/* ==========================================================================
+   Celular · Producción (lienzo "5. Producción")
+   ========================================================================== */
+@media (max-width: 700px) {
+  /* portada: sin la fila de etapas (están en el menú) */
+  .p-subnav { display: none; }
+
+  /* el set: la lista de equipos basta; el plano del set (se recorre con el cursor) se quita */
+  .plan, .p-rec { display: none; }
+
+  /* etapas abiertas: los pasos sin las mini animaciones, más compactos */
+  .svc__anim { display: none; }
+
+  /* la crew: la luz ya está prendida (sin linterna) */
+  .wall__lights, .wall__cap, .wall__dark { display: none; }
+
+  /* videoteca: el televisor primero y la estantería debajo, entera en el ancho */
+  .p-tapes__body { display: flex; flex-direction: column; gap: 24px; }
+  .p-tapes__copy { display: contents; }
+  .player { order: 1; }
+  .shelf { order: 2; margin-top: 10px; }
+  .shelf__row { flex-wrap: nowrap; justify-content: space-between; gap: 0; min-height: 320px; }
+  .spine { width: 52px; height: 280px; }
+  .spine.is-out { translate: 0 -26px; }
+  .spine__label { width: 38px; }
+  .spine__label span { font-size: 12px; }
+  .player__info { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* el guion: la hoja cabe con su sombra, los broches van en el margen y no tapan texto */
+  .g-sheet { margin-right: 12px; padding: 48px 18px 40px 44px; box-shadow: inset 0 14px 18px -14px rgba(27, 26, 53, .35), 5px 6px 0 #D9D4C8, 10px 12px 0 rgba(0, 0, 0, .45); }
+  .g-sheet__brad { left: 12px; width: 18px; height: 18px; }
+  .g-sheet__page { right: 18px; top: 16px; }
+  .g-sheet__stamp { right: -6px; }
+  .g-send { flex-direction: column; align-items: stretch; gap: 18px; }
+  .g-send__note { max-width: none; }
+  .g-send__btn, .g-send__again { align-self: flex-start; }
+}

@@ -10,6 +10,7 @@ import '../app/util.js';                                 // campos de WhatsApp: 
 import { mountLocation } from '../app/ubicacion.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
 
+const small = window.matchMedia('(max-width: 700px)').matches;   // celular
 const pad = (n) => String(n).padStart(2, '0');
 const timecode = (sec) => {
   const s = Math.floor(sec);
@@ -303,6 +304,12 @@ function initCrew() {
     manual = false;
     setMode();
   });
+  // celular: sin linterna (no hay cursor); la luz ya está prendida
+  if (small) {
+    lightsBtn.click();
+    const aside = $('.p-head__aside', wall);
+    if (aside) aside.textContent = 'Estas son las personas que van al set contigo.';
+  }
 
   const loop = (now) => {
     if (!visible) return;
@@ -591,3 +598,9 @@ initAnchors();
 
 const hdrEye = $('[data-eye="eye-hdr"]');
 if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).followCursor();
+
+// celular: el texto del set ya no invita a "pasar por el plano" (el plano no se muestra)
+if (small) {
+  const lede = $('.p-set__lede');
+  if (lede) lede.textContent = 'Cada marca es un equipo que llevamos al rodaje.';
+}
