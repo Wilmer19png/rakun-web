@@ -15,6 +15,8 @@ import {
 } from './content.js';
 
 let sb, me;
+// celular: la parrilla se ve como lista (el calendario no cabe)
+const small = window.matchMedia('(max-width: 700px)').matches;
 const st = { projects: [], project: null, month: monthStart(new Date()), posts: [], sel: null };
 
 (async () => {
@@ -354,6 +356,7 @@ function renderProjects() {
       <div class="px__stages" style="--n:${stages.length};--fill:${(fill / 100).toFixed(3)}">
         ${stages.map((s, i) => `<div class="px__stage${i < cur ? ' is-done' : ''}${i === cur ? ' is-now' : ''}"><i></i><span class="mono">${esc(s)}</span></div>`).join('')}
       </div>
+      ${stages.length ? `<p class="mono px__stage-now">Etapa ${cur + 1} de ${stages.length} · <b>${esc(stages[cur])}</b>${stages[cur + 1] ? `<br>Sigue: ${esc(stages[cur + 1])}` : ''}</p>` : ''}
       ${p.world === 'marca' ? '<a class="gx__btn" href="#parrilla" data-goto-grid="' + p.id + '">Ver mi parrilla de contenido →</a>' : ''}
     </section>`;
   }).join('');
@@ -396,7 +399,7 @@ function renderParrilla(grids) {
       </div>
     </div>
     ${pending ? `<p class="px__pending">● Tienes <b>${pending}</b> ${pending === 1 ? 'pieza' : 'piezas'} por aprobar este mes.</p>` : ''}
-    <div class="px__gridwrap">
+    ${small ? listHTML() : `<div class="px__gridwrap">
       <div class="gx__cal px__cal">
         ${DOW.map((d) => `<span class="gx__cal-h mono">${d}</span>`).join('')}
         ${monthCells(st.month).map(({ date }) => {
@@ -413,13 +416,31 @@ function renderParrilla(grids) {
         }).join('')}
       </div>
       <aside class="px__detail" data-detail>${sel ? detailHTML(sel) : '<p class="gx__p">Este mes todavía no tiene piezas para revisar.</p>'}</aside>
-    </div>`;
+    </div>`}`;
 
   $('[data-proj]', box)?.addEventListener('change', (e) => { st.project = e.target.value; st.sel = null; openParrilla(); });
   $('[data-prev]', box).addEventListener('click', () => { st.month = addMonths(st.month, -1); st.sel = null; openParrilla(); });
   $('[data-next]', box).addEventListener('click', () => { st.month = addMonths(st.month, 1); st.sel = null; openParrilla(); });
   $$('[data-post]', box).forEach((b) => b.addEventListener('click', () => { st.sel = b.dataset.post; renderParrilla(grids); }));
   bindReview(grids);
+}
+
+// celular: la parrilla es una lista por fecha; la pieza elegida se abre ahí mismo con aprobar / pedir cambio
+function listHTML() {
+  if (!st.posts.length) return '<p class="gx__p">Este mes todavía no tiene piezas para revisar.</p>';
+  return `<ol class="px__list">${st.posts.map((p) => {
+    const [, sname, sc] = statusInfo(p.status);
+    const on = p.id === st.sel;
+    const day = new Date(p.publish_at).toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short' });
+    return `<li class="px__item${on ? ' is-sel' : ''}" style="--sc:${sc}">
+      <button type="button" class="px__item-head" data-post="${p.id}" aria-expanded="${on}">
+        <span class="mono px__item-day">${esc(day)}</span><span class="mono px__item-st"><i></i>${esc(sname)}</span>
+        <span class="px__item-t">${esc(p.title)}</span>
+        <span class="mono px__item-n">${p.networks.map((k) => esc(netInfo(k)[1])).join(' · ')}</span>
+      </button>
+      ${on ? `<div class="px__detail">${detailHTML(p)}</div>` : ''}
+    </li>`;
+  }).join('')}</ol>`;
 }
 
 function detailHTML(p) {
