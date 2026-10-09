@@ -1632,3 +1632,64 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
   .hdr__login { display: none; }
   .hdr__home-tip { display: none; }
 }
+
+/* ==========================================================================
+   Celular · Inicio (lienzo "3. Inicio")
+   ========================================================================== */
+@media (max-width: 700px) {
+  /* portada: ocupa la pantalla; el mapache grande abajo a la izquierda, sin bloques detrás */
+  .hero__bg { display: none; }
+  .hero__grid { display: block; position: relative; overflow: hidden; min-height: calc(100svh - var(--hdr-h)); padding: 36px 20px 0; box-sizing: border-box; }
+  .hero__copy { position: static; display: block; }
+  .hero__title, .hero__lede, .hero__meta { position: relative; z-index: 2; }
+  .hero__foot { gap: 14px; margin-top: 22px; }
+  .hero__lede { max-width: 330px; font-size: 1rem; color: var(--mist); }
+  .hero__meta { font-size: .56rem; gap: 4px 12px; }
+  .hero__foot .link { position: absolute; right: 16px; bottom: 52px; z-index: 3; padding: 10px 12px; background: var(--cream); color: var(--ink-0); box-shadow: 4px 4px 0 var(--pink); font-size: .62rem; }
+  .hero__foot .link::after { display: none; }
+  .collage { position: absolute; left: -28px; bottom: 26px; width: 400px; max-width: none; aspect-ratio: 1; margin: 0; z-index: 1; }
+  .collage__blk, .collage__tape, .collage__burst, .collage__tag, .collage .cross { display: none; }
+  .collage__logo { inset: 0; width: 100%; height: 100%; }
+  .collage__cap { position: absolute; inset: 0 6px auto auto; width: auto; height: auto; display: block; padding: 5px 8px; background: var(--yellow); color: var(--ink-0); rotate: 3deg; font-size: .5rem; }
+  .collage__cap span:first-child::after { content: " — "; }
+
+  /* papel rasgado entre la portada y Enfoque */
+  .focus::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -22px; height: 26px; z-index: 7; pointer-events: none;
+    background: var(--cream); filter: drop-shadow(0 -5px 6px rgba(0, 0, 0, .4));
+    clip-path: polygon(0% 14px,3% 6px,5% 16px,8% 4px,11% 12px,14% 2px,17% 15px,20% 7px,23% 13px,26% 3px,29% 11px,32% 5px,35% 16px,38% 8px,41% 12px,44% 2px,47% 14px,50% 6px,53% 13px,56% 3px,59% 15px,62% 7px,65% 11px,68% 2px,71% 14px,74% 6px,77% 16px,80% 4px,83% 12px,86% 5px,89% 15px,92% 3px,95% 13px,98% 6px,100% 11px,100% 100%,0% 100%);
+  }
+  .services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card__media { aspect-ratio: auto; height: 96px; }
+
+  /* manifiesto: el texto completo de una vez y el ojo acostado abajo */
+  .js .manifesto { min-height: 0; }
+  .manifesto__sticky { position: relative; min-height: 0; gap: 26px; padding: 64px 20px; }
+  .manifesto__text { font-size: clamp(2.2rem, 10vw, 2.6rem); line-height: .95; }
+  .js .manifesto.is-scrub .w { opacity: 1; }
+  .manifesto__eye { order: 3; display: block; width: 200px; height: 132px; margin: 0 auto; }
+  .manifesto__eye svg { transform: rotate(-31.5deg); }
+
+  /* Mirar · Crear · Destacar: quietas, en una franja */
+  .marquee { padding: 24px 0; }
+  .marquee__rail { display: none; }
+  .marquee__track { width: auto; transform: none !important; }
+  .marquee__group { width: 100%; justify-content: space-between; padding: 0 20px; box-sizing: border-box; }
+  .marquee__group ~ .marquee__group, .mq__burst { display: none; }
+  .mq { font-size: 1.9rem; padding: 0; }
+
+  /* cómo trabajamos: línea vertical, solo texto, ya pintada */
+  .tl { display: block; position: relative; padding-left: 34px; }
+  .tl__art { display: none; }
+  .tl__step { padding-bottom: 30px; }
+  .tl__node { position: absolute; left: -34px; top: 2px; margin: 0; }
+  .tl__line { display: block; left: 8px; right: auto; top: 6px; bottom: 36px; height: auto; width: 3px; border: 0; background: var(--pink); }
+  .tl__fill { display: none; }
+  .tl__title { font-size: 1.9rem; }
+
+  /* ¿listo para que te vean?: los tres caminos directos, sin el botón que se abre */
+  .cta__eye-wrap, .mega-btn, .cta__hint { display: none; }
+  .picker { margin-top: 18px; }
+  .pick { min-height: 56px; }
+  .pick__name { font-size: 1.3rem; }
+}

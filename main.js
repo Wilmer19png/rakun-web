@@ -13,6 +13,7 @@ const gsap = window.gsap;
 const anime = window.anime;
 const ScrollTrigger = window.ScrollTrigger;
 const mobile = window.matchMedia('(max-width: 600px)').matches;
+const small = window.matchMedia('(max-width: 700px)').matches;   // celular: solo las animaciones que cuentan el mensaje
 const HAS_GSAP = !!(gsap && ScrollTrigger);
 
 if (HAS_GSAP) gsap.registerPlugin(ScrollTrigger);
@@ -208,7 +209,7 @@ const liveEyes = {};
 function mountEyes() {
   $$('svg[data-eye]').forEach((svg) => {
     const id = svg.dataset.eye;
-    liveEyes[id] = new RakunEye(svg, { prefix: id, openness: id === 'eye-mf' && HAS_GSAP && !reduced ? 0 : 1 });
+    liveEyes[id] = new RakunEye(svg, { prefix: id, openness: id === 'eye-mf' && HAS_GSAP && !reduced && !small ? 0 : 1 });
   });
 }
 function wakeEyes() {
@@ -223,7 +224,7 @@ function wakeEyes() {
    Animaciones
    ========================================================================== */
 function heroEntrance() {
-  if (!HAS_GSAP || reduced) return;
+  if (!HAS_GSAP || reduced || small) return;
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
   tl.from('.hero__title .line > span', { yPercent: 115, duration: 1.15, stagger: 0.09 }, 0)
     .from(['.hero__lede', '.hero__meta', '.hero__foot .link'], { y: 24, opacity: 0, duration: 0.9, stagger: 0.07 }, 0.35)
@@ -261,7 +262,7 @@ function splitWords(container) {
 }
 
 function scrollAnimations() {
-  if (!HAS_GSAP || reduced) return;
+  if (!HAS_GSAP || reduced || small) return;
 
   // Titulares de sección
   $$('.reveal').forEach((el) => {
@@ -345,7 +346,7 @@ function initTimeline() {
   const tl = $('[data-tl]');
   if (!tl) return;
   const steps = $$('.tl__step', tl);
-  if (reduced || !('IntersectionObserver' in window)) {
+  if (reduced || small || !('IntersectionObserver' in window)) {
     tl.classList.add('is-run');
     steps.forEach((s) => s.classList.add('is-on'));
     return;
@@ -369,7 +370,7 @@ function initTimeline() {
 
 function initMarquee() {
   const track = $('[data-marquee]');
-  if (!track) return;
+  if (!track || small) return;                      // en celular las tres palabras quedan quietas
   const group = $('.marquee__group', track);
   const fill = () => {
     $$('.marquee__group', track).slice(1).forEach((g) => g.remove());
@@ -461,6 +462,7 @@ function initPicker() {
   const btn = $('[data-plans]');
   const picker = $('[data-picker]');
   if (!btn || !picker) return;
+  if (small) { picker.hidden = false; return; }      // en celular los tres caminos se ven directo
   btn.addEventListener('click', () => {
     const open = btn.getAttribute('aria-expanded') !== 'true';
     btn.setAttribute('aria-expanded', String(open));
@@ -564,7 +566,6 @@ function runDoor() {
   lenis?.stop();
   const eye = new RakunEye($('[data-door-eye]', door), { prefix: 'eye-door', openness: 0 });
   const staged = $$('.door__kicker, .door__q, .ticket, .door__enter, .door__fine', door);
-  const small = window.matchMedia('(max-width: 700px)').matches;
   door.tabIndex = -1;
   door.focus({ preventScroll: true });
 
