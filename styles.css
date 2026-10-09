@@ -1705,11 +1705,16 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
 }
 
 /* pie: el logo en caja (RAKÜN grande + barra "Visual Design"), como el del encabezado */
-.badge--ftr { --bs: clamp(60px, 6.6vw, 104px); }
+.badge--ftr { --bs: clamp(84px, 9.4vw, 150px); }
+.ftr .logo-h__mark, .p-ftr__logo .logo-h__mark { width: clamp(140px, 14vw, 220px); }
 .badge--ftr .badge__bar { justify-content: center; gap: .4em; font-size: .3em; letter-spacing: .2em; padding: .22em .3em .16em .5em; }
 .ftr .badge--ftr { border-color: var(--navy); }
+/* Inicio: con el logo grande, el logo va en su propia fila y las columnas debajo */
+.ftr__top { grid-template-columns: minmax(0, 1fr); gap: clamp(40px, 5vw, 72px); margin-bottom: clamp(36px, 4vw, 60px); }
 .ftr .badge--ftr .badge__word { color: var(--navy); }
 .ftr .badge--ftr .badge__u { color: var(--pink); }
 @media (max-width: 700px) {
-  .badge--ftr { --bs: 46px; }
+  .badge--ftr { --bs: 54px; }
+  .ftr .logo-h__mark, .p-ftr__logo .logo-h__mark { width: 78px; }
+  .logo-h { gap: 12px; }
 }
