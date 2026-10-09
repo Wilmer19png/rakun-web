@@ -593,9 +593,9 @@ html:not(.js) .wall__lights { display: none; }
   .player { order: 1; }
   .shelf { order: 2; margin-top: 10px; }
   .shelf__row { flex-wrap: nowrap; justify-content: space-between; gap: 0; min-height: 320px; }
-  .spine { width: 52px; height: 280px; }
+  .spine { width: 46px; height: 280px; }
   .spine.is-out { translate: 0 -26px; }
-  .spine__label { width: 38px; }
+  .spine__label { width: 34px; }
   .spine__label span { font-size: 12px; }
   .player__info { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
