@@ -101,7 +101,7 @@ export async function viewWork(ctx, opts = {}) {
   main.innerHTML = head('08', 'Lo que se ve en la página', 'Nuestro trabajo', '<button class="gx__btn gx__btn--hot" type="button" data-new>+ Agregar proyecto</button>') + `
     <div class="gx__wk-bar">
       ${[['', 'Todos'], ...KINDS.map(([k, n]) => [k, n])].map(([k, n]) => `<button class="gx__chip${filter === k ? ' is-on' : ''}" type="button" data-kind="${k}">${esc(n)} <span class="gx__count">${works.filter((w) => !k || w.kind === k).length}</span></button>`).join('')}
-      <span class="gx__wk-star mono">★ En el Inicio: ${featured} de 3</span>
+      <span class="gx__wk-star mono">★ En el Inicio: ${featured} de 4</span>
     </div>
     <div class="gx__table">
       <div class="gx__tr gx__tr--h gx__tr--wk"><span>Orden</span><span>Imagen</span><span>Proyecto</span><span>Tipo</span><span>Estado</span><span>Inicio</span><span>Videoteca</span><span></span></div>
@@ -118,7 +118,7 @@ export async function viewWork(ctx, opts = {}) {
         </div>`).join('') || '<p class="gx__empty">Todavía no hay proyectos. Agrega el primero.</p>'}
     </div>
     <p class="mono gx__saved" data-saved aria-live="polite"></p>
-    <p class="gx__p gx__wk-help">Lo publicado aparece solo en «Todos los proyectos». La ★ lo pone también en las franjas del Inicio (máximo 3 videos). «Videoteca» agrega el botón «Ver el proyecto completo» al casete de ese video en Producción.</p>`;
+    <p class="gx__p gx__wk-help">Lo publicado aparece solo en «Todos los proyectos». La ★ lo pone también en las franjas del Inicio (máximo 4 videos). «Videoteca» agrega el botón «Ver el proyecto completo» al casete de ese video en Producción.</p>`;
 
   const saved = $('[data-saved]', main);
   const update = async (id, patch, msg = '✓ Guardado') => {
@@ -136,7 +136,7 @@ export async function viewWork(ctx, opts = {}) {
       if (await update(w.id, { status: w.status === 'publicado' ? 'borrador' : 'publicado' })) viewWork(ctx, opts);
     });
     $('[data-fav]', row)?.addEventListener('click', async () => {
-      if (!w.featured && featured >= 3) { saved.textContent = 'Ya hay 3 en el Inicio: quita la ★ de otro primero.'; return; }
+      if (!w.featured && featured >= 4) { saved.textContent = 'Ya hay 4 en el Inicio: quita la ★ de otro primero.'; return; }
       if (await update(w.id, { featured: !w.featured })) viewWork(ctx, opts);
     });
     $('[data-vtk]', row)?.addEventListener('change', async (e) => {
@@ -266,7 +266,7 @@ async function editWork(ctx, id) {
 
         <fieldset class="gx__fs gx__wk-where"><legend class="mono">${k === 'reel' ? '4' : '6'} · Dónde aparece</legend>
           <label class="gx__check"><input type="checkbox" name="publish"${w.status === 'publicado' ? ' checked' : ''}><span>Publicado (sale en «Todos los proyectos»)</span></label>
-          ${k === 'video' ? `<label class="gx__check"><input type="checkbox" name="featured"${w.featured ? ' checked' : ''}><span>★ En las franjas del Inicio (máx. 3)</span></label>
+          ${k === 'video' ? `<label class="gx__check"><input type="checkbox" name="featured"${w.featured ? ' checked' : ''}><span>★ En las franjas del Inicio (máx. 4)</span></label>
           <label class="gx__check"><input type="checkbox" name="in_videoteca"${w.in_videoteca ? ' checked' : ''}><span>Botón en la videoteca de Producción</span></label>` : ''}
         </fieldset>
 
@@ -411,7 +411,7 @@ async function editWork(ctx, id) {
       if (w.kind === 'reel' && w.status === 'publicado' && !w.reels.length) { msg.textContent = 'Agrega al menos un reel para publicarlo.'; return; }
       if (w.featured && w.kind === 'video') {
         const { count } = await sb.from('works').select('id', { count: 'exact', head: true }).eq('featured', true).eq('kind', 'video').eq('status', 'publicado').neq('id', w.id || '00000000-0000-0000-0000-000000000000');
-        if (count >= 3) { msg.textContent = 'Ya hay 3 videos con ★ en el Inicio: quita la ★ de otro primero (o desmarca esta).'; return; }
+        if (count >= 4) { msg.textContent = 'Ya hay 4 videos con ★ en el Inicio: quita la ★ de otro primero (o desmarca esta).'; return; }
       }
       const row = {
         kind: w.kind, category: w.kind === 'video' ? w.category : w.kind, title: w.title.trim(),

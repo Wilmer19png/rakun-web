@@ -17,7 +17,7 @@ export const SEED = [
     cover_url: 'https://i.ytimg.com/vi/x8bgyfs9UeE/maxresdefault.jpg', youtube_id: 'x8bgyfs9UeE', featured: false, in_videoteca: true, sort: 5 },
   { slug: 'donde-la-musica-muere', kind: 'video', category: 'corto', title: 'Donde la música muere', client: 'Proyecto de semestre', year: 2024, did: 'Dirección · Foto · Cámara · Post', summary: 'Una reinterpretación del universo de ¡Que viva la música!',
     description: 'Una reinterpretación visual inspirada en el universo frenético de ¡Que viva la música! de Andrés Caicedo. Este cortometraje explora la decadencia y la euforia urbana a través de una narrativa experimental. Asumimos un rol multidisciplinario (dirección, cámara y edición) para que la visión estética y el ritmo del montaje transmitieran fielmente la atmósfera caicediana, desde el rodaje hasta el corte final.',
-    cover_url: 'https://i.ytimg.com/vi/dAaUGrENSRQ/sddefault.jpg', youtube_id: 'dAaUGrENSRQ', featured: false, in_videoteca: true, sort: 6 },
+    cover_url: 'https://i.ytimg.com/vi/dAaUGrENSRQ/sddefault.jpg', youtube_id: 'dAaUGrENSRQ', featured: true, in_videoteca: true, sort: 6 },
   { slug: 'doc-mariana-hoyos', kind: 'reel', category: 'reel', title: 'Doc Mariana Hoyos', client: 'Veterinaria', summary: 'Estrategia, grabación y edición para redes.', sort: 7,
     cover_url: 'https://i.ytimg.com/vi/u6wRut-pz0s/oardefault.jpg',
     reels: [

@@ -93,3 +93,6 @@ insert into public.works (slug, kind, category, title, client, year, did, summar
  'La casa en internet de «El pregón de la plaza». Una página que lleva a la gente a escuchar a quienes trabajan en Mercasa e Impala: sus historias, sus fotos y el «caos con sentido» de la plaza, con la misma estética vernácula del documental.',
  'https://pregondelaplaza.netlify.app/', 'assets/trabajo/pregon-web.jpg', 'publicado', 9)
 on conflict (slug) do nothing;
+
+-- «Donde la música muere» también va en las franjas del Inicio (★; máximo 4)
+update public.works set featured = true where slug = 'donde-la-musica-muere';

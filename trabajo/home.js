@@ -1,7 +1,7 @@
 /* ==========================================================================
    RAKÜN · Inicio: «Nuestro trabajo», «Marcas e identidades» y «Páginas web»
    Todo sale de los proyectos publicados en el gestor (trabajo/data.js):
-   - franjas: los videos con ★ (máximo 3; si no hay ★, los 3 primeros)
+   - franjas: los videos con ★ (máximo 4; si no hay ★, los 4 primeros)
    - reels: el primer proyecto de reels (hasta 3 videos verticales)
    - identidades: hasta 3 marcas; al tocar una, su manual se abre ahí mismo
    - webs: hasta 3 sitios en el computador antiguo
@@ -23,7 +23,7 @@ function renderBands(works) {
   if (!box) return;
   const videos = works.filter((w) => w.kind === 'video');
   const feat = videos.filter((w) => w.featured);
-  const list = (feat.length ? feat : videos).slice(0, 3);
+  const list = (feat.length ? feat : videos).slice(0, 4);
   box.hidden = !list.length;
   box.innerHTML = list.map((w, i) => {
     const src = fragSrc(w);
