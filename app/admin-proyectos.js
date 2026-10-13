@@ -2,13 +2,32 @@
    RAKÜN · gestor · 03 Proyectos
    Cada cliente puede tener varios proyectos (marca, producción, web).
    La etapa que se elige aquí es la que ve el cliente en su portal.
+   Pestañas: Proyectos · Cotizaciones (admin-cotizaciones.js). Cada proyecto
+   se abre con sus entregables (admin-entregables.js).
    ========================================================================== */
 import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
 import { STAGES, WORLD_NAME, WORLD_COLOR } from './content.js';
+import { viewQuotes, editQuote, quoteUrl } from './admin-cotizaciones.js';
+import { deliverablesPanel } from './admin-entregables.js';
 
-export async function viewProjects(ctx) {
-  const { sb, main, head, loading, fail, staff, go } = ctx;
+/** Encabezado con las pestañas (los proyectos y las cotizaciones viven juntos). */
+function tabsHTML(ctx, active, actions = '') {
+  const tab = (k, n) => `<button type="button" role="tab" class="gx__chip${active === k ? ' is-on' : ''}" aria-selected="${active === k}" data-tab="${k}">${n}</button>`;
+  return `${ctx.head('03', 'Del sí al proyecto', 'Proyectos', actions)}
+  <div class="qx__tabs" role="tablist" aria-label="Proyectos o cotizaciones">${tab('proyectos', 'Proyectos')}${tab('cotizaciones', 'Cotizaciones')}</div>`;
+}
+const wireTabs = (ctx) => $$('[data-tab]', ctx.main).forEach((b) => b.addEventListener('click', () => ctx.go('proyectos', { tab: b.dataset.tab })));
+
+export async function viewProjects(ctx, opts = {}) {
+  const { sb, main, loading, fail, staff, go } = ctx;
+  if (opts.quote) return editQuote(ctx, opts.quote, opts.preset);
+  if (opts.tab === 'cotizaciones') {
+    await viewQuotes(ctx, (active, actions) => tabsHTML(ctx, active, actions));
+    wireTabs(ctx);
+    return;
+  }
+  if (opts.open) return viewProject(ctx, opts.open);
   loading();
   const [{ data: projects, error }, { data: clients }] = await Promise.all([
     sb.from('projects').select('*, clients(name)').order('created_at', { ascending: false }),
@@ -16,7 +35,7 @@ export async function viewProjects(ctx) {
   ]);
   if (error) { main.innerHTML = ''; fail(error); return; }
 
-  main.innerHTML = head('03', 'Etapas y responsables', 'Proyectos', '<button class="gx__btn gx__btn--dark" type="button" data-new>+ Nuevo proyecto</button>') + `
+  main.innerHTML = tabsHTML(ctx, 'proyectos', '<button class="gx__btn gx__btn--dark" type="button" data-new>+ Nuevo proyecto</button>') + `
     <div class="gx__table">
       <div class="gx__tr gx__tr--h gx__tr--pj"><span>Proyecto</span><span>Etapa (la ve el cliente)</span><span>Estado</span><span>A cargo</span><span></span></div>
       ${projects.map((p) => `
@@ -25,11 +44,12 @@ export async function viewProjects(ctx) {
           <span><select data-f="stage" aria-label="Etapa">${(STAGES[p.world] || []).map((s) => `<option${p.stage === s ? ' selected' : ''}>${esc(s)}</option>`).join('')}</select></span>
           <span><select data-f="status" aria-label="Estado">${[['activo', 'Activo'], ['pausado', 'Pausado'], ['terminado', 'Terminado']].map(([k, n]) => `<option value="${k}"${p.status === k ? ' selected' : ''}>${n}</option>`).join('')}</select></span>
           <span><select data-f="owner_id" aria-label="A cargo"><option value="">Sin asignar</option>${staff.map((s) => `<option value="${s.id}"${p.owner_id === s.id ? ' selected' : ''}>${esc(s.full_name || s.email)}</option>`).join('')}</select></span>
-          <span>${p.world === 'marca' ? '<button class="gx__btn" type="button" data-grid>Parrilla →</button>' : ''}</span>
-        </div>`).join('') || '<p class="gx__empty">Aún no hay proyectos. Crea el primero para un cliente.</p>'}
+          <span class="gx__row-actions"><button class="gx__btn" type="button" data-open-p>Entregables →</button>${p.world === 'marca' ? '<button class="gx__btn" type="button" data-grid>Parrilla →</button>' : ''}</span>
+        </div>`).join('') || '<p class="gx__empty">Aún no hay proyectos. Crea el primero para un cliente o registra el anticipo de una cotización.</p>'}
     </div>
     <p class="mono gx__saved" data-saved aria-live="polite"></p>`;
 
+  wireTabs(ctx);
   const saved = $('[data-saved]', main);
   $$('[data-id]', main).forEach((row) => {
     $$('select[data-f]', row).forEach((sel) => sel.addEventListener('change', async () => {
@@ -38,9 +58,40 @@ export async function viewProjects(ctx) {
       saved.textContent = e ? errorText(e) : '✓ Guardado';
     }));
     $('[data-grid]', row)?.addEventListener('click', () => go('parrillas', { project: row.dataset.id }));
+    $('[data-open-p]', row).addEventListener('click', () => go('proyectos', { open: row.dataset.id }));
   });
 
   $('[data-new]', main).addEventListener('click', () => newProject(ctx, clients || []));
+}
+
+/* ---------- un proyecto: sus datos y sus entregables ---------- */
+async function viewProject(ctx, id) {
+  const { sb, main, loading, fail } = ctx;
+  loading();
+  let res = await sb.from('projects').select('*, clients(name), quotes(number, token)').eq('id', id).single();
+  // sin la fase 7 todavía no existe la relación con las cotizaciones
+  if (res.error) res = await sb.from('projects').select('*, clients(name)').eq('id', id).single();
+  if (res.error) { main.innerHTML = ''; fail(res.error); return; }
+  const p = res.data;
+  const owner = ctx.staff.find((s) => s.id === p.owner_id);
+  const date = (d) => new Date(`${d}T12:00:00`).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
+  main.innerHTML = `
+    <header class="gx__head">
+      <div><p class="mono gx__kicker"><button class="qx__crumb" type="button" data-back>03 · Proyectos</button> / ${esc(p.clients?.name || '')}</p><h1 class="gx__title">${esc(p.name)}</h1></div>
+      <div class="gx__actions">${p.world === 'marca' ? '<button class="gx__btn" type="button" data-grid>Parrilla →</button>' : ''}</div>
+    </header>
+    <div class="dx__pinfo">
+      <span class="mono gx__tag" style="background:${WORLD_COLOR[p.world]}">${WORLD_NAME[p.world]}</span>
+      ${p.plan ? `<span>${esc(p.plan)}</span>` : ''}
+      <span>Etapa: <b>${esc(p.stage || '—')}</b></span>
+      <span>A cargo: <b>${esc(owner?.full_name || 'Sin asignar')}</b></span>
+      ${p.start_date ? `<span>Inicio: ${date(p.start_date)}</span>` : ''}
+      ${p.quotes?.token ? `<a class="qx__link" href="${esc(quoteUrl(p.quotes.token))}" target="_blank" rel="noopener">Cotización ${esc(p.quotes.number)} ↗</a>` : ''}
+    </div>
+    <div data-deliv><p class="mono gx__empty">Cargando…</p></div>`;
+  $('[data-back]', main).addEventListener('click', () => ctx.go('proyectos'));
+  $('[data-grid]', main)?.addEventListener('click', () => ctx.go('parrillas', { project: p.id }));
+  deliverablesPanel(ctx, p, $('[data-deliv]', main));
 }
 
 function newProject(ctx, clients) {
@@ -70,13 +121,12 @@ function newProject(ctx, clients) {
     e.preventDefault();
     const fd = Object.fromEntries(new FormData(f));
     if (!fd.name.trim()) { $('[data-msg]', f).textContent = 'Ponle un nombre al proyecto.'; return; }
-    const { error } = await sb.from('projects').insert({
+    const { data, error } = await sb.from('projects').insert({
       client_id: fd.client_id, world: fd.world, name: fd.name.trim(), plan: fd.plan.trim() || null,
       start_date: fd.start_date || null, end_date: fd.end_date || null, owner_id: fd.owner_id || null,
       stage: STAGES[fd.world][0],
-    });
+    }).select('id').single();
     if (error) { $('[data-msg]', f).textContent = errorText(error); return; }
-    go('proyectos');
+    go('proyectos', { open: data.id });
   });
 }
-

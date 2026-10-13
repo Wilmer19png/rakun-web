@@ -9,9 +9,10 @@
 import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
 import { REDES as BASE_MARCA, WEB as BASE_WEB, LEVELS, PIECES, priceInCarta, isRedes } from '../planes/data.js';
+import { BASE_RATES, BASE_RECIBO } from './quote-sources.js';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
-const BASE = { marca: BASE_MARCA, web: BASE_WEB };
+const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO };
 const st = { world: 'marca', tab: 'planes', cat: 0, carta: 0, lib: 0, draft: {}, saved: {}, info: {} };
 const REC_OPTIONS = ['1 sesión de hasta 3 h', '1 jornada de hasta 6 h', '1 jornada de hasta 6 h con asistente'];
 const COLORS = [['var(--yellow)', 'Amarillo'], ['var(--blue)', 'Azul'], ['var(--pink)', 'Rosado']];
@@ -36,22 +37,24 @@ const TPL = {
   group: () => ({ name: 'Nueva categoría', items: [] }),
   format: () => ['Nuevo formato', '', 'agil'],
   profile: () => 'Nuevo perfil',
+  rate: () => ['Nueva tarifa', 'Rodaje', 'día', 0],
   lib: () => ({ key: `grupo-${Date.now().toString(36)}`, title: 'Nuevo grupo', color: 'var(--yellow)', profiles: [], formats: [] }),
 };
 
 export async function viewPlans(ctx) {
   const { sb, loading, fail, main } = ctx;
   loading();
-  for (const w of ['marca', 'web']) {
+  for (const w of ['marca', 'web', 'produccion', 'recibo']) {
     if (st.draft[w]) continue;
     const { data, error } = await sb.from('plan_catalog').select('content, updated_at').eq('id', w).maybeSingle();
     if (error) { main.innerHTML = ''; fail(error); return; }
     // Redes: lo publicado con la estructura vieja (perfiles creador/médico/mentor) ya no sirve
-    const old = w === 'marca' && data && !isRedes(data.content);
+    const old = (w === 'marca' && data && !isRedes(data.content)) || (w === 'produccion' && data && !Array.isArray(data.content?.rates));
     st.draft[w] = clone(data && !old ? data.content : BASE[w]);
     if (w === 'marca') st.draft[w] = { ...clone(BASE_MARCA), ...st.draft[w] };
+    if (w === 'recibo') st.draft[w] = { ...clone(BASE_RECIBO), ...st.draft[w] };
     st.saved[w] = old ? '' : JSON.stringify(st.draft[w]);
-    st.info[w] = old ? 'Lo publicado es del formato anterior (Marca personal): estos son los planes nuevos de Redes, publícalos para que se vean'
+    st.info[w] = old ? (w === 'marca' ? 'Lo publicado es del formato anterior (Marca personal): estos son los planes nuevos de Redes, publícalos para que se vean' : 'Aún no se han publicado las tarifas de producción')
       : data ? `Publicado por última vez el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}`
         : 'Aún no se ha publicado: estos son los precios base';
   }
@@ -63,11 +66,9 @@ function render(ctx) {
   const w = st.world;
   const scroll = window.scrollY;
   main.innerHTML = head('09', 'Lo que ve el cliente en la página', 'Planes y precios', `
-    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)']]
+    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)'], ['recibo', 'Recibo', 'var(--navy)']]
       .map(([k, n, c]) => `<button class="gx__chip gx__chip--world${st.world === k ? ' is-on' : ''}" style="--c:${c}" type="button" data-world="${k}">${n}</button>`).join('')}`) +
-    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : `
-      <div class="gx__soon"><p>Producción se cotiza por proyecto (con el guion de "Cotizar producción"), así que no tiene planes con precio fijo en la página.</p><p class="mono">Cuando definan tarifas base, las agregamos aquí.</p></div>`) +
-    (w === 'produccion' ? '' : `
+    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : w === 'produccion' ? prodHTML() : reciboHTML()) + (`
       <div class="gx__pubbar" data-pubbar>
         <span class="mono" data-pubstate></span>
         <span class="gx__btns">
@@ -87,7 +88,6 @@ function render(ctx) {
     st[k] = st[k] === i ? -1 : i;
     rerender();
   }));
-  if (w === 'produccion') return;
   const d = st.draft[w];
 
   // cada campo escribe directo en el borrador
@@ -355,6 +355,41 @@ function libHTML() {
       }).join('')}
     </div>
     <button type="button" class="gx__add mono" data-add="library" data-tpl="lib">+ Agregar grupo de perfiles</button>`;
+}
+
+/* ---------- Producción: tarifas base para las cotizaciones ---------- */
+function prodHTML() {
+  const rates = st.draft.produccion.rates;
+  const stages = [...new Set(rates.map((r) => r[1]))];
+  return `
+    <p class="gx__p">Producción no tiene planes con precio en la página: se cotiza por proyecto. Estas son las <b>tarifas base</b> que salen en el cotizador (03 Proyectos → Cotizaciones) al armar un bloque de Producción audiovisual. Las que estén en $0 se llenan al cotizar.</p>
+    <datalist id="stages">${stages.map((s) => `<option value="${esc(s)}">`).join('')}</datalist>
+    <div class="gx__items gx__items--rates">
+      <div class="gx__item gx__item--head mono"><span>Concepto</span><span>Etapa</span><span>Unidad</span><span>Precio</span><span></span></div>
+      ${rates.map(([name, stage, unit, price], j) => `
+      <div class="gx__item">
+        <input data-path="rates.${j}.0" value="${esc(name)}" aria-label="Concepto">
+        <input data-path="rates.${j}.1" value="${esc(stage)}" list="stages" aria-label="Etapa">
+        <input data-path="rates.${j}.2" value="${esc(unit)}" aria-label="Unidad">
+        <input data-path="rates.${j}.3" data-kind="price" value="${esc(price)}" inputmode="numeric" aria-label="Precio">
+        <span class="gx__item-act">${moveBtns('rates', j)}<button type="button" class="gx__mini" data-del="rates" data-i="${j}" aria-label="Quitar tarifa">✕</button></span>
+      </div>`).join('')}
+    </div>
+    <button type="button" class="gx__add mono gx__pad-end" data-add="rates" data-tpl="rate">+ Agregar tarifa</button>`;
+}
+
+/* ---------- Recibo: los datos que salen en cada cotización ---------- */
+function reciboHTML() {
+  const r = st.draft.recibo;
+  const area = (label, path, value, rows = 3) => `<label class="gx__f"><span>${label}</span><textarea data-path="${path}" rows="${rows}">${esc(value || '')}</textarea></label>`;
+  return `
+    <p class="gx__p">Estos datos salen en el recibo de cada cotización (el enlace y el PDF que recibe el cliente). La factura electrónica llega en otra fase.</p>
+    <div class="gx__recibo">
+      <div class="gx__row2">${field('Razón social o nombre', 'legal', r.legal)}${field('NIT o cédula', 'nit', r.nit)}</div>
+      <div class="gx__row2">${field('Ciudad', 'city', r.city)}${field('WhatsApp de contacto (para el botón del recibo)', 'whatsapp', r.whatsapp)}</div>
+      ${area('Cómo pagar (sale al aceptar la cotización: cuenta, Nequi, llave…)', 'payInfo', r.payInfo, 4)}
+      ${area('Condiciones (sale al final del recibo)', 'terms', r.terms, 3)}
+    </div>`;
 }
 
 function webHTML() {

@@ -170,3 +170,19 @@ Recomendaciones para los archivos:
 - **Imágenes:** se achican solas a WebP al subirlas.
 - **Manual de marca:** sube el PDF y cada página se convierte en imagen ahí mismo (tarda más o menos un minuto).
 - **Video completo:** va como enlace de YouTube; no ocupa espacio.
+
+## Fase 7 · Cotizador y entregables
+
+1. **SQL Editor → New query** → pega todo `supabase/fase7.sql` → **Run**. Crea:
+   - las tablas `quotes` (cotizaciones), `quote_payments` (pagos) y `deliverables` (entregables), que solo maneja el equipo,
+   - dos funciones para que el cliente vea y acepte su cotización con el enlace secreto, sin cuenta,
+   - la carpeta privada `entregas` en Storage (archivos entregados y comprobantes de pago; máximo 50 MB),
+   - y permite guardar los datos del recibo en el catálogo.
+2. En el gestor:
+   - **00 · Mis pendientes** es lo primero que ve cada persona: sus entregables por fecha y lo que le toca revisar.
+   - **03 · Proyectos → Cotizaciones**: armar, enviar (enlace para WhatsApp o correo) y registrar pagos. Con el primer pago se crean los proyectos, uno por bloque, con sus entregables.
+   - **09 · Planes y precios → Producción**: las tarifas base que salen al cotizar producción. **→ Recibo**: NIT, ciudad, WhatsApp, cómo pagar y condiciones.
+   - **10 · Equipo → Carga de trabajo**: lo pendiente de cada persona; se arrastra para reasignar.
+3. El cliente abre `cotizacion.html?c=…`, la acepta y la descarga en PDF (el botón imprime la hoja; en el diálogo elige «Guardar como PDF»).
+
+La factura electrónica y el pago en línea (Wompi) quedan para otra fase.

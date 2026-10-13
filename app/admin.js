@@ -11,6 +11,7 @@ import { viewPlans } from './admin-planes.js';
 import { viewDocuments } from './admin-documentos.js';
 import { viewShoots, viewMeetings } from './admin-agenda.js';
 import { viewWork } from './admin-trabajo.js';
+import { viewPending, refreshPendingBadge, teamLoad } from './admin-entregables.js';
 import { openPasswordDialog } from './password.js';
 import { mountLocation } from './ubicacion.js';
 
@@ -67,11 +68,12 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, col: 'nu
 
   boot.hidden = true;
   $('[data-app]').hidden = false;
-  go(location.hash.slice(1) || 'solicitudes');
+  refreshPendingBadge(sb, me).catch(() => {});
+  go(location.hash.slice(1) || 'pendientes');
 })();
 
 function go(view, opts = {}) {
-  if (!VIEWS[view]) view = 'solicitudes';
+  if (!VIEWS[view]) view = 'pendientes';
   state.view = view;
   history.replaceState(null, '', `#${view}`);
   $$('[data-view]').forEach((b) => b.classList.toggle('is-on', b.dataset.view === view));
@@ -85,7 +87,7 @@ function go(view, opts = {}) {
 }
 
 /** Herramientas que reciben las secciones que viven en otros módulos. */
-const ctx = () => ({ sb, me, staff, main, head, loading, fail, openModal, closeModal, openDrawer, closeDrawer, go, WORLD });
+const ctx = () => ({ sb, me, staff, main, head, loading, fail, openModal, closeModal, openDrawer, closeDrawer, go, WORLD, openInvite });
 
 function openDrawer(html, label = 'Detalle') {
   const box = $('[data-drawer-box]');
@@ -199,7 +201,8 @@ function openLead(id) {
     <div class="gx__btns">
       ${wa ? `<a class="gx__btn gx__btn--wa" href="https://wa.me/${wa}?text=${encodeURIComponent(`Hola ${l.name.split(' ')[0]}, te escribimos de RAKÜN por tu solicitud del plan ${l.plan || ''}.`)}" target="_blank" rel="noopener">WhatsApp ↗</a>` : ''}
       <a class="gx__btn" href="mailto:${esc(l.email)}?subject=${encodeURIComponent('RAKÜN · tu solicitud')}">Correo ↗</a>
-      <button class="gx__btn gx__btn--hot" type="button" data-convert>Convertir en cliente →</button>
+      <button class="gx__btn" type="button" data-convert>Convertir en cliente →</button>
+      <button class="gx__btn gx__btn--hot" type="button" data-quote-lead>Cotizar →</button>
     </div>
     ${me.role === 'admin' ? '<button class="gx__danger mono" type="button" data-del-lead>Eliminar solicitud</button>' : ''}`;
   $$('[data-close-drawer]', box).forEach((b) => b.addEventListener('click', closeDrawer));
@@ -218,6 +221,7 @@ function openLead(id) {
   let t;
   $('[data-notes]', box).addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => patch({ notes: e.target.value }, 'Notas guardadas'), 700); });
   $('[data-convert]', box).addEventListener('click', () => convertLead(l));
+  $('[data-quote-lead]', box).addEventListener('click', () => quoteLead(l));
   $('[data-del-lead]', box)?.addEventListener('click', async () => {
     if (!confirm(`¿Eliminar la solicitud de ${l.name}? No se puede deshacer.`)) return;
     const { error } = await sb.from('leads').delete().eq('id', l.id);
@@ -232,16 +236,29 @@ function openLead(id) {
 }
 function closeDrawer() { const d = $('[data-drawer]'); if (d) d.hidden = true; }
 
-async function convertLead(l) {
+async function ensureClient(l) {
   const { data: found } = await sb.from('clients').select('*').eq('email', l.email.toLowerCase()).maybeSingle();
-  let client = found;
-  if (!client) {
-    const { data, error } = await sb.from('clients').insert({
-      name: l.name, email: l.email.toLowerCase(), phone: l.phone, city: l.city, lead_id: l.id, notes: l.plan ? `Plan: ${l.plan}` : null,
-    }).select().single();
-    if (error) { $('[data-saved]').textContent = errorText(error); return; }
-    client = data;
-  }
+  if (found) return found;
+  const { data, error } = await sb.from('clients').insert({
+    name: l.name, email: l.email.toLowerCase(), phone: l.phone, city: l.city, lead_id: l.id, notes: l.plan ? `Plan: ${l.plan}` : null,
+  }).select().single();
+  if (error) { $('[data-saved]').textContent = errorText(error); return null; }
+  return data;
+}
+
+/** Cotizar desde una solicitud: crea el cliente si no existe y abre una cotización con lo que pidió. */
+async function quoteLead(l) {
+  const client = await ensureClient(l);
+  if (!client) return;
+  if (['nueva', 'contactado', 'reunion'].includes(l.status)) await sb.from('leads').update({ status: 'propuesta' }).eq('id', l.id);
+  closeDrawer();
+  const world = ['marca', 'web', 'produccion'].includes(l.world) ? l.world : '';
+  go('proyectos', { quote: 'new', preset: { client_id: client.id, lead_id: l.id, title: l.plan || 'Cotización', world } });
+}
+
+async function convertLead(l) {
+  const client = await ensureClient(l);
+  if (!client) return;
   await sb.from('leads').update({ status: 'ganado' }).eq('id', l.id);
   closeDrawer();
   await go('clientes');
@@ -406,6 +423,7 @@ function openInvite(person, role = 'cliente') {
 }
 
 function openModal(html) {
+  $('[data-modal-box]').classList.remove('qx__modal-wide');
   $('[data-modal-box]').innerHTML = `<button class="gx__x gx__x--abs" type="button" data-close-modal aria-label="Cerrar">✕</button>${html}`;
   $$('[data-close-modal]', $('[data-modal-box]')).forEach((b) => b.addEventListener('click', closeModal));
   $('[data-modal]').hidden = false;
@@ -415,13 +433,25 @@ function closeModal() { const m = $('[data-modal]'); if (m) m.hidden = true; }
 /* ==========================================================================
    07 · Equipo
    ========================================================================== */
+const team = { tab: 'personas' };
+function teamHead(actions = '') {
+  const tab = (k, n) => `<button type="button" role="tab" class="gx__chip${team.tab === k ? ' is-on' : ''}" aria-selected="${team.tab === k}" data-team-tab="${k}">${n}</button>`;
+  return head('10', 'Quién tiene qué', 'Equipo', actions) + `<div class="qx__tabs" role="tablist" aria-label="Equipo">${tab('personas', 'Personas y accesos')}${tab('carga', 'Carga de trabajo')}</div>`;
+}
+const wireTeamTabs = () => $$('[data-team-tab]', main).forEach((b) => b.addEventListener('click', () => { team.tab = b.dataset.teamTab; viewTeam(); }));
+
 async function viewTeam() {
+  if (team.tab === 'carga') {
+    main.innerHTML = `${teamHead()}<div data-load><p class="mono gx__empty">Cargando…</p></div>`;
+    wireTeamTabs();
+    return teamLoad(ctx(), $('[data-load]', main));
+  }
   loading();
   const { data, error } = await sb.from('profiles').select('id, full_name, email, role, area, color').in('role', ['admin', 'equipo']).order('full_name');
   if (error) { main.innerHTML = ''; fail(error); return; }
   staff = data;
   const isAdmin = me.role === 'admin';
-  main.innerHTML = head('10', 'Quiénes trabajan aquí', 'Equipo', isAdmin ? '<button class="gx__btn gx__btn--dark" type="button" data-new-staff>+ Invitar al equipo</button>' : '') + `
+  main.innerHTML = teamHead(isAdmin ? '<button class="gx__btn gx__btn--dark" type="button" data-new-staff>+ Invitar al equipo</button>' : '') + `
     <div class="gx__team">
       ${data.map((s) => `
         <div class="gx__person">
@@ -430,6 +460,7 @@ async function viewTeam() {
           ${isAdmin ? `<label class="gx__f gx__f--inline"><span>Área</span><input value="${esc(s.area || '')}" data-area="${s.id}" placeholder="Edición y montaje"></label>` : ''}
         </div>`).join('')}
     </div>`;
+  wireTeamTabs();
   if (!isAdmin) return;
   $('[data-new-staff]', main).addEventListener('click', () => {
     openModal(`
@@ -461,6 +492,7 @@ async function viewTeam() {
    ========================================================================== */
 
 const VIEWS = {
+  pendientes: () => viewPending(ctx()),
   solicitudes: viewLeads,
   clientes: viewClients,
   proyectos: (o) => viewProjects(ctx(), o),
