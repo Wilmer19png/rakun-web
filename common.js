@@ -147,7 +147,7 @@ function initStart() {
    secciones de esta página en cuadrícula y abajo una franja azul con el botón
    principal, iniciar sesión y WhatsApp. Se arma con lo que ya trae cada página. */
 const WORLDS = [
-  { re: /marca|libreria/, href: 'marca.html', n: '01', name: 'Marca personal', tags: 'Creadores · Médicos · Mentores', c: 'var(--yellow)' },
+  { re: /marca|libreria/, href: 'marca.html', n: '01', name: 'Redes', tags: 'Creadores · Médicos · Mentores', c: 'var(--yellow)' },
   { re: /produccion/, href: 'produccion.html', n: '02', name: 'Producción audiovisual', tags: 'Videoclips · Cortos · Comerciales', c: 'var(--blue)' },
   { re: /web\.html/, href: 'web.html', n: '03', name: 'Web y apps', tags: 'Sitios · Tiendas · Apps', c: 'var(--pink)' },
 ];

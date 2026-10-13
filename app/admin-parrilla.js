@@ -24,7 +24,7 @@ export async function viewParrilla(ctx, opts = {}) {
 
   if (!st.project) {
     main.innerHTML = head('04', 'Parrilla de contenido', 'Parrillas') +
-      '<div class="gx__soon"><p>Aún no hay proyectos de Marca personal. Crea uno en <b>Proyectos</b> y vuelve aquí para armar su parrilla.</p></div>';
+      '<div class="gx__soon"><p>Aún no hay proyectos de Redes. Crea uno en <b>Proyectos</b> y vuelve aquí para armar su parrilla.</p></div>';
     return;
   }
   await loadMonth(ctx);

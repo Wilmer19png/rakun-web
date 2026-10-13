@@ -68,11 +68,12 @@
 
     <div class="mega mega--3" id="mega" data-mega>
       <section class="mega__world" aria-labelledby="mega-a">
-        <a class="mega__head" href="marca.html#inicio" aria-current="page"><span class="mono mega__kicker">Mundo 01 <span class="mega__go">Estás aquí ↑</span></span><span class="mega__title" id="mega-a">Marca <em>personal</em></span></a>
+        <a class="mega__head" href="marca.html#inicio" aria-current="page"><span class="mono mega__kicker">Mundo 01 <span class="mega__go">Estás aquí ↑</span></span><span class="mega__title" id="mega-a"><em>Redes</em></span></a>
         <ul class="mega__list">
-          <li><a href="marca.html#creador" data-profile-link="creador"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Influencers</span><span class="mono">Planes para creadores</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-          <li><a href="marca.html#medico" data-profile-link="medico"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">Médicos</span><span class="mono">Planes para salud</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
-          <li><a href="marca.html#mentor" data-profile-link="mentor"><span class="mega__sw" style="--sw: linear-gradient(135deg, var(--yellow) 50%, var(--blue) 50%)"></span><span><span class="mega__name">Mentores</span><span class="mono">Planes de contenido</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="marca.html#planes"><span class="mega__sw" style="--sw: var(--yellow)"></span><span><span class="mega__name">Solo contenido</span><span class="mono">Tú pones la idea · grabamos y editamos</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="marca.html#gestion"><span class="mega__sw" style="--sw: var(--pink)"></span><span><span class="mega__name">Gestión completa</span><span class="mono">Estrategia · Publicación · Pauta</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="marca.html#extras"><span class="mega__sw" style="--sw: var(--blue)"></span><span><span class="mega__name">La carta del club</span><span class="mono">Súmale lo que quieras a tu plan</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
+          <li><a href="libreria.html"><span class="mega__sw" style="--sw: linear-gradient(135deg, var(--yellow) 50%, var(--blue) 50%)"></span><span><span class="mega__name">Librería de formatos</span><span class="mono">Todo lo que podemos hacer</span></span><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></li>
         </ul>
       </section>
       <section class="mega__world mega__world--b" aria-labelledby="mega-b">
@@ -109,96 +110,27 @@
 
   <!-- ==============================================================
        LA LIBRERÍA DE FORMATOS — todo lo que podemos hacer, por perfil
-       Las tarjetas y los ejemplos los arma planes/libreria.js (datos en planes/formatos.js)
+       Las tarjetas y los ejemplos los arma planes/libreria.js (datos en planes/data.js · REDES.library)
        ============================================================== -->
   <section class="sec sec--cream lib" id="inicio" aria-labelledby="lib-title" data-lib>
     <div class="rail" aria-hidden="true"><span class="rail__num">LIB</span><span class="rail__label">Librería</span></div>
     <div class="sec__body">
-      <a class="mono lib__back" href="marca.html#formatos">← Volver a Marca personal</a>
+      <a class="mono lib__back" href="marca.html#formatos">← Volver a Redes</a>
 
       <div class="block__head lib__head">
         <div>
-          <p class="mono fx-kicker">Mundo 01 / Marca personal · librería</p>
+          <p class="mono fx-kicker">Mundo 01 / Redes · librería</p>
           <h1 class="lib__title" id="lib-title">La librería de <em>formatos.</em></h1>
         </div>
         <p class="block__aside">Todo lo que podemos hacer por tu marca, ordenado por perfil. Toca un formato para ver ejemplos.</p>
       </div>
 
-      <nav class="lib__idx" aria-label="Perfiles">
-        <a class="fx-who__btn" href="#creador" style="--t: var(--yellow)"><span class="mono">Influencers · creadores</span>Creador</a>
-        <a class="fx-who__btn" href="#medico" style="--t: var(--blue)"><span class="mono">Médicos · salud</span>Médico</a>
-        <a class="fx-who__btn" href="#mentor" style="--t: var(--pink)"><span class="mono">Mentores · coaches</span>Mentor</a>
-        <span class="mono lib__count">24 formatos · 3 perfiles</span>
+      <nav class="lib__idx" aria-label="Perfiles" data-lib-idx>
+        <span class="mono lib__count" data-lib-total>24 formatos · 3 grupos</span>
       </nav>
+      <p class="lib__legend">Cada formato dice qué edición lleva (<span class="lvl lvl--tag" style="--l: var(--blue)">Ágil</span> <span class="lvl lvl--tag" style="--l: var(--yellow)">Pro</span> <span class="lvl lvl--tag" style="--l: var(--pink)">Premium</span> ) y cuánto cuesta suelto. Si va dentro de tu plan, ya está pagado. <a href="marca.html#tipos-de-edicion">¿Qué es cada edición? →</a></p>
 
-      <section class="lib__sec" id="creador" aria-labelledby="h-creador" data-lib-sec="creador" style="--t: var(--yellow)">
-        <div class="fx-head">
-          <h2 class="fx-head__title" id="h-creador">Para <mark>creadores</mark></h2>
-          <p class="mono fx-head__note">Influencers · creadores · <span data-lib-n></span> formatos</p>
-        </div>
-        <ul class="lib__grid" data-lib-cards aria-label="Formatos para creadores"></ul>
-        <div class="fx-drawer" id="drawer-creador" data-fx-drawer inert>
-          <div class="fx-drawer__in">
-            <div class="fx-drawer__panel">
-              <div class="fx-drawer__head">
-                <div>
-                  <p class="mono fx-drawer__kicker" data-fx-kicker></p>
-                  <h3 class="fx-drawer__title" data-fx-title></h3>
-                  <p class="fx-drawer__desc" data-fx-desc></p>
-                </div>
-                <div class="fx-drawer__side"><span class="mono" data-fx-count></span><button class="fx-x" type="button" data-fx-close aria-label="Cerrar ejemplos">✕</button></div>
-              </div>
-              <div class="fx-videos" data-fx-videos></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="lib__sec" id="medico" aria-labelledby="h-medico" data-lib-sec="medico" style="--t: var(--blue)">
-        <div class="fx-head">
-          <h2 class="fx-head__title" id="h-medico">Para <mark>médicos</mark></h2>
-          <p class="mono fx-head__note">Médicos · salud · <span data-lib-n></span> formatos</p>
-        </div>
-        <ul class="lib__grid" data-lib-cards aria-label="Formatos para médicos"></ul>
-        <div class="fx-drawer" id="drawer-medico" data-fx-drawer inert>
-          <div class="fx-drawer__in">
-            <div class="fx-drawer__panel">
-              <div class="fx-drawer__head">
-                <div>
-                  <p class="mono fx-drawer__kicker" data-fx-kicker></p>
-                  <h3 class="fx-drawer__title" data-fx-title></h3>
-                  <p class="fx-drawer__desc" data-fx-desc></p>
-                </div>
-                <div class="fx-drawer__side"><span class="mono" data-fx-count></span><button class="fx-x" type="button" data-fx-close aria-label="Cerrar ejemplos">✕</button></div>
-              </div>
-              <div class="fx-videos" data-fx-videos></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="lib__sec" id="mentor" aria-labelledby="h-mentor" data-lib-sec="mentor" style="--t: var(--pink)">
-        <div class="fx-head">
-          <h2 class="fx-head__title" id="h-mentor">Para <mark>mentores</mark></h2>
-          <p class="mono fx-head__note">Mentores · coaches · <span data-lib-n></span> formatos</p>
-        </div>
-        <ul class="lib__grid" data-lib-cards aria-label="Formatos para mentores"></ul>
-        <div class="fx-drawer" id="drawer-mentor" data-fx-drawer inert>
-          <div class="fx-drawer__in">
-            <div class="fx-drawer__panel">
-              <div class="fx-drawer__head">
-                <div>
-                  <p class="mono fx-drawer__kicker" data-fx-kicker></p>
-                  <h3 class="fx-drawer__title" data-fx-title></h3>
-                  <p class="fx-drawer__desc" data-fx-desc></p>
-                </div>
-                <div class="fx-drawer__side"><span class="mono" data-fx-count></span><button class="fx-x" type="button" data-fx-close aria-label="Cerrar ejemplos">✕</button></div>
-              </div>
-              <div class="fx-videos" data-fx-videos></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div data-lib-groups></div>
 
       <div class="lib__end">
         <p>¿Ya sabes qué quieres?</p>
@@ -226,7 +158,7 @@
       </div>
       <div class="ftr__col">
         <h2 class="mono">Mundos</h2>
-        <a class="link" href="index.html">Marca personal <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        <a class="link" href="marca.html">Redes <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
         <a class="link" href="produccion.html">Producción audiovisual <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
         <a class="link" href="web.html">Web y apps <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
       </div>

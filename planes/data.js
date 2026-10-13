@@ -1,110 +1,158 @@
 /* ==========================================================================
-   RAKÜN · datos base de los planes (Tarifas_RAKUN_2026.xlsx)
-   Son los precios "de fábrica". Si en el gestor se publican cambios,
-   la página los toma de Supabase (tabla plan_catalog) y estos quedan de respaldo.
-   Precios en COP antes de IVA.
+   RAKÜN · datos base de Redes (mundo 01) y de Web y apps
+   Son los datos "de fábrica". Si en el gestor (09 · Planes y precios) se
+   publican cambios, la página los toma de Supabase (tabla plan_catalog, id
+   'marca') y estos quedan de respaldo. Precios en COP antes de IVA.
    ========================================================================== */
 
-export const SESSION_PRICE = 649000;            // sesión de grabación (hasta 3 h) · Creadores - Costeo C32
-
-export const DATA = {
-  creador: {
-    head: {
-      kicker: 'Planes mensuales · Instagram, TikTok y Facebook',
-      lede: 'Elige tu línea: FLUJO (mucho contenido) o IMPACTO (contenido elaborado). Todo se publica también en Facebook sin costo extra.',
-    },
-    color: 'var(--yellow)',
-    lines: {
-      flujo: [
-        { tag: 'FLUJO', name: 'Inicio', ideal: 'Empezar a publicar con constancia.', ed: 649000, tri: 589000, sessions: 1,
-          rows: [['Reels / TikToks', '12 al mes (3 por semana)'], ['Edición', 'Rápida: cortes, subtítulos, ganchos y tendencias'], ['Carruseles', '—'], ['Ideas y guiones', 'Calendario de ideas del mes'], ['Publicación', 'La haces tú (te entregamos copys)'], ['Comunidad', '—'], ['Seguimiento', 'Reporte mensual de vistas y seguidores']] },
-        { tag: 'FLUJO', name: 'Ritmo', hot: true, ideal: 'Crecer rápido con 5 reels por semana.', ed: 1290000, tri: 1190000, sessions: 1,
-          rows: [['Reels / TikToks', '20 al mes (5 por semana)'], ['Edición', 'Rápida: cortes, subtítulos, ganchos y tendencias'], ['Carruseles', '4'], ['Ideas y guiones', 'Ideas + guiones basados en tendencias'], ['Publicación', 'La hacemos nosotros'], ['Comunidad', '—'], ['Seguimiento', 'Reporte + ajustes al perfil']] },
-        { tag: 'FLUJO', name: 'Diario', ideal: 'Volverte un referente: 1 reel diario.', ed: 2490000, tri: 2290000, sessions: 2,
-          rows: [['Reels / TikToks', '30 al mes (1 diario)'], ['Edición', 'Rápida: cortes, subtítulos, ganchos y tendencias'], ['Carruseles', '8'], ['Ideas y guiones', 'Ideas + guiones + estrategia por formato'], ['Publicación', 'La hacemos nosotros'], ['Comunidad', 'Respondemos comentarios y mensajes'], ['Seguimiento', 'Reporte + reunión mensual']] },
-      ],
-      impacto: [
-        { tag: 'IMPACTO', name: 'Inicio', ideal: 'Empezar con piezas que se ven de otro nivel.', ed: 1090000, tri: 979000, sessions: 1,
-          rows: [['Reels / TikToks', '4 al mes (1 por semana)'], ['Edición', 'Elaborada: motion graphics, efectos de sonido y color'], ['Carruseles', '—'], ['Ideas y guiones', 'Calendario de ideas del mes'], ['Publicación', 'La haces tú (te entregamos copys)'], ['Comunidad', '—'], ['Seguimiento', 'Reporte mensual de vistas y seguidores']] },
-        { tag: 'IMPACTO', name: 'Pro', hot: true, ideal: 'Construir una marca personal fuerte.', ed: 2290000, tri: 2090000, sessions: 1,
-          rows: [['Reels / TikToks', '8 al mes (2 por semana)'], ['Edición', 'Elaborada: motion graphics, efectos de sonido y color'], ['Carruseles', '2 animados'], ['Ideas y guiones', 'Ideas + guiones'], ['Publicación', 'La hacemos nosotros'], ['Comunidad', '—'], ['Seguimiento', 'Reporte + ajustes al perfil']] },
-        { tag: 'IMPACTO', name: 'Élite', ideal: 'Creadores que van por marcas y colaboraciones.', ed: 4890000, tri: 4390000, sessions: 2,
-          rows: [['Reels / TikToks', '12 al mes (3 por semana)'], ['Edición', 'Elaborada + 2 reels 100% animados'], ['Carruseles', '4 animados'], ['Ideas y guiones', 'Ideas + guiones + estrategia de marca personal'], ['Publicación', 'La hacemos nosotros'], ['Comunidad', 'Respondemos comentarios y mensajes'], ['Seguimiento', 'Reporte + reunión mensual']] },
-      ],
-    },
-    extras: [
-      ['Impulso de alcance (pauta)', 'Mensual', 489000, 'Ponemos pauta a tus mejores reels para llegar a más gente. La inversión en pauta va aparte (desde $300.000 / mes).'],
-      ['Kit visual de marca', 'Único', 890000, 'Plantillas de motion, tipografías, colores, portadas y subtítulos con tu estilo.'],
-      ['Media kit para marcas', 'Único', 389000, 'Tus números, audiencia y tarifas en un documento profesional para enviar a marcas.'],
-      ['Optimización de perfil', 'Único', 189000, 'Bio, foto, historias destacadas, link en bio y portadas.'],
-      ['Sesión de fotos lifestyle', 'Por sesión', 589000, 'Fotos profesionales para perfil, portadas y contenido.'],
-      ['Reel rápido adicional', 'Por video', 59900, 'Un reel extra de edición rápida.'],
-      ['Reel elaborado adicional', 'Por video', 219000, 'Un reel extra con motion y diseño sonoro.'],
-      ['Entrega exprés (24 h)', 'Por video', '+30%', 'Para tendencias que hay que subir ya.'],
-      ['Sesión de grabación adicional', 'Por sesión', 649000, 'Hasta 3 h con equipo profesional.'],
-    ],
-  },
-
-  medico: {
-    head: {
-      kicker: 'Planes mensuales · médicos, odontólogos, veterinarios, estéticas',
-      lede: 'Grabamos en tu consultorio, editamos y movemos tu pauta. La inversión en pauta la pagas directamente a Meta.',
-    },
-    color: 'var(--blue)',
-    plans: [
-      { tag: 'Salud', name: 'Presencia', ideal: 'Consultorios que quieren empezar a recibir pacientes desde redes.', price: 3290000, ads: 1000000,
-        rows: [['Grabación', '1 sesión al mes (hasta 3 horas)'], ['Videos cortos', '8 con subtítulos y gancho inicial'], ['Anuncios', 'Usamos tus mejores videos como anuncio'], ['Video largo', '—'], ['Carruseles', '4 educativos'], ['Guiones', 'Los escribimos: tú solo llegas y hablas'], ['Pauta en Meta', '1 campaña para recibir mensajes por WhatsApp'], ['Pacientes', 'Los mensajes llegan directo a tu WhatsApp'], ['Resultados', 'Reporte mensual: mensajes y costo por paciente potencial']] },
-      { tag: 'Salud', name: 'Agenda llena', hot: true, ideal: 'Profesionales con consulta que quieren llenar la agenda de forma constante.', price: 5490000, ads: 2000000,
-        rows: [['Grabación', '1 jornada al mes (hasta 5 h) con asistente de producción'], ['Videos cortos', '10 (7 Pro + 3 Premium, con testimonios de pacientes)'], ['Anuncios', '2 diseñados para vender, con varias versiones del gancho'], ['Video largo', '—'], ['Carruseles', '6 educativos'], ['Guiones', 'Incluidos'], ['Pauta en Meta', 'Hasta 3 campañas: pacientes nuevos + volver a impactar'], ['Pacientes', 'WhatsApp con respuestas automáticas, formulario de citas y etiquetas'], ['Resultados', 'Reporte + reunión mensual de resultados']] },
-      { tag: 'Salud', name: 'Autoridad', ideal: 'Clínicas y especialistas que quieren ser el referente de su ciudad.', price: 10490000, ads: 4000000,
-        rows: [['Grabación', '2 sesiones al mes con asistente de producción'], ['Videos cortos', '20 (12 Pro + 8 Premium)'], ['Anuncios', '4 con varias versiones del gancho'], ['Video largo', '1 al mes: YouTube, web o sala de espera'], ['Carruseles', '8 educativos'], ['Guiones', 'Incluidos'], ['Pauta en Meta', 'Campañas ilimitadas en todo el recorrido del paciente'], ['Pacientes', 'Todo lo anterior + seguimiento de cada paciente hasta que agenda'], ['Resultados', 'Reunión cada 15 días y entregas prioritarias en 48 h']] },
-    ],
-    gear: [
-      ['Cámara Sony A7 IV', 'Tu consulta se ve como una clínica de primer nivel, no como un video de celular.'],
-      ['Lente 50 mm', 'Fondo desenfocado y aspecto de cine: tú eres el protagonista.'],
-      ['Lente zoom profesional', 'Mostramos consultorio, equipos y procedimientos sin interrumpir la consulta.'],
-      ['Luces Godox de 300 W', 'Piel uniforme, sin sombras ni brillos, aunque tu consultorio sea oscuro.'],
-      ['Estabilizador (gimbal)', 'Recorridos suaves por tu clínica, tipo comercial de televisión.'],
-      ['Micrófonos RØDE Wireless GO II', 'Se te entiende perfecto: el mal audio es la razón #1 por la que dejan de ver.'],
-    ],
-    extras: [
-      ['Configuración inicial', 'Único', 990000, 'Cuentas de Meta, píxel, WhatsApp Business, estrategia y guiones del primer mes.'],
-      ['Video testimonio de paciente', 'Por video', 349000, 'Un paciente real contando su experiencia, con consentimiento firmado.'],
-      ['Video institucional / tour', 'Por proyecto', 1490000, '1-2 min mostrando instalaciones, equipo y forma de atender.'],
-      ['Sesión de fotos profesional', 'Por sesión', 689000, 'Retratos tuyos, de tu equipo y del consultorio (20 fotos editadas).'],
-      ['Perfil de Google + reseñas', 'Único', 690000, 'Optimizamos tu ficha de Google Maps y montamos un sistema para pedir reseñas.'],
-      ['Página para agendar citas', 'Único + hosting', 1890000, 'Servicios, testimonios y botón de WhatsApp o formulario.'],
-      ['Automatización de WhatsApp', 'Único', 890000, 'Respuestas automáticas, catálogo, etiquetas y mensajes de seguimiento.'],
-      ['Entrenamiento a recepción', 'Único (2 h)', 590000, 'Guion y capacitación para que tu recepción convierta mensajes en citas.'],
-      ['Video para sala de espera', 'Por proyecto', 789000, 'Loop de 3-5 min con servicios y consejos para tus pantallas.'],
-      ['Media jornada de grabación', 'Por sesión', 649000, 'Hasta 4 h de grabación con el equipo completo.'],
-      ['Jornada completa de grabación', 'Por día', 889000, 'Hasta 8 h de grabación con el equipo completo.'],
-    ],
-  },
-
-  mentor: {
-    head: {
-      kicker: 'Planes mensuales de contenido',
-      lede: 'Investigación, ideas, plan de contenidos, guiones, edición y publicación. Tú enseñas; nosotros hacemos que te miren.',
-    },
-    color: 'var(--pink)',
-    plans: [
-      { tag: 'Contenido', name: 'Despega', ideal: 'Publicar todos los días con un plan detrás.', price: 1490000,
-        rows: [['Publicaciones', '30 al mes (1 diaria)'], ['Contenido', '15 videos con texto en pantalla\n5 reacciones o clips\n5 videos a cámara o clips\n5 carruseles'], ['Bonus', '—']] },
-      { tag: 'Contenido', name: 'Acelera', hot: true, ideal: 'El mejor valor por publicación: crecer en serio.', price: 2890000,
-        rows: [['Publicaciones', '90 al mes (3 diarias)'], ['Contenido', '60 videos con texto en pantalla\n10 reacciones o clips\n10 videos a cámara o clips\n10 carruseles'], ['Bonus', 'Pack de historias (stories) de venta']] },
-      { tag: 'Contenido', name: 'Élite', ideal: 'Dominar tu nicho con presencia en todo momento.', price: 5890000,
-        rows: [['Publicaciones', '150 al mes (5 diarias)'], ['Contenido', '120 videos con texto en pantalla\n20 reacciones o clips\n20 videos a cámara o clips\n20 carruseles'], ['Bonus', 'Pack de historias (stories) de venta']] },
-    ],
-    extras: [
-      ['Sistema para conseguir clientes', 'Mensual', 1390000, 'El camino desde que te ven en redes hasta que te escriben o compran: formularios, WhatsApp, landing.'],
-      ['Pauta en Facebook e Instagram', 'Mensual', 1390000, 'Creamos, administramos y optimizamos tus anuncios. La inversión en pauta va aparte.'],
-      ['Asesoría estratégica 1 a 1', 'Mensual', 1390000, 'Reuniones para revisar resultados, ajustar la estrategia y darte feedback.'],
-      ['Equipo comercial', 'Mensual + 15% de ventas', 1390000, 'Una persona agenda a los interesados (setter) y otra cierra la venta (closer).'],
-      ['Jornada de grabación presencial', 'Desde / día', 889000, 'Vamos a tu oficina o locación con equipo profesional y grabamos el contenido del mes.'],
-    ],
-  },
+/** Los tipos de edición: nombre, color y qué incluye. 'tier' es el nivel de «Tipos de edición · 3 niveles». */
+export const LEVELS = {
+  agil: { name: 'Ágil', color: 'var(--blue)', desc: 'Cortes, subtítulos, gancho y música en tendencia.', tier: 0 },
+  pro: { name: 'Pro', color: 'var(--yellow)', desc: 'Lo del Ágil + gráficos, zooms y efectos de sonido.', tier: 1 },
+  premium: { name: 'Premium', color: 'var(--pink)', desc: 'Motion graphics, diseño sonoro y color.', tier: 2 },
 };
+
+/** Tipos de pieza de la librería: con qué servicio de la carta se cobran (el precio sale de la carta). */
+export const PIECES = {
+  agil: { name: 'Ágil', color: 'var(--blue)', item: 'Video ágil', level: 'agil' },
+  pro: { name: 'Pro', color: 'var(--yellow)', item: 'Video Pro', level: 'pro' },
+  premium: { name: 'Premium', color: 'var(--pink)', item: 'Video Premium', level: 'premium' },
+  recorte: { name: 'Recorte', color: 'var(--mist)', item: 'Recorte vertical' },
+  carrusel: { name: 'Carrusel', color: 'var(--mist)', item: 'Carrusel' },
+  anuncio: { name: 'Anuncio', color: 'var(--pink)', item: 'Anuncio para pauta' },
+  horizontal: { name: 'Horizontal Pro', color: 'var(--yellow)', item: 'Video horizontal Pro' },
+};
+
+export const REDES = {
+  v: 2,
+  quarterlyPct: 10,                                   // descuento por pago trimestral anticipado
+  duration: '20 a 35 s',
+  note: 'La inversión en pauta va aparte: la pagas directo a Meta.',
+  cats: [
+    {
+      key: 'contenido', name: 'Solo contenido', color: 'var(--yellow)',
+      desc: 'Para los que solo necesitan el contenido. Tú pones la idea; nosotros lo grabamos y lo editamos.',
+      plans: [
+        { name: 'Ritmo', ideal: 'Para creadores que necesitan publicar seguido y rápido.', ed: 509000, rec: 1190000,
+          recText: '1 sesión de hasta 3 h', levels: ['agil'],
+          rows: [['Videos verticales', '16 al mes'], ['Publicación', 'La haces tú']] },
+        { name: 'Equilibrio', hot: true, ideal: 'Para quienes quieren constancia, pero con piezas que se vean más producidas.', ed: 1290000, rec: 1990000,
+          recText: '1 sesión de hasta 3 h', levels: ['pro', 'premium'],
+          rows: [['Videos verticales', '14 al mes (12 Pro + 2 Premium)'], ['Publicación', 'La haces tú']] },
+        { name: 'Impacto', ideal: 'Para marcas personales que necesitan piezas de alto nivel y presencia en YouTube.', ed: 1990000, rec: 3390000,
+          recText: '1 jornada de hasta 6 h con asistente', levels: ['pro', 'premium'],
+          rows: [['Videos verticales', '12 al mes (8 Pro + 4 Premium)'], ['Horizontales', '2 videos (hasta 10 min)'], ['Recortes', '6 verticales'], ['Publicación', 'La haces tú']] },
+      ],
+    },
+    {
+      key: 'gestion', name: 'Gestión completa', color: 'var(--pink)',
+      desc: 'Para los que necesitan todo. Pensamos, escribimos, grabamos, editamos, publicamos y movemos tu pauta.',
+      plans: [
+        { name: 'Ritmo', ideal: 'Para creadores que quieren crecer con estrategia sin pensar qué publicar.', ed: 2490000, rec: 3090000,
+          recText: '1 sesión de hasta 3 h', levels: ['agil'], ads: 500000,
+          rows: [['Videos verticales', '16 al mes'], ['Carruseles', '4'], ['Estrategia', 'Estrategia y parrilla'], ['Guiones', '16'], ['Publicación', 'La hacemos nosotros'], ['Pauta', 'Impulso de alcance'], ['Seguimiento', 'Reporte mensual']] },
+        { name: 'Equilibrio', hot: true, ideal: 'Para profesionales que quieren empezar a conseguir clientes desde redes.', ed: 3790000, rec: 4490000,
+          recText: '1 sesión de hasta 3 h', levels: ['pro', 'premium'], ads: 1000000,
+          rows: [['Videos verticales', '14 al mes (12 Pro + 2 Premium)'], ['Carruseles', '4'], ['Estrategia', 'Estrategia y parrilla'], ['Guiones', '14'], ['Publicación', 'La hacemos nosotros'], ['Pauta', '1 campaña'], ['WhatsApp', 'Sistema de captación'], ['Seguimiento', 'Reporte + 1 reunión al mes']] },
+        { name: 'Impacto', ideal: 'Para médicos, odontólogos, mentores e influencers consolidados.', ed: 5890000, rec: 7190000,
+          recText: '1 jornada de hasta 6 h', levels: ['pro', 'premium'], ads: 2000000,
+          rows: [['Videos verticales', '12 al mes (8 Pro + 4 Premium)'], ['Horizontales', '2 + 6 recortes'], ['Carruseles', '6'], ['Anuncios', '2 para pauta'], ['Estrategia', 'Estrategia y parrilla'], ['Guiones', '14'], ['Publicación', 'La hacemos nosotros'], ['Pauta', '1 campaña + 2 de retargeting'], ['WhatsApp', 'Sistema de captación'], ['Seguimiento', 'Reporte + 2 reuniones al mes']] },
+      ],
+    },
+  ],
+  // la carta del club: cada servicio es [nombre, unidad, precio, descripción, agotado]
+  carta: [
+    { name: 'Pauta', items: [
+      ['Impulso de alcance', 'Mensual', 489000, 'Ponemos pauta a tus mejores videos para llegar a más gente. Inversión sugerida aparte: desde $500.000 al mes.'],
+      ['Pauta Clientes · 1 campaña', 'Mensual', 890000, 'Una campaña pensada para que te escriban y te compren. Inversión sugerida aparte: desde $1.000.000 al mes.'],
+      ['Pauta Clientes Pro', 'Mensual', 1887000, '3 campañas y conexión con WhatsApp para atender a los interesados. Inversión sugerida aparte: desde $2.000.000 al mes.'],
+      ['Configuración inicial de cuentas', 'Una sola vez', 990000, 'Cuentas de Meta, píxel y WhatsApp Business listos para pautar.'],
+    ] },
+    { name: 'Videos y piezas', items: [
+      ['Video ágil', 'Por video', 35000, 'Cortes, subtítulos, gancho y música en tendencia.'],
+      ['Video Pro', 'Por video', 90000, 'Lo del ágil más gráficos, zooms y efectos de sonido.'],
+      ['Video Premium', 'Por video', 180000, 'Motion graphics, diseño sonoro y color.'],
+      ['Recorte vertical', 'Por video', 35000, 'Un momento de tu video largo convertido en vertical.'],
+      ['Video horizontal Pro', 'Por minuto', 29900, 'Para YouTube: edición Pro de tu video largo.'],
+      ['Video institucional vertical', 'Por proyecto', 1490000, '1 a 2 minutos en vertical mostrando tus instalaciones, tu equipo y cómo atiendes.'],
+      ['Carrusel', 'Por carrusel', 99000, 'Láminas diseñadas que se guardan y se comparten.'],
+      ['Anuncio para pauta', 'Por video', 179000, 'Un video hecho para vender: un mensaje, una acción.'],
+    ] },
+    { name: 'Estrategia y gestión', items: [
+      ['Estrategia y parrilla', 'Mensual', 509000, 'Qué publicar, cuándo y para qué, organizado en tu calendario del mes.'],
+      ['Guion', 'Por guion', 39900, 'Lo que dices en el video, escrito para enganchar desde el primer segundo.'],
+      ['Publicación y copys', 'Por pieza', 8900, 'Subimos la pieza con su texto, hashtags y portada.'],
+      ['Reporte mensual', 'Mensual', 149000, 'Tus números del mes y lo que vamos a ajustar.'],
+      ['Reunión de resultados', 'Por reunión', 199000, 'Revisamos juntos el reporte y decidimos el siguiente paso.'],
+      ['Sistema de captación por WhatsApp', 'Mensual', 199000, 'Mensajes y seguimiento para que los interesados que llegan de redes no se pierdan.'],
+      ['Automatización de WhatsApp', 'Único', 890000, 'Respuestas automáticas, catálogo, etiquetas y mensajes de seguimiento.'],
+    ] },
+    { name: 'Grabación y fotos', items: [
+      ['Sesión de grabación', 'Hasta 3 h', 769000, 'Grabamos el contenido con equipo profesional.'],
+      ['Jornada de grabación', 'Hasta 6 h', 1490000, 'Una jornada completa con asistente para grabar mucho en un día.'],
+      ['Sesión de fotos profesional', 'Por sesión', 689000, 'Retratos tuyos, de tu equipo y de tu espacio (20 fotos editadas).'],
+      ['Sesión de fotos lifestyle', 'Por sesión', 589000, 'Fotos naturales para tu perfil, portadas y contenido.'],
+    ] },
+    { name: 'Para tu perfil', items: [
+      ['Optimización de perfil', 'Único', 189000, 'Bio, foto, historias destacadas, link en bio y portadas.'],
+      ['Kit visual de marca', 'Único', 890000, 'Plantillas de motion, tipografías, colores, portadas y subtítulos con tu estilo.'],
+      ['Media kit', 'Único', 389000, 'Tus números, audiencia y tarifas en un documento profesional para enviar a marcas.'],
+      ['Página para agendar citas', 'Único + hosting', 1890000, 'Tus servicios, testimonios y un botón de WhatsApp o formulario para agendar.'],
+      ['Entrega exprés 24 h', 'Por pieza', '+30%', 'Para tendencias que hay que subir ya.'],
+    ] },
+  ],
+  // la librería de formatos: grupos de perfiles; cada formato es [nombre, descripción, tipo de pieza]
+  library: [
+    { key: 'creador', title: 'Creadores e influencers', color: 'var(--yellow)',
+      profiles: ['Creadores de contenido', 'Influencers', 'Artistas y músicos', 'Emprendedores', 'Deportistas'],
+      formats: [
+        ['Reacción comentada', 'Reaccionas a un video, noticia o tendencia y das tu opinión en pantalla.', 'agil'],
+        ['Sketch de humor', 'Mini escena actuada y graciosa, pensada para compartirse.', 'pro'],
+        ['Formato POV', 'Grabado como si quien mira viviera la escena en primera persona.', 'pro'],
+        ['Tú vs. tú', 'Apareces dos veces en el mismo video conversando contigo.', 'pro'],
+        ['Clips de tu contenido largo', 'Cortamos los mejores momentos de tu podcast o live.', 'recorte'],
+        ['Carrusel animado', 'Varias láminas que se deslizan, con elementos en movimiento.', 'carrusel'],
+        ['Reel animado', 'Video 100% animado con gráficos y textos. Sin grabación.', 'premium'],
+        ['Aftermovie', 'Resumen rápido y emocionante de un evento o lanzamiento.', 'premium'],
+      ] },
+    { key: 'medico', title: 'Salud y estética', color: 'var(--blue)',
+      profiles: ['Médicos', 'Odontólogos', 'Veterinarios', 'Esteticistas', 'Psicólogos', 'Nutricionistas'],
+      formats: [
+        ['Preguntas y respuestas', 'Respondes las dudas que más te hacen tus pacientes.', 'agil'],
+        ['Video publicitario', 'Anuncio para pauta: un mensaje, una acción.', 'anuncio'],
+        ['POV de consulta', 'Quien mira vive la consulta en primera persona: cero miedo.', 'pro'],
+        ['Carrusel educativo', 'Información clara en láminas que se guardan y se comparten.', 'carrusel'],
+        ['Historia con voz en off', 'Contamos un caso con tu voz y video de apoyo, sin que salgas a cámara.', 'pro'],
+        ['El paciente vs. el experto', 'Te interpretas a ti y al paciente para resolver un mito.', 'pro'],
+        ['Clips de tu charla', 'Los mejores minutos de tu conferencia o live, en vertical.', 'recorte'],
+        ['Reel animado', 'Explicamos un procedimiento con animación, sin grabarte.', 'premium'],
+      ] },
+    { key: 'mentor', title: 'Mentores y empresas', color: 'var(--pink)',
+      profiles: ['Mentores', 'Coaches', 'Consultores', 'Empresas', 'Marcas y negocios locales'],
+      formats: [
+        ['Video de ventas (VSL)', 'Video largo que explica tu oferta paso a paso y lleva a comprar.', 'horizontal'],
+        ['Podcast en video', 'Edición entre cámaras, audio limpio, nombres y gráficos.', 'horizontal'],
+        ['Video publicitario', 'Anuncio con guion de ventas para llenar tu programa.', 'anuncio'],
+        ['Clips del podcast', 'Del episodio de una hora salen diez videos cortos.', 'recorte'],
+        ['Carrusel de método', 'Tu método en láminas: paso a paso, guardable.', 'carrusel'],
+        ['Preguntas y respuestas', 'Resuelves objeciones antes de que lleguen a ventas.', 'agil'],
+        ['Webinar recortado', 'Tu clase en vivo convertida en piezas cortas que venden.', 'recorte'],
+        ['Reel animado', 'Tu método explicado con animación, sin grabarte.', 'premium'],
+      ] },
+  ],
+};
+
+/** El precio de un servicio de la carta por su nombre (para la librería). */
+export const priceInCarta = (data, itemName) => {
+  for (const g of data.carta || []) {
+    const it = g.items.find((x) => x[0] === itemName);
+    if (it) return { price: it[2], unit: it[1] };
+  }
+  return null;
+};
+
+/** Un catálogo publicado sirve si ya tiene la estructura nueva (v: 2); si es el viejo, se usa REDES. */
+export const isRedes = (c) => c && c.v === 2 && Array.isArray(c.cats);
 
 // Planes de Web y apps (web.html). price es texto libre: "desde $3.500.000", "A cotizar"…
 export const WEB = {

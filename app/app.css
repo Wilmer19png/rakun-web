@@ -665,3 +665,47 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
   .gx__wk-save { flex-direction: column-reverse; align-items: stretch; }
   .gx__wk-save .gx__danger { margin: 0; }
 }
+
+/* planes · Redes: pestañas Planes / Carta del club / Librería */
+.gx__subtabs--tabs { padding-bottom: 14px; border-bottom: 2px solid var(--navy); }
+.gx__subtabs--tabs .gx__chip { padding: 12px 16px; font-size: .66rem; }
+.gx__cat-head { margin-bottom: 6px; }
+.gx__plan-grid + .gx__plan-foot { margin-top: 22px; }
+.gx__plan-n { margin: 0 0 10px; font-size: .58rem; color: var(--ink-soft); }
+.gx__plan-foot { display: grid; grid-template-columns: 220px 220px minmax(0, 1fr); gap: 12px; padding: 16px 16px 4px; background: var(--white); }
+.gx__plan-foot + .gx__p { margin-top: 14px; padding-bottom: 90px; }
+.gx__lvls { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.gx__lvl { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid rgba(27, 26, 53, .3); cursor: pointer; font-family: var(--f-mono); font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; }
+.gx__lvl input { width: 14px !important; height: 14px; min-height: 0 !important; accent-color: var(--navy); }
+.gx__lvl:has(input:checked) { background: var(--l); border-color: var(--navy); }
+.gx__cgs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.gx__cg { background: var(--white); border-left: 6px solid var(--c, var(--navy)); box-shadow: 4px 5px 0 rgba(27, 26, 53, .1); }
+.gx__cg-head { display: flex; align-items: center; gap: 4px; padding: 6px 10px 6px 0; }
+.gx__cg-btn { flex: 1; display: grid; grid-template-columns: auto minmax(0, 1fr) auto 24px; align-items: center; gap: 14px; padding: 10px 14px; border: 0; background: none; text-align: left; cursor: pointer; }
+.gx__cg-btn b { font-weight: 500; font-size: 1.02rem; }
+.gx__cg-btn .mono { font-size: .58rem; color: var(--ink-soft); }
+.gx__cg-btn > span:last-child { font-size: 1.2rem; text-align: center; }
+.gx__cg-dot { width: 12px; height: 12px; background: var(--c); border: 1px solid var(--navy); }
+.gx__cg.is-open .gx__cg-head { border-bottom: 1px solid rgba(27, 26, 53, .12); }
+.gx__cg-body { padding: 16px; }
+.gx__items { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
+.gx__item { display: grid; grid-template-columns: 1.1fr .55fr .55fr 2fr auto; gap: 4px; align-items: center; }
+.gx__items--lib .gx__item { grid-template-columns: 1fr 2fr 140px 170px auto; }
+.gx__item--head { font-size: .54rem; color: var(--ink-soft); padding-bottom: 2px; }
+.gx__item input, .gx__item select { min-height: 34px !important; padding: 6px 8px !important; font-size: .8rem !important; border-width: 1px !important; }
+.gx__item.is-out input:first-child { text-decoration: line-through; text-decoration-color: var(--pink); }
+.gx__item-act { display: flex; align-items: center; gap: 4px; }
+.gx__item-act .gx__check { margin-right: 6px; font-size: .58rem; }
+.gx__item-price { font-size: .66rem; color: var(--navy); }
+.gx__chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: -4px 0 18px; }
+.gx__pchip { display: inline-flex; align-items: center; border: 1px solid rgba(27, 26, 53, .3); background: var(--cream); }
+.gx__pchip input { width: auto !important; min-height: 30px !important; padding: 4px 8px !important; border: 0 !important; background: transparent !important; font-size: .82rem !important; }
+.gx__pchip button { width: 26px; min-height: 30px; border: 0; border-left: 1px solid rgba(27, 26, 53, .2); background: none; font-size: .62rem; }
+.gx__pchip button:hover { background: var(--pink); color: var(--white); }
+.gx__cgs + .gx__add + .gx__p, .gx__cgs + .gx__add:last-child { margin-bottom: 90px; }
+@media (max-width: 960px) {
+  .gx__plan-foot { grid-template-columns: minmax(0, 1fr); }
+  .gx__item, .gx__items--lib .gx__item { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 8px 0; border-bottom: 1px solid rgba(27, 26, 53, .12); }
+  .gx__item > input:first-child, .gx__item > input:nth-child(4), .gx__items--lib .gx__item > input:nth-child(2) { grid-column: 1 / -1; }
+  .gx__item--head { display: none; }
+}

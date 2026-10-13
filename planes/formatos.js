@@ -1,7 +1,7 @@
 /* ==========================================================================
-   Marca personal · ¿Qué es cada cosa?
-   Tres niveles de edición dibujados como líneas de tiempo. Los formatos (FORMATS)
-   viven aquí, pero se muestran en la librería (libreria.html · planes/libreria.js).
+   Redes · ¿Qué es cada cosa?
+   Tres niveles de edición dibujados como líneas de tiempo. Los formatos de la
+   librería viven en planes/data.js (REDES.library).
    Cada uno abre una pestaña con sus ejemplos; los videos solo se cargan al abrirla.
    ========================================================================== */
 import { $, $$, reduced } from '../common.js';
@@ -13,7 +13,7 @@ const WHO = {
   medico: ['Dra. · odontología', 'Dr. · dermatología', 'Dra. · nutrición', 'Dr. · cirugía plástica'],
   mentor: ['Mentora · finanzas', 'Coach · ventas', 'Mentor · negocios', 'Coach · liderazgo'],
 };
-export const placeholders = (profile, n = 4) => Array.from({ length: n }, (_, i) => ({ src: '', who: WHO[profile][i % 4], dur: `0:${String(18 + (i * 7) % 40).padStart(2, '0')}` }));
+export const placeholders = (profile, n = 4) => Array.from({ length: n }, (_, i) => ({ src: '', who: (WHO[profile] || WHO.creador)[i % 4], dur: `0:${String(18 + (i * 7) % 40).padStart(2, '0')}` }));
 
 // Ejemplos reales de cada nivel de edición (videos verticales en YouTube o Vimeo).
 // El reproductor solo se carga cuando tocan el video; antes se ve la portada.
@@ -53,58 +53,24 @@ const SUBS = [[1, 14], [16, 14], [32, 15], [49, 14], [65, 15], [82, 16]];
 
 const TIERS = [
   {
-    id: 'esencial', n: 'Nivel 01', name: 'Esencial', file: 'esencial_v1.mp4',
-    desc: 'Hablas a cámara; editamos cortes, subtítulos y ritmo básico.',
+    id: 'esencial', n: 'Nivel 01', name: 'Ágil', file: 'agil_v1.mp4',
+    desc: 'Cortes, subtítulos, gancho y música en tendencia.',
     tracks: [['V1', cuts(5)], ['SUB', blocks(SUBS, C.sub)], ['A1', full(C.aud)]],
     legend: [['Cortes', C.v], ['Subtítulos', C.sub], ['Voz', C.aud]],
   },
   {
     id: 'pro', n: 'Nivel 02', name: 'Pro', file: 'pro_v1.mp4',
-    desc: 'Lo mismo + gráficos, zooms, efectos de sonido y ritmo dinámico.',
+    desc: 'Lo del Ágil + gráficos, zooms y efectos de sonido.',
     tracks: [['V1', cuts(9)], ['ZOOM', dots([8, 27, 44, 61, 79], C.zoom)], ['SUB', blocks(SUBS, C.sub, [1, 4])], ['GFX', blocks([[20, 12], [55, 10], [84, 12]], C.gfx)], ['SFX', dots([9, 21, 34, 56, 70, 85], C.sfx)], ['A1', full(C.aud)]],
     legend: [['Más cortes', C.v], ['Zooms', C.zoom], ['Palabra clave', C.key], ['Gráficos', C.gfx], ['Efectos', C.sfx]],
   },
   {
     id: 'premium', n: 'Nivel 03', name: 'Premium', file: 'premium_v1.mp4', hook: true,
-    desc: 'Edición de alto nivel: animación, diseño sonoro, color y gancho en los primeros 3 segundos.',
+    desc: 'Motion graphics, diseño sonoro y color.',
     tracks: [['V1', cuts(14)], ['ZOOM', dots([4, 15, 27, 38, 50, 62, 74, 88], C.zoom)], ['SUB', blocks(SUBS, C.sub, [0, 2, 4])], ['GFX', blocks([[0, 10], [18, 9], [36, 14], [58, 9], [76, 16]], C.gfx)], ['SFX', dots([2, 9, 17, 24, 33, 41, 52, 60, 69, 78, 86, 94], C.sfx)], ['MUS', full(C.mus)], ['COLOR', full(C.col)], ['A1', full(C.aud)]],
     legend: [['Gancho 3 s', C.key], ['Animación', C.gfx], ['Música', C.mus], ['Color', '#8B6CF0'], ['Diseño sonoro', C.sfx]],
   },
 ];
-
-/* ---------- más formatos por perfil (nombres y descripciones de Tarifas_RAKUN_2026) ---------- */
-export const FORMATS = {
-  creador: [
-    ['Reacción comentada', 'Reaccionas a un video, noticia o tendencia y das tu opinión en pantalla.', 'Por video'],
-    ['Sketch de humor', 'Mini escena actuada y graciosa, pensada para compartirse.', 'Por video'],
-    ['Formato POV', 'Grabado como si quien mira viviera la escena en primera persona.', 'Por video'],
-    ['Tú vs. tú', 'Apareces dos veces en el mismo video conversando contigo.', 'Por video'],
-    ['Clips de tu contenido largo', 'Cortamos los mejores momentos de tu podcast o live.', 'Por video'],
-    ['Carrusel animado', 'Varias láminas que se deslizan, con elementos en movimiento.', 'Por carrusel'],
-    ['Reel animado', 'Video 100% animado con gráficos y textos. Sin grabación.', 'Por video'],
-    ['Aftermovie', 'Resumen rápido y emocionante de un evento o lanzamiento.', 'Por video'],
-  ],
-  medico: [
-    ['Preguntas y respuestas', 'Respondes las dudas que más te hacen tus pacientes.', 'Por video'],
-    ['Video publicitario', 'Anuncio para pauta: un mensaje, una acción. Esencial, Pro o Premium.', 'Por video'],
-    ['POV de consulta', 'Quien mira vive la consulta en primera persona: cero miedo.', 'Por video'],
-    ['Carrusel educativo', 'Información clara en láminas que se guardan y se comparten.', 'Por carrusel'],
-    ['Historia con voz en off', 'Contamos un caso con tu voz y video de apoyo, sin que salgas a cámara.', 'Por video'],
-    ['El paciente vs. el experto', 'Te interpretas a ti y al paciente para resolver un mito.', 'Por video'],
-    ['Clips de tu charla', 'Los mejores minutos de tu conferencia o live, en vertical.', 'Por video'],
-    ['Reel animado', 'Explicamos un procedimiento con animación, sin grabarte.', 'Por video'],
-  ],
-  mentor: [
-    ['Video de ventas (VSL)', 'Video largo que explica tu oferta paso a paso y lleva a comprar.', 'Por minuto'],
-    ['Podcast en video', 'Edición entre cámaras, audio limpio, nombres y gráficos.', 'Por minuto'],
-    ['Video publicitario', 'Anuncio con guion de ventas para llenar tu programa.', 'Por video'],
-    ['Clips del podcast', 'Del episodio de una hora salen diez videos cortos.', 'Por video'],
-    ['Carrusel de método', 'Tu método en láminas: paso a paso, guardable.', 'Por carrusel'],
-    ['Preguntas y respuestas', 'Resuelves objeciones antes de que lleguen a ventas.', 'Por video'],
-    ['Webinar recortado', 'Tu clase en vivo convertida en piezas cortas que venden.', 'Por video'],
-    ['Reel animado', 'Tu método explicado con animación, sin grabarte.', 'Por video'],
-  ],
-};
 
 export const MAX_EXAMPLES = 8;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -194,14 +160,14 @@ export function showDrawer(drawer) {
   }, 360);
 }
 
-/* ---------- los tres niveles en Marca personal ---------- */
+/* ---------- los tres niveles en Redes ---------- */
 function closeTier() {
   shutDrawer($('[data-fx-drawer="tiers"]', root));
   $$('[data-fx-open]', root).forEach((b) => { b.setAttribute('aria-expanded', 'false'); b.classList.remove('is-on'); });
   fx.open = null;
 }
 
-function openTier(i) {
+export function openTier(i) {
   const same = fx.open === i;
   closeTier();
   if (same) return;

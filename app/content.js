@@ -7,7 +7,7 @@ export const STAGES = {
   web: ['Brief', 'Wireframe', 'Diseño', 'Desarrollo', 'Pruebas', 'Lanzamiento'],
 };
 
-export const WORLD_NAME = { marca: 'Marca personal', produccion: 'Producción', web: 'Web y apps' };
+export const WORLD_NAME = { marca: 'Redes', produccion: 'Producción', web: 'Web y apps' };
 export const WORLD_COLOR = { marca: 'var(--yellow)', produccion: 'var(--blue)', web: 'var(--pink)' };
 
 // Redes donde se publica una pieza: clave corta, nombre, color de la etiqueta

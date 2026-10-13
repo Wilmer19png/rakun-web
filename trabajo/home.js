@@ -58,7 +58,7 @@ function renderReels(works) {
   box.hidden = false;
   box.innerHTML = `
     <div class="wk__reels-copy">
-      <span class="mono wk__reels-k">[Marca personal · reels]</span>
+      <span class="mono wk__reels-k">[Redes · reels]</span>
       <p class="wk__reels-title">En <br>vertical.</p>
       <p class="wk__reels-p">Contenido para marcas personales: estrategia, grabación y edición para redes.</p>
       <a class="link" href="libreria.html">Ver la librería de formatos <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>

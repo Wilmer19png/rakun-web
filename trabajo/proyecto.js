@@ -16,7 +16,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const small = window.matchMedia('(max-width: 700px)').matches;
 const pad = (n) => String(n).padStart(2, '0');
 const paras = (t) => String(t || '').split(/\n{2,}|\r?\n/).filter((p) => p.trim()).map((p) => `<p>${esc(p)}</p>`).join('');
-const WORLD = { video: 'Producción audiovisual', identidad: 'Marca personal', web: 'Web y apps', reel: 'Marca personal' };
+const WORLD = { video: 'Producción audiovisual', identidad: 'Identidad visual', web: 'Web y apps', reel: 'Redes' };
 const BURST = '<svg class="wk__burst" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg>';
 const RAIL = (n, label) => `<div class="rail" aria-hidden="true"><span class="rail__num">${pad(n)}</span><span class="rail__label">${esc(label)}</span></div>`;
 

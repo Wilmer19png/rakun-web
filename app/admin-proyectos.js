@@ -55,7 +55,7 @@ function newProject(ctx, clients) {
     <form class="gx__form" data-form novalidate>
       <label class="gx__f"><span>Cliente *</span><select name="client_id" required>${clients.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></label>
       <label class="gx__f"><span>Tipo *</span><select name="world">${Object.entries(WORLD_NAME).map(([k, n]) => `<option value="${k}">${n}</option>`).join('')}</select></label>
-      <label class="gx__f"><span>Nombre del proyecto *</span><input name="name" required maxlength="160" placeholder="Marca personal · octubre"></label>
+      <label class="gx__f"><span>Nombre del proyecto *</span><input name="name" required maxlength="160" placeholder="Redes · octubre"></label>
       <label class="gx__f"><span>Plan</span><input name="plan" maxlength="160" placeholder="Agenda llena"></label>
       <div class="gx__row2">
         <label class="gx__f"><span>Inicio</span><input name="start_date" type="date"></label>

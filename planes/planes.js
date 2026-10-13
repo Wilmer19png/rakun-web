@@ -1,15 +1,15 @@
 /* ==========================================================================
    RAKÜN — planes.js
-   Planes de marca personal. Datos de Tarifas_RAKUN_2026.xlsx (hojas de cara
-   al cliente: Creadores, Salud, Planes mensuales, extras y condiciones).
-   Precios en COP antes de IVA. Para cambiar un precio, edita DATA.
+   Planes de Redes (mundo 01): Solo contenido y Gestión completa, la carta del
+   club y las etiquetas de edición. Datos en planes/data.js (REDES); lo que se
+   publica desde el gestor los reemplaza. Precios en COP antes de IVA.
    ========================================================================== */
 
 import { RakunEye } from '../eye.js';
-import { initFormats } from './formatos.js';
-import { DATA, SESSION_PRICE } from './data.js';
+import { initFormats, openTier } from './formatos.js';
+import { REDES, LEVELS, isRedes } from './data.js';
 import { loadCatalog } from '../app/catalog.js';
-import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu, waLink } from '../common.js';
+import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
 const small = window.matchMedia('(max-width: 700px)').matches;
 
 
@@ -22,50 +22,47 @@ const copBig = (n) => (typeof n === 'number' ? `<span class="cur">$</span>${n.to
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 /* ---------- estado ---------- */
-const state = { profile: 'creador', line: 'flujo', mode: 'edicion', quarterly: false };
+let D = REDES;                                            // lo publicado en el gestor reemplaza a REDES
+const state = { cat: 'contenido', mode: 'edicion', quarterly: false, carta: 0 };
+const catOf = () => D.cats.find((c) => c.key === state.cat) || D.cats[0];
+const roundK = (n) => Math.round(n / 1000) * 1000;
 
 /* ---------- precio de cada tarjeta ---------- */
 function priceOf(p) {
-  if (state.profile !== 'creador') {
-    return {
-      label: state.profile === 'medico' ? 'Precio mensual · pauta aparte' : 'Precio mensual',
-      price: p.price, was: null,
-      note: state.profile === 'medico' ? `/ mes · antes de IVA · pauta sugerida desde ${cop(p.ads)} / mes, aparte*` : '/ mes · antes de IVA',
-    };
-  }
   const rec = state.mode === 'grabacion';
-  const base = state.quarterly ? p.tri : p.ed;
-  const price = base + (rec ? p.sessions * SESSION_PRICE : 0);
-  const full = p.ed + (rec ? p.sessions * SESSION_PRICE : 0);
-  const sess = `${p.sessions} ${p.sessions > 1 ? 'sesiones' : 'sesión'} de grabación`;
+  const full = rec ? p.rec : p.ed;
+  const price = state.quarterly ? roundK(full * (1 - D.quarterlyPct / 100)) : full;
   return {
     label: rec ? 'Con grabación RAKÜN' : 'Solo edición · tú grabas',
     price,
     was: state.quarterly ? full : null,
-    note: [
-      '/ mes · antes de IVA',
-      rec ? `incluye ${sess}` : null,
-      state.quarterly ? 'pago trimestral anticipado' : null,
-    ].filter(Boolean).join(' · '),
+    note: ['/ mes · antes de IVA', state.quarterly ? 'pago trimestral anticipado' : null].filter(Boolean).join(' · '),
   };
 }
 
-function cardHTML(p, color) {
+// las etiquetas de edición llevan a «Tipos de edición» y abren ese nivel
+const levelTag = (k) => {
+  const l = LEVELS[k];
+  if (!l) return '';
+  return `<a class="lvl mono" href="#tipos-de-edicion" data-tier="${l.tier}" style="--l:${l.color}" title="${esc(l.desc)}">${esc(l.name)}<span aria-hidden="true">?</span></a>`;
+};
+
+function cardHTML(p, cat) {
   const pr = priceOf(p);
-  const subject = `Quiero el plan ${p.tag} ${p.name}`;
+  const rec = state.mode === 'grabacion';
+  const subject = `Quiero el plan ${cat.name} ${p.name}`;
   // datos que viajan al formulario "Quiero este plan" (app/lead-form.js)
-  const who = { creador: 'Creador', medico: 'Médico', mentor: 'Mentor' }[state.profile];
   const lead = {
     world: 'marca',
-    plan: `${who} · ${p.tag} · ${p.name}`,
-    detail: [pr.label, state.quarterly && state.profile === 'creador' ? 'pago trimestral' : null].filter(Boolean).join(' · '),
+    plan: `Redes · ${cat.name} · ${p.name}`,
+    detail: [pr.label, state.quarterly ? 'pago trimestral' : null].filter(Boolean).join(' · '),
     price: `${cop(pr.price)} / mes`,
   };
   return `
-    <li class="plc${p.hot ? ' plc--hot' : ''}${small && p.hot ? ' is-open' : ''}" style="--c: ${color}">
-      <button class="plc__fold" type="button" aria-expanded="${small && p.hot}" aria-label="Ver qué incluye ${esc(p.tag)} ${esc(p.name)}"></button>
-      ${p.hot ? '<span class="plc__badge mono">★ Más elegido</span>' : ''}
-      <p class="mono plc__tag">${esc(p.tag)}</p>
+    <li class="plc${p.hot ? ' plc--hot' : ''}${small && p.hot ? ' is-open' : ''}" style="--c: ${cat.color}">
+      <button class="plc__fold" type="button" aria-expanded="${small && p.hot}" aria-label="Ver qué incluye ${esc(cat.name)} ${esc(p.name)}"></button>
+      ${p.hot ? '<span class="plc__badge mono">★ Recomendado</span>' : ''}
+      <p class="mono plc__tag">${esc(cat.name)}</p>
       <h3 class="plc__name">${esc(p.name)}</h3>
       <p class="plc__ideal">${esc(p.ideal)}</p>
       <div class="plc__price-box">
@@ -75,44 +72,32 @@ function cardHTML(p, color) {
         <p class="plc__note">${esc(pr.note)}</p>
       </div>
       <dl class="plc__rows">
-        ${p.rows.map(([k, v]) => `<div class="plc__row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        ${p.rows.slice(0, 1).map(([k, v]) => `<div class="plc__row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        ${p.levels?.length ? `<div class="plc__row"><dt>Edición</dt><dd class="plc__lvls">${p.levels.map(levelTag).join('')}</dd></div>` : ''}
+        ${p.rows.slice(1).map(([k, v]) => `<div class="plc__row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        <div class="plc__row"><dt>Grabación</dt><dd>${esc(rec ? p.recText : 'Tú grabas')}</dd></div>
       </dl>
+      ${p.ads ? `<p class="plc__ads mono">Pauta sugerida aparte: desde ${cop(p.ads)} / mes · la pagas directo a Meta</p>` : ''}
       <a class="plc__cta" href="mailto:rakundesigns@gmail.com?subject=${encodeURIComponent(subject)}" data-lead="${esc(JSON.stringify(lead))}">Quiero este plan <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
     </li>`;
 }
 
-function specialHTML(profile) {
-  if (profile === 'creador') {
+/* ---------- la carta del club: categorías que se despliegan ---------- */
+function cartaHTML() {
+  return D.carta.map((g, i) => {
+    const open = state.carta === i;
     return `
-      <div class="quiz">
-        <div><p class="mono quiz__kicker">¿No sabes cuál elegir?</p><p class="quiz__title">Responde 6 preguntas y te decimos cuál.</p></div>
-        <div>
-          <ul class="quiz__qs mono">
-            <li>¿Muchos reels o reels elaborados?</li><li>¿En qué etapa estás?</li><li>¿Cuánto quieres invertir?</li>
-            <li>¿Quién graba?</li><li>¿Quieres pauta?</li><li>¿Qué es lo más importante?</li>
-          </ul>
-          <a class="quiz__cta" href="${waLink('Hola RAKÜN, quiero que me ayuden a elegir mi plan de creador.')}" target="_blank" rel="noopener" data-whatsapp-dyn>Encontrar mi plan →</a>
-        </div>
-      </div>`;
-  }
-  if (profile === 'medico') {
-    return `
-      <div class="gear-why">
-        <p class="mono gear-why__kicker">¿Por qué cuesta lo que cuesta?</p>
-        <p class="gear-why__title">Lo que llega a tu <em>consultorio.</em></p>
-        <ul class="gear-why__grid">${DATA.medico.gear.map(([n, g]) => `<li><b>${esc(n)}</b><span>${esc(g)}</span></li>`).join('')}</ul>
-        <p class="mono gear-why__note">* La inversión en pauta se paga directamente a Meta con la tarjeta del consultorio; con menos inversión llegan menos pacientes potenciales. Contenido ético y verificable: nunca prometemos curas ni resultados garantizados.</p>
-      </div>`;
-  }
-  return `
-    <div class="includes">
-      <p class="mono includes__kicker">Todos los planes incluyen</p>
-      <ul class="includes__chips mono">
-        <li style="--c: var(--yellow)">Investigación y estrategia</li><li style="--c: var(--blue)">Ideas de contenido</li><li style="--c: var(--pink)">Plan de contenidos</li>
-        <li style="--c: var(--yellow)">Guiones</li><li style="--c: var(--blue)">Edición</li><li style="--c: var(--pink)">Publicación</li>
+    <section class="cg${open ? ' is-open' : ''}">
+      <h3 class="cg__h"><button class="cg__btn" type="button" aria-expanded="${open}" aria-controls="cg-${i}" data-carta-i="${i}">
+        <span class="mono cg__n">${String(i + 1).padStart(2, '0')}</span><span class="cg__t">${esc(g.name)}</span>
+        <span class="mono cg__c">${g.items.length} ${g.items.length === 1 ? 'servicio' : 'servicios'}</span><span class="cg__ic" aria-hidden="true">${open ? '−' : '+'}</span>
+      </button></h3>
+      <ul class="carta" id="cg-${i}"${open ? '' : ' hidden'}>
+        ${g.items.map(([name, cobro, price, desc, out]) => `
+        <li${out ? ' class="is-out"' : ''}><span class="carta__name">${esc(name)}${out ? ' <span class="carta__out mono">Agotado</span>' : ''}</span><span class="carta__price"><span class="mono">${esc(cobro)}</span><b>${copBig(price)}</b></span><span class="carta__desc">${esc(desc)}</span></li>`).join('')}
       </ul>
-      <p class="includes__text">Comprado por piezas sueltas te sale parecido o más barato, pero sin la estrategia, los guiones y la publicación: eso es lo que hace que funcione.</p>
-    </div>`;
+    </section>`;
+  }).join('');
 }
 
 /* ---------- render ---------- */
@@ -129,24 +114,27 @@ cards?.addEventListener('click', (e) => {
 });
 let swapTimers = [];
 
+function renderCarta() {
+  const box = $('[data-carta]');
+  if (box) box.innerHTML = cartaHTML();
+}
+
 function render(animate = true) {
-  const d = DATA[state.profile];
-  // encabezado
-  $('[data-head-kicker]').textContent = d.head.kicker;
-  $('[data-head-lede]').textContent = d.head.lede;
-  // interruptores (solo creadores)
-  $('[data-switches]').hidden = state.profile !== 'creador';
-  $$('[data-line]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.line === state.line)));
+  const cat = catOf();
+  // pestañas: nombre y frase de cada categoría (pueden venir del gestor)
+  $$('[data-cat]').forEach((t) => {
+    const c = D.cats.find((x) => x.key === t.dataset.cat);
+    if (!c) { t.hidden = true; return; }
+    $('[data-cat-name]', t).textContent = c.name;
+    $('[data-cat-desc]', t).textContent = c.desc;
+    t.style.setProperty('--t', c.color);
+  });
+  $('[data-head-lede]').textContent = `Todos los videos verticales duran de ${D.duration}; si son más largos, se cotizan aparte. ${D.note}`;
+  $('[data-quarterly-pct]').textContent = `−${D.quarterlyPct}%`;
   $$('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
   $('[data-quarterly]').setAttribute('aria-checked', String(state.quarterly));
-  // tarjetas
-  // los planes marcados como ocultos en el gestor no se muestran
-  const plans = (state.profile === 'creador' ? d.lines[state.line] : d.plans).filter((p) => !p.hidden);
-  cards.innerHTML = plans.map((p) => cardHTML(p, d.color)).join('');
-  $('[data-special]').innerHTML = specialHTML(state.profile);
-  // la carta: lo marcado como agotado sale tachado y no se puede pedir
-  $('[data-carta]').innerHTML = d.extras.map(([name, cobro, price, desc, out]) => `
-    <li${out ? ' class="is-out"' : ''}><span class="carta__name">${esc(name)}${out ? ' <span class="carta__out mono">Agotado</span>' : ''}</span><span class="carta__price"><span class="mono">${esc(cobro)}</span><b>${copBig(price)}</b></span><span class="carta__desc">${esc(desc)}</span></li>`).join('');
+  // tarjetas (los planes marcados como ocultos en el gestor no se muestran)
+  cards.innerHTML = cat.plans.filter((p) => !p.hidden).map((p) => cardHTML(p, cat)).join('');
   // las tarjetas entran a saltos, una tras otra
   swapTimers.forEach(clearTimeout);
   swapTimers = [];
@@ -156,46 +144,56 @@ function render(animate = true) {
   swapTimers.push(setTimeout(() => cards.classList.remove('is-swapping'), 60 + 3 * 110 + 200));
 }
 
-function setProfile(p, focusTab = false) {
-  if (!DATA[p]) return;
-  state.profile = p;
-  $$('[data-profile]').forEach((t) => {
-    const on = t.dataset.profile === p;
+function setCat(key, focusTab = false) {
+  if (!D.cats.some((c) => c.key === key)) return;
+  state.cat = key;
+  $$('[data-cat]').forEach((t) => {
+    const on = t.dataset.cat === key;
     t.setAttribute('aria-selected', String(on));
     t.tabIndex = on ? 0 : -1;
     if (on && focusTab) t.focus();
   });
-  $('[data-panel]').setAttribute('aria-labelledby', `tab-${p}`);
-  history.replaceState(null, '', `#${p}`);
+  $('[data-panel]').setAttribute('aria-labelledby', `tab-${key}`);
   render();
 }
 
 function initPlans() {
-  // perfiles (pestañas con flechas del teclado)
-  const tabs = $$('[data-profile]');
+  // categorías (pestañas con flechas del teclado)
+  const tabs = $$('[data-cat]');
   tabs.forEach((t, i) => {
-    t.addEventListener('click', () => setProfile(t.dataset.profile));
+    t.addEventListener('click', () => setCat(t.dataset.cat));
     t.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
-      setProfile(next.dataset.profile, true);
+      setCat(next.dataset.cat, true);
     });
   });
-  $$('[data-line]').forEach((b) => b.addEventListener('click', () => { state.line = b.dataset.line; render(); }));
   $$('[data-mode]').forEach((b) => b.addEventListener('click', () => { state.mode = b.dataset.mode; render(false); }));
   $('[data-quarterly]').addEventListener('click', () => { state.quarterly = !state.quarterly; render(false); });
+  $('[data-carta]')?.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-carta-i]');
+    if (!b) return;
+    const i = Number(b.dataset.cartaI);
+    state.carta = state.carta === i ? -1 : i;
+    renderCarta();
+    $(`[data-carta-i="${i}"]`)?.focus({ preventScroll: true });
+  });
 
+  // llega desde el menú con #gestion o #contenido: esa categoría, directo a los planes
   const fromHash = location.hash.slice(1);
-  if (DATA[fromHash]) {
-    setProfile(fromHash);
-    requestAnimationFrame(() => $('#planes').scrollIntoView());   // llega desde otra página: directo a los planes
+  if (fromHash === 'gestion' || fromHash === 'contenido') {
+    setCat(fromHash);
+    requestAnimationFrame(() => $('#planes').scrollIntoView());
   } else render(false);
+  renderCarta();
 
-  // precios publicados desde el gestor (si hay); si no, se quedan los de data.js
+  // lo publicado desde el gestor (si ya tiene la estructura nueva); si no, se quedan los datos de data.js
   loadCatalog('marca').then((c) => {
-    if (!c) return;
-    ['creador', 'medico', 'mentor'].forEach((k) => { if (c[k]) DATA[k] = c[k]; });
+    if (!isRedes(c)) return;
+    D = { ...REDES, ...c };
+    if (!D.cats.some((x) => x.key === state.cat)) state.cat = D.cats[0].key;
     render(false);
+    renderCarta();
   });
 }
 
@@ -290,13 +288,21 @@ function initAnchors() {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
     const id = a.getAttribute('href').slice(1);
-    // los perfiles del menú (#creador, #medico, #mentor) cambian la pestaña
-    if (DATA[id]) {
+    // las categorías del menú (#contenido, #gestion) cambian la pestaña
+    if (id === 'contenido' || id === 'gestion') {
       e.preventDefault();
       closeMenu();
-      setProfile(id);
+      setCat(id);
       const target = $('#planes');
       if (lenis) lenis.scrollTo(target, { duration: 1 }); else target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+      return;
+    }
+    // una etiqueta Ágil / Pro / Premium: baja a «Tipos de edición» y abre ese nivel
+    if (a.dataset.tier !== undefined) {
+      e.preventDefault();
+      const target = document.getElementById('tipos-de-edicion');
+      if (lenis) lenis.scrollTo(target, { offset: -90, duration: 1.1 }); else target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+      setTimeout(() => openTier(Number(a.dataset.tier)), reduced ? 0 : 700);
       return;
     }
     const target = id ? document.getElementById(id) : null;

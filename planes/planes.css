@@ -794,3 +794,62 @@
 .p-subnav__types { margin-left: auto; }
 @media (max-width: 960px) { .p-subnav__types { display: none; } }
 @media (max-width: 700px) { .p-subnav { display: none; } }
+
+/* ==========================================================================
+   Redes (mundo 01): categorías, etiquetas de edición, pauta y la carta en desplegables
+   Lienzo: «Mundo 01 · Redes: planes, la carta del club, la librería y el gestor»
+   ========================================================================== */
+.pl-profiles--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* etiquetas Ágil / Pro / Premium: llevan a «Tipos de edición» */
+.plc__lvls { display: flex; flex-wrap: wrap; gap: 6px; }
+.lvl {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 9px;
+  background: var(--l); color: var(--ink-0); border: 1px solid var(--navy); text-decoration: none;
+  font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; transition: translate .15s, box-shadow .15s;
+}
+.lvl span { display: grid; place-items: center; width: 14px; height: 14px; border-radius: 50%; background: rgba(1, 2, 33, .16); font-size: .55rem; }
+.lvl:hover, .lvl:focus-visible { translate: -2px -2px; box-shadow: 2px 2px 0 var(--navy); outline: none; }
+.plc--hot .lvl { border-color: var(--cream); }
+.plc--hot .lvl:hover, .plc--hot .lvl:focus-visible { box-shadow: 2px 2px 0 var(--cream); }
+.plc__ads { margin: 14px 0 0; padding: 9px 11px; background: var(--yellow); color: var(--ink-0); font-size: .62rem; letter-spacing: .06em; line-height: 1.55; }
+/* la carta: cada categoría se despliega */
+.carta-groups { border-bottom: 1px solid rgba(255, 255, 255, .18); }
+.cg { border-top: 1px solid rgba(255, 255, 255, .18); }
+.cg__h { margin: 0; }
+.cg__btn {
+  display: flex; align-items: center; gap: 18px; width: 100%; min-height: 76px; padding: 0;
+  border: 0; background: none; color: var(--cream); cursor: pointer; text-align: left;
+}
+.cg__n { color: var(--pink); }
+.cg__t { font: 900 clamp(1.6rem, 2.6vw, 2.2rem)/.9 var(--f-display); text-transform: uppercase; }
+.cg__c { margin-left: auto; color: var(--mist); }
+.cg__ic { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border: 2px solid var(--cream); font-size: 1.2rem; line-height: 1; transition: background .2s, color .2s; }
+.cg__btn:hover .cg__ic, .cg__btn:focus-visible .cg__ic, .cg.is-open .cg__ic { background: var(--cream); color: var(--ink-0); }
+.cg__btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 4px; }
+.cg .carta { padding: 0 0 26px; }
+.cg .carta[hidden] { display: none; }
+@media (max-width: 700px) {
+  .pl-profiles--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cg__btn { gap: 12px; min-height: 64px; }
+  .cg__t { font-size: 1.35rem; }
+  .cg__c { display: none; }
+  .cg__ic { margin-left: auto; width: 36px; height: 36px; }
+}
+
+/* ---------- la librería: tipo de edición, precio suelto y para quién ---------- */
+.lvl--tag { min-height: 0; padding: 3px 7px 2px; font-family: var(--f-mono); font-size: .56rem; pointer-events: none; }
+.lib__idx { margin-bottom: 26px; }
+.lib__legend { max-width: 70ch; margin: 0 0 84px; font-size: .95rem; line-height: 1.9; color: var(--ink-soft); }
+.lib__legend .lvl--tag { vertical-align: 1px; }
+.lib__legend a { color: var(--navy); border-bottom: 1px solid currentColor; white-space: nowrap; }
+.lib__legend a:hover { color: var(--pink); }
+.lib__for { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: -6px 0 26px; padding: 0; list-style: none; }
+.lib__for li { padding: 5px 11px 4px; border: 1px solid rgba(27, 26, 53, .3); font-size: .85rem; }
+.lib__for li.mono { padding-left: 0; border: 0; color: var(--ink-soft); }
+.fx-card__meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.lib__grid .fx-card__meta { opacity: 1; }
+.lib__grid .fx-card__meta > span:first-child { opacity: .6; }
+.fx-card__price { margin-top: auto; padding-top: 6px; font: 900 1.15rem/1 var(--f-display); }
+.fx-card__price .mono { font-family: var(--f-mono); font-weight: 400; font-size: .56rem; letter-spacing: .06em; opacity: .7; }
+.fx-card__price + .fx-card__foot { margin-top: 0; }
+.fx-card.is-on .lvl--tag { border-color: var(--cream); }

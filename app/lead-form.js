@@ -10,7 +10,7 @@ import { CALCOM_URL, CONTACT_EMAIL } from './config.js';
 import { mountLocation } from './ubicacion.js';
 
 const CODES = [['+57', 'CO'], ['+1', 'US'], ['+52', 'MX'], ['+34', 'ES'], ['+51', 'PE'], ['+56', 'CL'], ['+54', 'AR'], ['+593', 'EC'], ['+58', 'VE'], ['+507', 'PA']];
-const WORLD_NAME = { marca: 'Marca personal', produccion: 'Producción audiovisual', web: 'Web y apps' };
+const WORLD_NAME = { marca: 'Redes', produccion: 'Producción audiovisual', web: 'Web y apps' };
 const MAX_LINKS = 5;
 
 let root = null;
