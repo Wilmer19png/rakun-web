@@ -23,6 +23,7 @@ let lenis = null;
 function initLenis() {
   if (reduced || !window.Lenis) return;
   lenis = new window.Lenis({ lerp: 0.16, smoothWheel: true });
+  window.lenis = lenis;                                  // para pausarlo desde otros módulos (trabajo/ui.js)
   if (HAS_GSAP) {
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));

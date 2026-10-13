@@ -603,3 +603,65 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
   .gx__cell .gx__post { margin: 0; font-size: .85rem; }
   .gx__cell .gx__post-t { white-space: normal; }
 }
+
+/* ==========================================================================
+   Gestor · 08 Nuestro trabajo (lienzo «Agregar proyectos desde el gestor»)
+   ========================================================================== */
+.gx__wk-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+.gx__wk-star { margin-left: auto; padding: 10px 14px; background: var(--ink-0); color: var(--yellow); font-size: .62rem; letter-spacing: .1em; }
+.gx__tr--wk { grid-template-columns: 70px 120px minmax(0, 1fr) 120px 130px 70px 100px 170px; }
+.gx__wk-ord { display: flex; gap: 4px; }
+.gx__wk-thumb { display: flex; justify-content: center; width: 120px; aspect-ratio: 16 / 9; background: #E9E4DA; overflow: hidden; }
+.gx__wk-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.gx__wk-thumb.is-v img { width: auto; aspect-ratio: 9 / 16; }
+.gx__wk-tpal { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
+.gx__wk-fav { width: 40px; height: 40px; border: 2px solid var(--navy); background: var(--white); color: var(--mist); font-size: 1.2rem; cursor: pointer; }
+.gx__wk-fav.is-on { color: var(--pink); }
+.gx__wk-help { max-width: 80ch; margin-top: 18px; }
+.gx__wk-back { display: inline-flex; align-items: center; min-height: 36px; margin-bottom: 8px; padding: 0; border: 0; background: none; color: var(--ink-soft); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.gx__wk-form { display: flex; flex-direction: column; gap: 22px; max-width: 1080px; }
+.gx__wk-form .gx__fs { padding: 18px 20px 8px; border: 2px solid var(--navy); background: var(--white); }
+.gx__wk-form .gx__fs legend { padding: 0 8px; }
+.gx__wk-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; }
+.gx__wk-wide { grid-column: 1 / -1; }
+.gx__wk-kinds { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding-bottom: 12px; }
+.gx__wk-kind { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 14px 18px; border: 2px solid var(--navy); border-left: 8px solid var(--c); cursor: pointer; }
+.gx__wk-kind input { position: absolute; opacity: 0; }
+.gx__wk-kind b { font-weight: 500; font-size: 1rem; }
+.gx__wk-kind small { font-size: .82rem; color: var(--ink-soft); }
+.gx__wk-kind.is-on { background: var(--navy); color: var(--cream); box-shadow: 5px 5px 0 var(--pink); }
+.gx__wk-kind.is-on small { color: var(--mist); }
+.gx__wk-kind:has(input:focus-visible) { outline: 3px solid var(--pink); outline-offset: 2px; }
+.gx__wk-did { display: flex; flex-wrap: wrap; gap: 6px; }
+.gx__wk-did label { cursor: pointer; }
+.gx__wk-did input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.gx__wk-did label:has(input:focus-visible) { outline: 3px solid var(--pink); }
+.gx__up { position: relative; }
+.gx__drop { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 96px; padding: 12px; border: 2px dashed var(--navy); background: rgba(243, 240, 234, .6); text-align: center; font-size: .9rem; }
+.gx__drop input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.gx__drop small { font-size: .55rem; letter-spacing: .08em; color: var(--ink-soft); }
+.gx__drop.is-over, .gx__drop:focus-within { background: #EAF8FF; border-style: solid; }
+.gx__up-cur { position: relative; display: block; margin-top: 8px; width: 180px; }
+.gx__up-cur img, .gx__up-cur video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
+.gx__up-cur .gx__mini { position: absolute; right: 4px; top: 4px; }
+.gx__gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 10px; }
+.gx__gal figure { position: relative; margin: 0; display: grid; gap: 4px; }
+.gx__gal img, .gx__gal video { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: #E9E4DA; }
+.gx__gal input { min-height: 34px !important; padding: 4px 6px !important; font-size: .78rem !important; }
+.gx__gal .gx__mini { position: absolute; right: 4px; top: 4px; }
+.gx__gal--pages img { aspect-ratio: 1440 / 816; }
+.gx__gal-more { display: grid; place-items: center; background: #E9E4DA; font-family: var(--f-mono); }
+.gx__wk-reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.gx__wk-reel .mono { margin: 0 0 8px; color: var(--pink); }
+.gx__wk-pal { display: grid; grid-template-columns: repeat(2, auto 1fr); gap: 8px 10px; align-items: center; }
+.gx__wk-pal input[type="color"] { width: 46px; height: 40px; padding: 2px; border: 2px solid var(--navy); background: var(--white); }
+.gx__wk-where { display: flex; flex-wrap: wrap; gap: 14px 30px; padding-bottom: 18px !important; }
+.gx__wk-save { display: flex; justify-content: flex-end; align-items: center; gap: 20px; }
+.gx__wk-save .gx__danger { margin: 0 auto 0 0; }
+@media (max-width: 860px) {
+  .gx__tr--wk { grid-template-columns: minmax(0, 1fr); }
+  .gx__wk-star { margin-left: 0; width: 100%; }
+  .gx__wk-kinds, .gx__wk-grid, .gx__wk-reels { grid-template-columns: minmax(0, 1fr); }
+  .gx__wk-save { flex-direction: column-reverse; align-items: stretch; }
+  .gx__wk-save .gx__danger { margin: 0; }
+}

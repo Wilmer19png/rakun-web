@@ -10,6 +10,7 @@ import { viewParrilla } from './admin-parrilla.js';
 import { viewPlans } from './admin-planes.js';
 import { viewDocuments } from './admin-documentos.js';
 import { viewShoots, viewMeetings } from './admin-agenda.js';
+import { viewWork } from './admin-trabajo.js';
 import { openPasswordDialog } from './password.js';
 import { mountLocation } from './ubicacion.js';
 
@@ -420,7 +421,7 @@ async function viewTeam() {
   if (error) { main.innerHTML = ''; fail(error); return; }
   staff = data;
   const isAdmin = me.role === 'admin';
-  main.innerHTML = head('09', 'Quiénes trabajan aquí', 'Equipo', isAdmin ? '<button class="gx__btn gx__btn--dark" type="button" data-new-staff>+ Invitar al equipo</button>' : '') + `
+  main.innerHTML = head('10', 'Quiénes trabajan aquí', 'Equipo', isAdmin ? '<button class="gx__btn gx__btn--dark" type="button" data-new-staff>+ Invitar al equipo</button>' : '') + `
     <div class="gx__team">
       ${data.map((s) => `
         <div class="gx__person">
@@ -467,6 +468,7 @@ const VIEWS = {
   grabaciones: () => viewShoots(ctx()),
   reuniones: () => viewMeetings(ctx()),
   documentos: () => viewDocuments(ctx()),
+  trabajo: (o) => viewWork(ctx(), o),
   planes: (o) => viewPlans(ctx(), o),
   equipo: viewTeam,
 };

@@ -9,6 +9,7 @@ import { RakunEye } from '../eye.js';
 import '../app/util.js';                                 // campos de WhatsApp: solo números
 import { mountLocation } from '../app/ubicacion.js';
 import { $, $$, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from '../common.js';
+import { loadWorks, projectUrl } from '../trabajo/data.js';
 
 const small = window.matchMedia('(max-width: 700px)').matches;   // celular
 const pad = (n) => String(n).padStart(2, '0');
@@ -23,6 +24,7 @@ let lenis = null;
 function initLenis() {
   if (reduced || !window.Lenis) return;
   lenis = new window.Lenis({ lerp: 0.16, smoothWheel: true });
+  window.lenis = lenis;                                  // para pausarlo desde otros módulos (trabajo/ui.js)
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
 }
@@ -350,7 +352,19 @@ function initTapes() {
   const btn = $('[data-player-btn]');
   const tc = $('[data-player-tc]');
   const ph = $('[data-player-ph]');
-  const cta = $('.player__cta', player);
+  const cta = $('.player__cta[data-guion-open]', player);
+  const workBtn = $('[data-player-work]', player);
+  // proyectos publicados con «En videoteca»: el casete de ese video lleva a su página
+  let workByYt = {};
+  loadWorks().then((ws) => {
+    ws.filter((w) => w.kind === 'video' && w.in_videoteca && w.youtube_id).forEach((w) => { workByYt[w.youtube_id] = w; });
+    showWork(current);
+  });
+  const showWork = (spine) => {
+    const w = !('empty' in spine.dataset) && workByYt[spine.dataset.yt];
+    workBtn.hidden = !w;
+    if (w) workBtn.href = projectUrl(w);
+  };
   const set = (key, text) => { $(`[data-player-${key}]`).textContent = text; };
   let timers = [];
   let tcStart = performance.now();
@@ -384,6 +398,7 @@ function initTapes() {
     set('name', d.name); set('kind', d.kind); set('client', d.client); set('year', d.year); set('did', d.did); set('desc', d.desc || '');
     ph.hidden = !('empty' in d);
     cta.hidden = !('empty' in d);
+    showWork(spine);
     btn.hidden = 'empty' in d;
     btn.setAttribute('aria-label', `Reproducir ${d.name}`);
     // cambio de casete: negro, estática y PLAY, a pocos cuadros

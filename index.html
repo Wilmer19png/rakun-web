@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@800;900&display=swap">
   <link rel="preload" href="fonts/KnuckleDown.otf" as="font" type="font/otf" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="trabajo/trabajo.css">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -253,6 +254,7 @@
   <nav class="hdr__nav" id="menu" aria-label="Principal">
     <ul>
       <li><button class="hdr__mega-btn" type="button" aria-expanded="false" aria-controls="mega" data-mega-btn>Lo que hacemos <svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2.2"/></svg></button></li>
+      <li><a href="#trabajo" data-spy>Trabajo</a></li>
       <li><a href="#enfoque" data-spy>Enfoque</a></li>
       <li><a href="#estudio" data-spy>Estudio</a></li>
       <li><a href="#planes" data-spy>Planes</a></li>
@@ -359,10 +361,80 @@
   </section>
 
   <!-- ==============================================================
-       002 · EN QUÉ NOS ENFOCAMOS
+       002 · NUESTRO TRABAJO — franjas de lado a lado + reels
+       (los proyectos salen del gestor: trabajo/data.js)
+       ============================================================== -->
+  <section class="sec sec--cream wk" id="trabajo" aria-labelledby="wk-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">002</span><span class="rail__label">Nuestro trabajo</span></div>
+    <div class="sec__body wk__head">
+      <h2 class="wk__title" id="wk-title">Nuestro<br>trabajo<svg class="wk__burst" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg></h2>
+      <figure class="wk__stamp" aria-hidden="true" data-parallax>
+        <span class="stamp"><span class="stamp__word">RAK<span>Ü</span>N</span><span class="stamp__bar"><span>VISUAL</span><span>DESIGN</span></span></span>
+        <figcaption class="mono">Sello RAKÜN</figcaption>
+      </figure>
+    </div>
+    <div class="wk__bands" data-work-bands></div>
+    <div class="wk__reels" data-work-reels hidden></div>
+    <p class="wk__all"><a class="wk__all-btn mono" href="trabajo.html">Ver todos los proyectos <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a></p>
+  </section>
+
+  <!-- ==============================================================
+       003 · MARCAS E IDENTIDADES — la mesa de trabajo (tipo InDesign)
+       ============================================================== -->
+  <section class="sec sec--cream idn" id="identidades" aria-labelledby="idn-title" data-idn hidden>
+    <div class="rail" aria-hidden="true"><span class="rail__num">003</span><span class="rail__label">Identidades</span></div>
+    <div class="sec__body">
+      <div class="idn__head">
+        <h2 class="wk__title wk__title--md" id="idn-title">Marcas e<br>identidades<svg class="wk__burst" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg></h2>
+        <p class="mono idn__hint">Toca una marca para abrir su manual</p>
+      </div>
+      <div class="idn__app" data-idn-app></div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       004 · PÁGINAS WEB — el computador antiguo
+       ============================================================== -->
+  <section class="sec sec--navy wbs" id="webs" aria-labelledby="wbs-title" data-webs hidden>
+    <div class="rail" aria-hidden="true"><span class="rail__num">004</span><span class="rail__label">Páginas web</span></div>
+    <div class="sec__body wbs__body">
+      <div class="wbs__copy">
+        <h2 class="wk__title wk__title--md" id="wbs-title">Páginas<br>web<svg class="wk__burst" viewBox="-50 -50 100 100" aria-hidden="true"><use href="#rk-burst"/></svg></h2>
+        <p class="wbs__lede">Sitios, tiendas y apps que hicimos. Abre una ventana para ver su presentación.</p>
+        <ol class="wbs__list" data-webs-list></ol>
+        <a class="link" href="web.html#planes">Ver los planes de web <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </div>
+      <figure class="pc">
+        <div class="pc__case">
+          <div class="pc__bezel">
+            <div class="pc__screen" data-webs-screen></div>
+          </div>
+          <div class="pc__chin"><span class="mono">RAKÜN · 26</span><span class="pc__vent" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="pc__led" aria-hidden="true"></span></div>
+        </div>
+        <div class="pc__base" aria-hidden="true"></div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       005 · MANIFIESTO
+       ============================================================== -->
+  <section class="sec sec--pink manifesto" id="manifiesto" aria-labelledby="mf-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Manifiesto</span></div>
+    <div class="manifesto__sticky">
+      <h2 class="manifesto__text" id="mf-title" aria-label="No hacemos que te veas bien. Hacemos que no puedan dejar de mirarte.">
+        <span aria-hidden="true" data-words>No hacemos que te veas bien. Hacemos que no puedan dejar de <strong>mirarte</strong></span>
+      </h2>
+      <span class="manifesto__eye" aria-hidden="true"><svg data-eye="eye-mf"></svg></span>
+      <p class="manifesto__sign mono" aria-hidden="true"><span>— RAKÜN</span><span class="sticker sticker--cream">Manifiesto · 005</span></p>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       006 · EN QUÉ NOS ENFOCAMOS
        ============================================================== -->
   <section class="sec sec--cream focus" id="enfoque" aria-labelledby="focus-title">
-    <div class="rail" aria-hidden="true"><span class="rail__num">002</span><span class="rail__label">Enfoque</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Enfoque</span></div>
 
     <div class="sec__body">
       <div class="focus__head">
@@ -430,19 +502,6 @@
     </div>
   </section>
 
-  <!-- ==============================================================
-       003 · MANIFIESTO
-       ============================================================== -->
-  <section class="sec sec--pink manifesto" id="manifiesto" aria-labelledby="mf-title">
-    <div class="rail" aria-hidden="true"><span class="rail__num">003</span><span class="rail__label">Manifiesto</span></div>
-    <div class="manifesto__sticky">
-      <h2 class="manifesto__text" id="mf-title" aria-label="No hacemos que te veas bien. Hacemos que no puedan dejar de mirarte.">
-        <span aria-hidden="true" data-words>No hacemos que te veas bien. Hacemos que no puedan dejar de <strong>mirarte</strong></span>
-      </h2>
-      <span class="manifesto__eye" aria-hidden="true"><svg data-eye="eye-mf"></svg></span>
-      <p class="manifesto__sign mono" aria-hidden="true"><span>— RAKÜN</span><span class="sticker sticker--cream">Manifiesto · 003</span></p>
-    </div>
-  </section>
 
   <!-- ==============================================================
        004 · MARQUEE
@@ -462,7 +521,7 @@
        006 · ESTUDIO: proceso, videos, cifras, testimonios
        ============================================================== -->
   <section class="sec sec--cream studio" id="estudio" aria-label="Estudio">
-    <div class="rail" aria-hidden="true"><span class="rail__num">005</span><span class="rail__label">Estudio</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Estudio</span></div>
 
     <div class="sec__body">
 
@@ -594,7 +653,7 @@
        007 · CTA FINAL — VER PLANES
        ============================================================== -->
   <section class="sec sec--navy cta" id="planes" aria-labelledby="cta-title">
-    <div class="rail" aria-hidden="true"><span class="rail__num">006</span><span class="rail__label">Planes</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">008</span><span class="rail__label">Planes</span></div>
     <div class="sec__body cta__body">
       <h2 class="cta__title reveal" id="cta-title"><span>¿Listo para que</span> <span class="pink">te vean?</span></h2>
 
@@ -628,7 +687,7 @@
      008 · FOOTER
      ================================================================== -->
 <footer class="sec sec--cream ftr" id="contacto">
-  <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Contacto</span></div>
+  <div class="rail" aria-hidden="true"><span class="rail__num">009</span><span class="rail__label">Contacto</span></div>
   <div class="sec__body">
     <div class="ftr__top">
       <a class="logo-h" href="#inicio" aria-label="RAKÜN Visual Design, volver al inicio">
@@ -675,5 +734,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script type="module" src="main.js"></script>
+<script type="module" src="trabajo/home.js"></script>
 </body>
 </html>

@@ -154,3 +154,19 @@ El correo gratis de Supabase solo le escribe a tu equipo y muy pocas veces por h
 5. **Authentication → Emails → Templates → Reset password**: asunto `Crea tu nueva contraseña · RAKÜN` y en el cuerpo pega todo `supabase/correos/recuperar-contrasena.html`.
 
 Gmail permite hasta unos 500 correos al día: de sobra para recuperar contraseñas. Si algún día tienen dominio propio (rakun.co), se cambia a un servicio como Resend.
+
+## Fase 6 · «Nuestro trabajo» (los proyectos de la página)
+
+1. **SQL Editor → New query** → pega todo `supabase/fase6.sql` → **Run**. Crea:
+   - la tabla `works` (los proyectos que se ven en la página; los publicados los puede leer cualquiera, solo el equipo los cambia),
+   - la carpeta pública `trabajo` en Storage (fragmentos, imágenes y páginas de manuales; máximo 50 MB por archivo),
+   - y carga los proyectos que ya estaban: los 6 videos de la videoteca, los reels de Doc Mariana Hoyos y la identidad de Eduardo López Jaramillo.
+2. Listo: en el gestor aparece **08 · Nuestro trabajo**. Desde ahí se agregan, publican y ordenan los proyectos.
+
+Mientras no corras este archivo, la página muestra los mismos proyectos desde una copia de respaldo (`trabajo/seed.js`), así que nada se ve vacío.
+
+Recomendaciones para los archivos:
+- **Fragmentos:** 8 a 12 segundos, sin sonido, MP4 (H.264) a 1920 px de ancho. Lo ideal es que pesen menos de 4 MB.
+- **Imágenes:** se achican solas a WebP al subirlas.
+- **Manual de marca:** sube el PDF y cada página se convierte en imagen ahí mismo (tarda más o menos un minuto).
+- **Video completo:** va como enlace de YouTube; no ocupa espacio.
