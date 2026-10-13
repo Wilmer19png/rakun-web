@@ -35,8 +35,8 @@ export const groupOf = (w) => {
 };
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-/** Solo enlaces http(s); cualquier otra cosa se descarta. */
-export const safeUrl = (u) => (/^https?:\/\//i.test(String(u || '')) ? String(u) : '');
+/** Solo enlaces http(s) o archivos de la propia página (assets/…); cualquier otra cosa se descarta. */
+export const safeUrl = (u) => (/^(https?:\/\/|assets\/)/i.test(String(u || '')) ? String(u) : '');
 export const projectUrl = (w) => `proyecto.html?p=${encodeURIComponent(w.slug)}`;
 export const ytThumb = (id, q = 'maxresdefault') => `https://i.ytimg.com/vi/${id}/${q}.jpg`;
 export const cover = (w) => safeUrl(w.cover_url) || (w.youtube_id ? ytThumb(w.youtube_id) : '');

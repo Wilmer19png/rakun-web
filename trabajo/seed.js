@@ -29,4 +29,8 @@ export const SEED = [
     summary: 'El ojo que observa y el estallido que rompe la contención.',
     description: 'La identidad de ELJ se construye sobre la tensión entre el intelectual reservado y el poeta transgresor. El ojo representa su intelecto y su rol de observador; el estallido es la ruptura de esa contención: su «yo» interior, la energía creativa que emerge desde el centro mismo de su percepción.',
     palette: ['#FF2C68', '#272727', '#FFF4C8'] },
+  { slug: 'pregon-de-la-plaza-web', kind: 'web', category: 'web', title: 'Pregón de la Plaza', client: 'Proyecto transmedia', year: 2026, did: 'Diseño UI · Desarrollo', sort: 9,
+    summary: 'La página del proyecto transmedia: las voces, la galería y la memoria de los mercados de Pereira.',
+    description: 'La casa en internet de «El pregón de la plaza». Una página que lleva a la gente a escuchar a quienes trabajan en Mercasa e Impala: sus historias, sus fotos y el «caos con sentido» de la plaza, con la misma estética vernácula del documental.',
+    site_url: 'https://pregondelaplaza.netlify.app/', cover_url: 'assets/trabajo/pregon-web.jpg' },
 ];

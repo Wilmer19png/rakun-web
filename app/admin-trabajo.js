@@ -33,7 +33,7 @@ const ytId = (v) => {
 };
 const slugify = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'proyecto';
 const mb = (n) => `${(n / 1048576).toFixed(1).replace('.', ',')} MB`;
-const thumbOf = (w) => safeUrl(w.cover_url) || (w.youtube_id ? `https://i.ytimg.com/vi/${w.youtube_id}/hqdefault.jpg` : '');
+const thumbOf = (w) => (/^assets\//.test(w.cover_url || '') ? w.cover_url : safeUrl(w.cover_url)) || (w.youtube_id ? `https://i.ytimg.com/vi/${w.youtube_id}/hqdefault.jpg` : '');
 
 /* ---------- archivos ---------- */
 function publicUrl(sb, path) { return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl; }

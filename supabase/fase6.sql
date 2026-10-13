@@ -86,3 +86,10 @@ insert into public.works (slug, kind, category, title, client, did, summary, des
  'La identidad de ELJ se construye sobre la tensión entre el intelectual reservado y el poeta transgresor. El ojo representa su intelecto y su rol de observador; el estallido es la ruptura de esa contención: su «yo» interior, la energía creativa que emerge desde el centro mismo de su percepción.',
  '{"#FF2C68","#272727","#FFF4C8"}', 'publicado', 8)
 on conflict (slug) do nothing;
+
+insert into public.works (slug, kind, category, title, client, year, did, summary, description, site_url, cover_url, status, sort) values
+('pregon-de-la-plaza-web', 'web', 'web', 'Pregón de la Plaza', 'Proyecto transmedia', 2026, 'Diseño UI · Desarrollo',
+ 'La página del proyecto transmedia: las voces, la galería y la memoria de los mercados de Pereira.',
+ 'La casa en internet de «El pregón de la plaza». Una página que lleva a la gente a escuchar a quienes trabajan en Mercasa e Impala: sus historias, sus fotos y el «caos con sentido» de la plaza, con la misma estética vernácula del documental.',
+ 'https://pregondelaplaza.netlify.app/', 'assets/trabajo/pregon-web.jpg', 'publicado', 9)
+on conflict (slug) do nothing;
