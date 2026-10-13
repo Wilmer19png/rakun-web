@@ -597,7 +597,7 @@ initGuion();
 initAnchors();
 
 const hdrEye = $('[data-eye="eye-hdr"]');
-if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).followCursor();
+if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).explore();   // no persigue el cursor
 
 // celular: el texto del set ya no invita a "pasar por el plano" (el plano no se muestra)
 if (small) {

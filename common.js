@@ -84,6 +84,62 @@ export function initHeader(lenisGetter) {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
   $$('.hdr__nav a').forEach((a) => a.addEventListener('click', closeMenu));
   initNavSpy();
+  initStart();
+}
+
+/* ---------- "Iniciar proyecto": primero eliges el mundo y te lleva a sus planes ----------
+   Cualquier enlace con data-start abre este cuadro (sin JS, el enlace va a #planes). */
+const START = [
+  { href: 'marca.html#planes', go: 'Ver los planes' },
+  { href: 'produccion.html#guion', go: 'Escribir tu guion de cotización' },
+  { href: 'web.html#planes', go: 'Ver los planes' },
+];
+let startBox = null;
+let startFrom = null;
+function closeStart() {
+  if (!startBox || startBox.hidden) return;
+  startBox.hidden = true;
+  root.classList.remove('start-open');
+  getLenis()?.start();
+  startFrom?.focus({ preventScroll: true });
+}
+function openStart(from) {
+  if (!startBox) {
+    startBox = document.createElement('div');
+    startBox.className = 'start';
+    startBox.hidden = true;
+    startBox.innerHTML = `
+      <div class="start__scrim" data-start-close></div>
+      <div class="start__box" role="dialog" aria-modal="true" aria-labelledby="start-title" tabindex="-1" data-lenis-prevent>
+        <button class="start__x mono" type="button" data-start-close aria-label="Cerrar">✕</button>
+        <p class="mono start__k">Iniciar proyecto</p>
+        <h2 class="start__title" id="start-title">¿Qué quieres <em>iniciar?</em></h2>
+        <div class="start__list">${WORLDS.map((w, i) => `
+          <a class="start__ticket" href="${START[i].href}" style="--t: ${w.c}">
+            <span class="mono start__tags">${w.n} · ${w.tags}</span>
+            <span class="start__name">${w.name}</span>
+            <span class="mono start__go">${START[i].go} →</span>
+          </a>`).join('')}</div>
+      </div>`;
+    document.body.append(startBox);
+    $$('[data-start-close]', startBox).forEach((b) => b.addEventListener('click', closeStart));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeStart(); });
+  }
+  startFrom = from;
+  startBox.hidden = false;
+  root.classList.add('start-open');
+  getLenis()?.stop();
+  $('.start__box', startBox).focus({ preventScroll: true });
+}
+function initStart() {
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-start]');
+    if (!a) return;
+    e.preventDefault();
+    e.stopPropagation();                                 // antes que el desplazamiento a #planes de la página
+    closeMenu();
+    openStart(a);
+  }, true);
 }
 
 /* ---------- Menú de celular (opción C del lienzo) ----------
@@ -131,7 +187,7 @@ function buildMobileNav() {
       ${sections ? `<p class="mono mnav__k">En esta página</p><div class="mnav__secs">${sections}</div>` : ''}
     </nav>
     <div class="mnav__foot">
-      ${cta ? `<a class="mnav__cta" href="${escHTML(cta.getAttribute('href'))}">${escHTML(cta.textContent.trim())} <span aria-hidden="true">↗</span></a>` : ''}
+      ${cta ? `<a class="mnav__cta" href="${escHTML(cta.getAttribute('href'))}"${cta.hasAttribute('data-start') ? ' data-start' : ''}>${escHTML(cta.textContent.trim())} <span aria-hidden="true">↗</span></a>` : ''}
       <div class="mnav__row">
         ${login ? `<a class="mnav__ghost mono" href="${escHTML(login.getAttribute('href'))}">Iniciar sesión</a>` : ''}
         <a class="mnav__ghost mono" href="${waLink()}" target="_blank" rel="noopener">WhatsApp ↗</a>

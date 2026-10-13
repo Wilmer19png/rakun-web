@@ -216,6 +216,8 @@ function wakeEyes() {
   Pointer.init();
   Object.entries(liveEyes).forEach(([id, eye]) => {
     if (id === 'eye-cta') eye.watch($('[data-plans]'));
+    // el ojo del encabezado no persigue el cursor: mira a su aire y parpadea
+    else if (id === 'eye-hdr') eye.explore();
     else eye.followCursor();
   });
 }

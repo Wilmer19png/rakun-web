@@ -87,4 +87,4 @@ initLibrary();
 initAnchors();
 
 const hdrEye = $('[data-eye="eye-hdr"]');
-if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).followCursor();
+if (hdrEye) new RakunEye(hdrEye, { prefix: 'eye-hdr' }).explore();   // no persigue el cursor

@@ -779,3 +779,18 @@
   .sos__dialog { position: static; width: 100%; margin-top: 16px; rotate: 0deg; }
   .sos__dialog::after, .sos__dialog::before { display: none; }
 }
+
+/* Marca personal: la barra de secciones bajo el encabezado, como en Producción y Web (solo en computador) */
+.mk-hero__main { min-width: 0; }
+.p-subnav {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px 28px;
+  padding: 14px var(--gutter);
+  border-bottom: 1px solid var(--line-dark);
+  color: var(--mist);
+}
+.p-subnav a { transition: color .2s; }
+.p-subnav a:hover { color: var(--white); }
+.p-subnav__here { color: var(--pink); font-weight: 500; }
+.p-subnav__types { margin-left: auto; }
+@media (max-width: 960px) { .p-subnav__types { display: none; } }
+@media (max-width: 700px) { .p-subnav { display: none; } }
