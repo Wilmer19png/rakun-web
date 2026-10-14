@@ -2,9 +2,9 @@
    RAKÜN · la página de cada proyecto (proyecto.html?p=<slug>)
    Lienzo «Página de cada proyecto · v2» (referencia Bruut, estilo RAKÜN):
    negro y rosado alternados, escenas de lado a lado y texto centrado.
-   Video: portada → escena 1 (con «Ver el video completo» pegado al centro) →
+   Video: portada → escena 1 →
    el proyecto (rosado) → escena 2 → la experiencia (negro, con la explosión) →
-   escena 3 → la frase (rosado) → lo que sigue.
+   escena 3 → la frase (rosado) → lo que sigue (con «Ver el video completo»).
    Identidad: portada → el proyecto → el manual completo → lo que sigue.
    Web: portada → la presentación → el proyecto → piezas → lo que sigue.
    Cada parte solo aparece si el proyecto la tiene.
@@ -56,14 +56,12 @@ function scene(w, src, label, { main = false } = {}) {
   const file = safeUrl(src);
   const img = cover(w);
   if (!file && !(main && img)) return '';
-  const full = main && (w.youtube_id || (w.kind === 'video' && file));
   return `
   <section class="pc-scene${main && small && w.frag_v_url ? ' pc-scene--v' : ''}" aria-label="${esc(label)}">
     ${main ? `<img src="${esc(img)}" alt="" decoding="async">` : ''}
     ${file ? `<video data-frag data-src="${esc(file)}" muted loop playsinline preload="none"${main ? ` poster="${esc(img)}"` : ''} aria-hidden="true"></video>` : ''}
     ${file ? `<span class="mono pc-tag"><i></i>${esc(label)}</span>` : ''}
     ${main && file ? '<button class="pj-snd" type="button" aria-label="Activar sonido" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l4 6M21 9l-4 6"/></svg></button>' : ''}
-    ${full ? `<div class="pc-scene__ui"><button class="pc-play" type="button" data-full>${PLAY}Ver el video completo</button></div>` : ''}
   </section>`;
 }
 
@@ -158,6 +156,7 @@ function closing(w, works) {
       <span class="pc-tile__img">${cover(x) ? `<img src="${esc(cover(x))}" alt="" loading="lazy">` : ''}</span>
     </a>`).join('')}
     <div class="pc-next__btns">
+      ${w.kind === 'video' && w.youtube_id ? `<button class="pc-btn pc-btn--play" type="button" data-full>${PLAY}Ver el video completo</button>` : ''}
       <a class="pc-btn" href="trabajo.html">Ver todos los proyectos ↗</a>
       <a class="pc-btn pc-btn--line" href="${more[0]}">${more[1]} ↗</a>
     </div>

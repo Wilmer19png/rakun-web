@@ -705,3 +705,6 @@
   .pc-play { position: static; margin: 0; padding: 12px 16px 11px; font-size: .62rem; }
   .pc-next__btns { position: static; margin-top: 30px; }
 }
+.pc-btn--play { gap: 10px; cursor: pointer; background: var(--yellow); box-shadow: 5px 5px 0 var(--pink); }
+.pc-btn--play:hover, .pc-btn--play:focus-visible { box-shadow: 8px 8px 0 var(--pink); }
+.pc-btn--play svg { width: 14px; height: 14px; fill: currentColor; }
