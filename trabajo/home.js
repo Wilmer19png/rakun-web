@@ -215,6 +215,37 @@ function renderWebs(works) {
     screen.querySelector('[data-close-win]').focus({ preventScroll: true });
   };
   home();
+  renderTerm(webs);
+}
+
+/* ---------- 004 · la terminal: registro de lanzamientos ----------
+   Los puntajes de Lighthouse son reales: se miden en pagespeed.web.dev y se anotan aquí
+   por slug, p. ej. { 'pregon-de-la-plaza-web': [98, 100, 100] } (rendimiento, accesibilidad, SEO).
+   Sin puntajes, la terminal muestra solo datos que salen de los proyectos. */
+const SCORES = {};
+// dónde vive cada sitio, en una palabra
+const where = (url) => { const h = hostOf(url); return /netlify/.test(h) ? 'netlify' : /vercel/.test(h) ? 'vercel' : h ? 'dominio propio' : ''; };
+
+function renderTerm(webs) {
+  const box = $('[data-webs-term]');
+  if (!box) return;
+  const scored = webs.find((w) => SCORES[w.slug]);
+  const years = webs.map((w) => w.year).filter(Boolean);
+  const stats = scored
+    ? SCORES[scored.slug].map((n, i) => [n, ['Rendimiento', 'Accesibilidad', 'SEO'][i], ['y', 'ok', 'c'][i]])
+    : [[webs.length, webs.length === 1 ? 'Sitio en línea' : 'Sitios en línea', 'ok'], [years.length ? Math.max(...years) : '—', 'Último lanzamiento', 'y'], [3, 'Celular · tablet · pc', 'c']];
+  const slug = (w) => esc(w.slug.replace(/-web$/, ''));
+  box.innerHTML = `
+    <div class="term__bar mono" aria-hidden="true"><i></i><i></i><i></i><span>rakun@web — registro de lanzamientos</span></div>
+    <div class="term__body">
+      <div class="term__log mono" role="list" aria-label="Páginas publicadas">
+        <p aria-hidden="true"><span class="t-p">rakun@web</span> <span class="t-d">~ %</span> git log --lanzamientos</p>
+        ${webs.map((w) => `<p role="listitem"><span class="t-y">${esc(w.year || '····')}</span><span class="term__slug">${slug(w)}</span><span class="t-ok">● en línea</span><span class="t-d">${esc(where(w.site_url))}</span></p>`).join('')}
+        <p role="listitem"><span class="t-y">${new Date().getFullYear()}-??</span><span class="term__slug">tu-proyecto</span><span class="t-c">○ en cola</span><a class="t-d term__go" href="web.html#planes">→ cotiza el tuyo</a></p>
+        <p aria-hidden="true"><span class="t-p">rakun@web</span> <span class="t-d">~ %</span> <span class="term__caret"></span></p>
+      </div>
+      <div class="term__stats">${stats.map(([n, label, c]) => `<div><b class="t-${c}">${esc(n)}</b><span class="mono">${esc(label)}</span></div>`).join('')}</div>
+    </div>`;
 }
 
 /* ---------- el sello se mueve más lento que la página (parallax) ---------- */

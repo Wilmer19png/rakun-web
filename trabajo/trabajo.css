@@ -548,3 +548,56 @@
   .idn__page--soon .idn__sw--soon { display: none; }
   .reel__you-t { font-size: 1.6rem; }
 }
+
+/* ---------- 004 · páginas web, más editorial (lienzo «Páginas web · B») ---------- */
+.wbs__kicker { margin: 0 0 8px; color: var(--blue); }
+.wbs__stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.wbs__stack li { padding: 5px 9px 4px; border: 1px solid rgba(243, 240, 234, .35); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; }
+.pc { position: relative; }
+.pc__dim { position: relative; height: 1px; margin: 0 0 26px; background: #8FB7D9; }
+.pc__dim::before, .pc__dim::after { content: ""; position: absolute; top: -5px; width: 1px; height: 11px; background: #8FB7D9; }
+.pc__dim::before { left: 0; } .pc__dim::after { right: 0; }
+.pc__dim span { position: absolute; left: 50%; top: -8px; translate: -50% 0; padding: 0 10px; background: var(--ink-0); color: #8FB7D9; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.pc__fig { margin-top: 16px; color: #8FB7D9; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; }
+
+/* la terminal: de lado a lado, debajo del texto y el computador */
+.wbs .term { grid-column: 1 / -1; margin-top: clamp(20px, 3vw, 44px); border: 2px solid var(--blue); background: #010211; box-shadow: 8px 8px 0 var(--pink); }
+.term__bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; border-bottom: 1px solid rgba(43, 205, 255, .35); color: #8FB7D9; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; }
+.term__bar i { width: 10px; height: 10px; border-radius: 50%; }
+.term__bar i:nth-child(1) { background: var(--pink); } .term__bar i:nth-child(2) { background: var(--yellow); } .term__bar i:nth-child(3) { background: var(--blue); }
+.term__bar span { margin-left: auto; }
+.term__body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 30px; align-items: center; padding: 16px 18px 18px; }
+.term__log p { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; font-size: .8rem; line-height: 1.9; color: #CDE8FF; letter-spacing: .02em; text-transform: none; }
+.term__slug { min-width: 18ch; }
+.term__go { text-decoration: none; }
+.term__go:hover, .term__go:focus-visible { color: var(--yellow); }
+.term__caret { display: inline-block; width: 9px; height: 1.05em; background: var(--blue); vertical-align: -3px; animation: term-blink 1.05s steps(1) infinite; }
+@keyframes term-blink { 50% { opacity: 0; } }
+.term__stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; text-align: center; }
+.term__stats b { display: block; font-family: var(--f-mono); font-size: clamp(1.6rem, 2.4vw, 2.1rem); font-weight: 500; }
+.term__stats .mono { color: #5C6A92; font-size: .56rem; letter-spacing: .1em; line-height: 1.5; }
+.t-p { color: var(--pink); } .t-ok { color: #7CF29C; } .t-y { color: var(--yellow); } .t-c { color: var(--blue); } .t-d { color: #5C6A92; }
+
+/* ---------- 003 · identidades: la tira del proceso (lienzo «Identidades · B») ---------- */
+.idn__proc { margin-top: clamp(48px, 6vw, 80px); padding-top: 14px; border-top: 2px solid var(--navy); }
+.idn__proc-head { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; color: var(--ink-soft); }
+.idn__proc-head span:first-child { color: var(--pink); }
+.idn__steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
+.idn__steps li { display: flex; flex-direction: column; gap: 6px; }
+.idn__step-n { font-family: var(--f-display); font-weight: 900; font-size: clamp(2.4rem, 3.6vw, 3.4rem); line-height: .8; color: var(--pink); }
+.idn__steps b { margin-top: 6px; font-weight: 500; font-size: 1.2rem; }
+.idn__steps li > span:last-child { font-size: .95rem; line-height: 1.45; color: var(--ink-soft); }
+
+@media (prefers-reduced-motion: reduce) { .term__caret { animation: none; } }
+@media (max-width: 1100px) {
+  .term__body { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .pc__dim, .pc__fig { display: none; }
+  .wbs .term { margin-top: 6px; box-shadow: 5px 5px 0 var(--pink); }
+  .term__body { padding: 12px 12px 14px; gap: 18px; }
+  .term__log p { gap: 0 10px; font-size: .72rem; }
+  .term__slug { min-width: 0; }
+  .idn__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 16px; }
+  .idn__proc-head { flex-direction: column; gap: 4px; }
+}
