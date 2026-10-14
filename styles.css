@@ -263,7 +263,7 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
 .has-cursor .cursor { display: block; }
 .has-cursor, .has-cursor * { cursor: none !important; }
 .cursor__dot, .cursor__ring {
-  position: fixed; left: 0; top: 0; z-index: 300;           /* encima de intro, alcantarilla y formularios */
+  position: fixed; left: 0; top: 0; z-index: 1000;          /* encima de todo: intro, alcantarilla, formularios y avisos */
   pointer-events: none; border-radius: 50%;
   will-change: transform;
 }

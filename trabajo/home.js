@@ -2,8 +2,8 @@
    RAKÜN · Inicio: «Nuestro trabajo», «Marcas e identidades» y «Páginas web»
    Todo sale de los proyectos publicados en el gestor (trabajo/data.js):
    - franjas: los videos con ★ (máximo 4; si no hay ★, los 4 primeros)
-   - reels: el primer proyecto de reels (hasta 3 videos verticales)
-   - identidades: hasta 3 marcas; al tocar una, su manual se abre ahí mismo
+   - reels: hasta 4 videos verticales (si faltan, el último espacio invita a los planes)
+   - identidades: hasta 4 marcas (si hay menos, páginas «en maquetación»); al tocar una, su manual se abre ahí mismo
    - webs: hasta 3 sitios en el computador antiguo
    Las secciones sin proyectos se quedan ocultas.
    ========================================================================== */
@@ -52,9 +52,9 @@ function renderBands(works) {
 /* ---------- 002 · los reels (verticales) ---------- */
 function renderReels(works) {
   const box = $('[data-work-reels]');
-  const w = works.find((x) => x.kind === 'reel' && x.reels.length);
-  if (!box || !w) return;
-  const reels = w.reels.slice(0, 3);
+  // hasta 4 reels, de todos los proyectos de reels; si faltan, el último espacio invita a los planes
+  const reels = works.filter((x) => x.kind === 'reel').flatMap((x) => x.reels.map((r) => ({ ...r, w: x }))).slice(0, 4);
+  if (!box || !reels.length) return;
   box.hidden = false;
   box.innerHTML = `
     <div class="wk__reels-copy">
@@ -64,14 +64,20 @@ function renderReels(works) {
       <a class="link" href="libreria.html">Ver la librería de formatos <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
     </div>
     ${reels.map((r, i) => `
-      <button class="reel" type="button" data-reel="${i}" aria-label="Ver ${esc(r.label || `reel ${i + 1}`)} de ${esc(w.title)}">
+      <button class="reel" type="button" data-reel="${i}" aria-label="Ver ${esc(r.label || `reel ${i + 1}`)} de ${esc(r.w.title)}">
         <img src="${esc(safeUrl(r.poster) || (r.yt ? `https://i.ytimg.com/vi/${esc(r.yt)}/oardefault.jpg` : ''))}" alt="" loading="lazy" decoding="async">
-        <span class="reel__cap"><b>${esc(w.title)}</b><span class="mono">${esc(w.client || '')}${r.label ? ` · ${esc(r.label)}` : ''}</span></span>
+        <span class="reel__cap"><b>${esc(r.w.title)}</b><span class="mono">${esc(r.w.client || '')}${r.label ? ` · ${esc(r.label)}` : ''}</span></span>
         <span class="reel__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-      </button>`).join('')}`;
+      </button>`).join('')}
+    ${reels.length < 4 ? `
+      <a class="reel reel--you" href="marca.html#planes">
+        <span class="reel__you-k mono">${pad(reels.length + 1)} · tu turno</span>
+        <span class="reel__you-t">Tu marca,<br>en vertical.</span>
+        <span class="reel__you-go mono">Ver los planes de Redes ↗</span>
+      </a>` : ''}`;
   box.querySelectorAll('[data-reel]').forEach((b) => b.addEventListener('click', () => {
     const r = reels[Number(b.dataset.reel)];
-    openVideo({ yt: r.yt, src: r.video_url, vertical: true, title: `${w.title} · ${r.label || 'reel'}` });
+    openVideo({ yt: r.yt, src: r.video_url, vertical: true, title: `${r.w.title} · ${r.label || 'reel'}` });
   }));
 }
 
@@ -96,8 +102,18 @@ const brandMark = (w) => {
 function renderIdentities(works) {
   const sec = $('[data-idn]');
   const app = $('[data-idn-app]');
-  const ids = works.filter((w) => w.kind === 'identidad').slice(0, 3);
+  const ids = works.filter((w) => w.kind === 'identidad').slice(0, 4);
   if (!sec || !app || !ids.length) return;
+  // páginas «en maquetación» para que la mesa no se vea con una sola marca (siempre 4 páginas)
+  const SOON = [['Salud', 'Consultorio · clínica'], ['Gastronomía', 'Restaurante · café'], ['Música', 'Artista · banda']];
+  const ghosts = SOON.slice(0, Math.max(0, 4 - ids.length));
+  const ghostHTML = ([field, kind], i) => `
+          <div class="idn__page idn__page--soon" aria-hidden="true">
+            <span class="idn__lbl mono">${pad(ids.length + i + 1)} · En maquetación</span>
+            <span class="idn__frame"></span>
+            <span class="idn__sw idn__sw--soon"><i></i><i></i><i></i><i></i></span>
+            <span class="idn__meta"><b>Próxima marca</b><span class="mono">${field} · ${kind}</span></span>
+          </div>`;
   sec.hidden = false;
   let open = -1;
 
@@ -120,6 +136,7 @@ function renderIdentities(works) {
             <span class="idn__meta"><b>${esc(x.title)}</b><span class="mono">${esc(x.did || x.client || '')}</span></span>
             <span class="idn__sel" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           </button>`).join('')}
+        ${ghosts.map(ghostHTML).join('')}
       </div>`;
     const panel = w ? `
       <div class="idn__panel idn__panel--info">
@@ -135,7 +152,7 @@ function renderIdentities(works) {
       </div>` : `
       <div class="idn__panel">
         <p class="idn__ph mono">Páginas</p>
-        <div class="idn__thumbs">${ids.map((x, i) => `<span><i style="background:${esc(x.palette[2] || '#F3F0EA')}"></i>${pad(i + 1)}</span>`).join('')}</div>
+        <div class="idn__thumbs">${ids.map((x, i) => `<span><i style="background:${esc(x.palette[2] || '#F3F0EA')}"></i>${pad(i + 1)}</span>`).join('')}${ghosts.map((g, i) => `<span><i class="idn__thumb-soon"></i>${pad(ids.length + i + 1)}</span>`).join('')}</div>
         <p class="idn__ph mono">Capas</p>
         <span class="idn__row"><i style="background:#FF2C68"></i>Logotipo</span>
         <span class="idn__row"><i style="background:#FFF02B"></i>Paleta de color</span>

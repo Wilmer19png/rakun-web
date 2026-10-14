@@ -82,7 +82,7 @@
 .band:focus-visible { outline: 3px solid var(--yellow); outline-offset: -3px; }
 
 .wk__reels {
-  display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, clamp(170px, 18vw, 260px)); gap: 28px; align-items: end;
+  display: grid; grid-template-columns: minmax(0, 1fr) repeat(4, clamp(150px, 14.6vw, 220px)); gap: 24px; align-items: end;
   margin-top: 0; border-top: 1px solid rgba(243, 240, 234, .14); padding: 64px clamp(24px, 4.4vw, 64px) 56px calc(var(--rail) + var(--gutter));
   background: var(--ink-0); color: var(--cream);
 }
@@ -131,16 +131,16 @@
 .idn__stage { position: relative; display: grid; place-items: center; padding: 48px 28px 40px 46px; background: #3B3A4A; }
 .idn__rx { position: absolute; left: 18px; right: 0; top: 0; height: 18px; background: repeating-linear-gradient(90deg, #9C9AB5 0 1px, transparent 1px 10px) 0 12px / 10px 6px repeat-x, #2A2939; }
 .idn__ry { position: absolute; left: 0; top: 18px; bottom: 0; width: 18px; background: repeating-linear-gradient(0deg, #9C9AB5 0 1px, transparent 1px 10px) 12px 0 / 6px 10px repeat-y, #2A2939; }
-.idn__pages { display: flex; flex-wrap: wrap; justify-content: center; gap: 44px; }
+.idn__pages { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
 .idn__page {
-  position: relative; display: flex; flex-direction: column; width: 250px; height: 340px; padding: 0; cursor: pointer;
+  position: relative; display: flex; flex-direction: column; width: 196px; height: 276px; padding: 0; cursor: pointer;
   border: 0; background: var(--cream); color: var(--navy); text-align: left; box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
 }
 .idn__lbl { position: absolute; left: 0; top: -20px; color: var(--mist); }
 .idn__logo { flex: 1; display: grid; place-items: center; margin: 18px 18px 0; overflow: hidden; background: rgba(27, 26, 53, .04); }
 .idn__logo img { width: 100%; height: 100%; object-fit: contain; }
 .idn__word { display: grid; padding: 10px; font-family: "Poppins", var(--f-body); line-height: 1; text-align: center; }
-.idn__word b { font-weight: 800; font-size: 1.9rem; text-transform: uppercase; }
+.idn__word b { font-weight: 800; font-size: 1.6rem; text-transform: uppercase; }
 .idn__word span { font-weight: 700; font-size: 1.05rem; }
 .idn__sw { display: grid; grid-template-columns: repeat(4, 1fr); height: 34px; margin: 12px 18px 0; }
 .idn__meta { display: grid; gap: 4px; padding: 12px 18px 16px; }
@@ -162,7 +162,7 @@
 .idn__pal b { padding: 2px 5px; background: rgba(255, 255, 255, .85); color: var(--navy); font-weight: 400; font-size: .6rem; }
 .idn__panel { display: flex; flex-direction: column; background: #232231; border-left: 1px solid #2E2D3C; }
 .idn__ph { margin: 0; padding: 9px 12px; color: var(--cream); background: #2C2B3B; border-bottom: 1px solid #2E2D3C; text-transform: uppercase; letter-spacing: .1em; }
-.idn__thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 14px 12px; border-bottom: 1px solid #2A2939; }
+.idn__thumbs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 14px 12px; border-bottom: 1px solid #2A2939; }
 .idn__thumbs span { display: grid; gap: 5px; text-align: center; }
 .idn__thumbs i { display: block; height: 52px; }
 .idn__row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid #2A2939; }
@@ -177,7 +177,7 @@
 .idn__status { display: flex; justify-content: space-between; align-items: center; min-height: 26px; padding: 0 14px; background: #141320; border-top: 1px solid #2E2D3C; }
 
 /* ---------- 004 · páginas web: el computador antiguo ---------- */
-.wbs__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 760px); gap: clamp(40px, 5vw, 72px); align-items: center; }
+.wbs__body { display: grid; grid-template-columns: minmax(450px, 1fr) minmax(0, 860px); gap: clamp(32px, 3vw, 48px); align-items: center; }
 .wbs__copy { display: flex; flex-direction: column; gap: 26px; }
 .wbs__lede { margin: 0; max-width: 34ch; font-size: 1.12rem; line-height: 1.55; color: var(--mist); }
 .wbs__list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line-dark); }
@@ -185,8 +185,8 @@
 .wbs__list li .mono:last-child { color: var(--blue); }
 .wbs__copy .link { align-self: flex-start; color: var(--yellow); }
 .pc { margin: 0; width: 100%; }
-.pc__case { position: relative; padding: 44px 44px 70px; background: linear-gradient(180deg, #E4DCCB, #CFC6B3); border: 3px solid var(--navy); box-shadow: 16px 18px 0 #000; }
-.pc__bezel { padding: 22px; background: #2A2830; border: 3px solid var(--navy); box-shadow: inset 0 0 0 6px #3A3742; }
+.pc__case { position: relative; padding: 30px 30px 62px; background: linear-gradient(180deg, #E4DCCB, #CFC6B3); border: 3px solid var(--navy); box-shadow: 16px 18px 0 #000; }
+.pc__bezel { padding: 16px; background: #2A2830; border: 3px solid var(--navy); box-shadow: inset 0 0 0 6px #3A3742; }
 .pc__screen {
   position: relative; display: flex; flex-direction: column; aspect-ratio: 4 / 3; overflow: hidden;
   border-radius: 38px / 30px; color: #CDE8FF; font-family: var(--f-mono);
@@ -214,7 +214,7 @@
 .pc__url { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; margin: 0 10px 10px; padding: 0 10px; border: 1px solid var(--blue); background: transparent; color: var(--blue); cursor: pointer; font-family: var(--f-mono); font-size: .66rem; letter-spacing: .06em; text-align: left; }
 .pc__url span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pc__url:hover, .pc__url:focus-visible { background: var(--blue); color: var(--ink-0); outline: none; }
-.pc__chin { position: absolute; left: 44px; right: 44px; bottom: 20px; display: flex; justify-content: space-between; align-items: center; color: #5C5A7A; }
+.pc__chin { position: absolute; left: 30px; right: 30px; bottom: 18px; display: flex; justify-content: space-between; align-items: center; color: #5C5A7A; }
 .pc__vent { display: flex; gap: 5px; } .pc__vent i { width: 28px; height: 4px; background: #A99F8B; }
 .pc__led { width: 10px; height: 10px; background: var(--pink); box-shadow: 0 0 8px var(--pink); }
 .pc__base { width: 40%; height: 26px; margin: 0 auto; background: #CFC6B3; border: 3px solid var(--navy); border-top: 0; }
@@ -252,7 +252,7 @@
   .idn__work { grid-template-columns: 44px minmax(0, 1fr); }
   .idn__panel { grid-column: 1 / -1; border-left: 0; border-top: 1px solid #2E2D3C; }
   .idn__panel:not(.idn__panel--info) { display: none; }
-  .wk__reels { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .wk__reels { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .wk__reels-copy { grid-column: 1 / -1; }
 }
 
@@ -278,7 +278,7 @@
   .band__go { min-height: 44px; display: inline-flex; align-items: center; }
   .band__idx { right: 12px; top: 12px; padding: 5px 8px; }
 
-  .wk__reels { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 32px 16px 36px; }
+  .wk__reels { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 32px 16px 36px; }
   .wk__reels-copy { grid-column: 1 / -1; gap: 12px; margin-bottom: 10px; }
   .wk__reels-title { font-size: 2.75rem; }
   .wk__reels-title br { display: none; }
@@ -516,3 +516,35 @@
   .pj-next__cta { width: 100%; }
 }
 .nowrap { white-space: nowrap; }
+
+/* ---------- 4.º espacio de los reels: invita a los planes cuando hay menos de 4 ---------- */
+.reel--you {
+  display: flex; flex-direction: column; justify-content: space-between; padding: 16px;
+  border: 2px dashed var(--cream); box-shadow: 8px 9px 0 var(--yellow); background: var(--navy); text-decoration: none;
+  transition: translate .2s var(--ease-out), box-shadow .2s var(--ease-out);
+}
+.reel--you::after { display: none; }
+.reel__you-k { color: var(--yellow); }
+.reel__you-t { font-family: var(--f-display); font-weight: 900; font-size: clamp(1.5rem, 2.1vw, 2rem); line-height: .9; text-transform: uppercase; }
+.reel__you-go { color: var(--pink); line-height: 1.5; }
+.reel--you:hover, .reel--you:focus-visible { translate: -3px -3px; box-shadow: 11px 12px 0 var(--yellow); }
+
+/* ---------- identidades: páginas «en maquetación» (marco vacío de InDesign) ---------- */
+.idn__page--soon { cursor: default; background: #ECE7DC; box-shadow: 0 10px 26px rgba(0, 0, 0, .3); }
+.idn__page--soon .idn__lbl { color: #8B88AE; }
+.idn__frame {
+  flex: 1; margin: 18px 18px 0; border: 1px solid #8B88AE;
+  background:
+    linear-gradient(to top right, transparent calc(50% - .6px), #8B88AE calc(50% - .6px), #8B88AE calc(50% + .6px), transparent calc(50% + .6px)),
+    linear-gradient(to bottom right, transparent calc(50% - .6px), #8B88AE calc(50% - .6px), #8B88AE calc(50% + .6px), transparent calc(50% + .6px));
+}
+.idn__sw--soon i { border: 1px dashed #8B88AE; }
+.idn__sw--soon i + i { border-left: 0; }
+.idn__page--soon .idn__meta b { color: #8B88AE; }
+.idn__thumb-soon { background: #ECE7DC !important; outline: 1px dashed #8B88AE; outline-offset: -1px; }
+@media (max-width: 700px) {
+  .idn__page--soon { display: grid; }
+  .idn__page--soon .idn__frame { grid-row: 1 / 3; margin: 0; aspect-ratio: 1; }
+  .idn__page--soon .idn__sw--soon { display: none; }
+  .reel__you-t { font-size: 1.6rem; }
+}
