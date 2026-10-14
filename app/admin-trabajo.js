@@ -49,6 +49,16 @@ async function put(sb, folder, blob, name) {
   if (error) throw error;
   return publicUrl(sb, path);
 }
+/** Los errores de subida más comunes, en palabras. */
+function uploadError(err) {
+  const m = String(err?.message || err || '');
+  if (/bucket not found/i.test(m)) return 'No existe la carpeta «trabajo» en Supabase: corre supabase/fase6.sql.';
+  if (/row-level security|unauthorized|403/i.test(m)) return 'Supabase no te dejó subirlo: cierra sesión, vuelve a entrar al gestor e inténtalo otra vez.';
+  if (/exceeded|too large|413|payload/i.test(m)) return 'El archivo supera el límite de Supabase (50 MB).';
+  if (/mime|not supported|415/i.test(m)) return 'Supabase no acepta este tipo de archivo. Expórtalo como MP4 (videos) o JPG/PNG (imágenes).';
+  if (/fetch|network/i.test(m)) return 'Se cortó la conexión mientras subía. Revisa el internet e inténtalo de nuevo.';
+  return `No se pudo subir: ${errorText(err)}`;
+}
 /** Imagen → WebP de máximo `max` px de ancho (los GIF se suben tal cual). */
 async function shrink(file, max = 2000) {
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
@@ -212,10 +222,10 @@ async function editWork(ctx, id) {
         ${k === 'video' ? `
         <fieldset class="gx__fs gx__wk-grid"><legend class="mono">3 · Las escenas (videos de lado a lado)</legend>
           <p class="gx__p gx__wk-wide">La página del proyecto alterna escenas de lado a lado con los textos: escena 1 → «El proyecto» → escena 2 → «La experiencia» → escena 3 → la frase. Cada escena: 8–12 s, horizontal 16:9, sin sonido, MP4 de menos de 4 MB. La que falte, no aparece.</p>
-          ${fileBox('frag_url', 'Escena 1 · fragmento principal (va debajo del título, con «Ver el video completo»)', 'MP4 o WebM · 8–12 s · sin sonido · máx. 4 MB ideal', 'video/mp4,video/webm')}
-          ${fileBox('frag_v_url', 'Escena 1 · versión vertical para celular (opcional)', 'El mismo fragmento en 4:5 o 9:16', 'video/mp4,video/webm')}
-          ${fileBox('frag2_url', 'Escena 2 (después de «El proyecto»)', 'El momento más vistoso', 'video/mp4,video/webm')}
-          ${fileBox('frag3_url', 'Escena 3 (después de «La experiencia»)', 'Otro momento: detrás de cámaras, un plano clave…', 'video/mp4,video/webm')}
+          ${fileBox('frag_url', 'Escena 1 · fragmento principal (va debajo del título)', 'MP4 o WebM · 8–12 s · sin sonido · máx. 4 MB ideal', 'video/*')}
+          ${fileBox('frag_v_url', 'Escena 1 · versión vertical para celular (opcional)', 'El mismo fragmento en 4:5 o 9:16', 'video/*')}
+          ${fileBox('frag2_url', 'Escena 2 (después de «El proyecto»)', 'El momento más vistoso', 'video/*')}
+          ${fileBox('frag3_url', 'Escena 3 (después de «La experiencia»)', 'Otro momento: detrás de cámaras, un plano clave…', 'video/*')}
           ${fileBox('cover_url', 'Foto fija (portada)', 'Si la dejas vacía se usa la miniatura de YouTube', 'image/*')}
           <label class="gx__f gx__wk-wide"><span>Video completo (enlace de YouTube)</span><input name="youtube" value="${esc(w.youtube_id ? `https://youtu.be/${w.youtube_id}` : '')}" placeholder="https://youtu.be/…"><small>Solo se carga si le dan play.</small></label>
         </fieldset>` : ''}
@@ -245,7 +255,7 @@ async function editWork(ctx, id) {
         ${k === 'web' ? `
         <fieldset class="gx__fs gx__wk-grid"><legend class="mono">3 · La página</legend>
           <label class="gx__f gx__wk-wide"><span>Enlace del sitio * (para «¿Seguro que quieres salir?»)</span><input name="site_url" type="url" value="${esc(w.site_url || '')}" placeholder="https://tutienda.com"></label>
-          ${fileBox('frag_url', 'Video de presentación (archivo)', 'MP4 o WebM · o pon un enlace de YouTube abajo', 'video/mp4,video/webm')}
+          ${fileBox('frag_url', 'Video de presentación (archivo)', 'MP4 o WebM · o pon un enlace de YouTube abajo', 'video/*')}
           ${fileBox('cover_url', 'Captura del sitio *', 'Se ve en la ventana y en las tarjetas', 'image/*')}
           <label class="gx__f gx__wk-wide"><span>Video de presentación (enlace de YouTube, opcional)</span><input name="youtube" value="${esc(w.youtube_id ? `https://youtu.be/${w.youtube_id}` : '')}" placeholder="https://youtu.be/…"></label>
         </fieldset>` : ''}
@@ -327,7 +337,14 @@ async function editWork(ctx, id) {
         const file = e.target.files[0];
         if (!file) return;
         keep();
-        const isVid = /^video\//.test(file.type);
+        const isVid = /^video\//.test(file.type) || /\.(mov|m4v|avi|mkv)$/i.test(file.name);
+        // solo MP4 y WebM se ven en todos los navegadores; un .MOV se ve negro en Chrome y Android
+        if (isVid && !/^video\/(mp4|webm)$/.test(file.type)) {
+          const ext = (file.name.split('.').pop() || '').toUpperCase();
+          msg.textContent = `Este video es ${ext}: así no se ve en todos los navegadores. Expórtalo como MP4 (H.264, sin audio) y súbelo de nuevo. En HandBrake: preset «Fast 1080p30», formato MP4.`;
+          e.target.value = '';
+          return;
+        }
         if (isVid && file.size > MAX_VIDEO) { msg.textContent = `El video pesa ${mb(file.size)}: el máximo es 50 MB. Recórtalo a 8–12 s.`; return; }
         msg.textContent = `Subiendo ${file.name}…`;
         try {
@@ -337,7 +354,7 @@ async function editWork(ctx, id) {
           if (old) removeFiles(sb, [old]);
           msg.textContent = isVid && file.size > HEAVY_VIDEO ? `✓ Subido. Ojo: pesa ${mb(file.size)}; lo ideal es menos de 4 MB para que cargue rápido.` : '✓ Subido. Recuerda guardar.';
           draw();
-        } catch (err) { msg.textContent = errorText(err); }
+        } catch (err) { msg.textContent = uploadError(err); }
       });
     });
     $$('[data-clear]', f).forEach((b) => b.addEventListener('click', () => { keep(); const old = w[b.dataset.clear]; w[b.dataset.clear] = null; if (old) removeFiles(sb, [old]); draw(); }));
