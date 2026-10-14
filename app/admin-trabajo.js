@@ -206,14 +206,16 @@ async function editWork(ctx, id) {
           <label class="gx__f"><span>${k === 'identidad' ? 'Marca' : k === 'reel' ? 'Perfil (ej. Veterinaria)' : 'Cliente'}</span><input name="client" maxlength="160" value="${esc(w.client || '')}"></label>
           ${k !== 'reel' ? `<label class="gx__f"><span>Año</span><input name="year" type="number" min="1990" max="2100" value="${esc(w.year || '')}"></label>` : ''}
           ${k !== 'reel' ? `<div class="gx__f gx__wk-wide"><span>Qué hicimos</span><div class="gx__wk-did">${DID.map((d) => `<label class="gx__chip gx__chip--sm${didSet.has(d) ? ' is-on' : ''}"><input type="checkbox" name="did" value="${d}"${didSet.has(d) ? ' checked' : ''}>${d}</label>`).join('')}</div></div>` : ''}
-          <label class="gx__f gx__wk-wide"><span>Línea corta (la de la franja y las tarjetas)</span><input name="summary" maxlength="300" value="${esc(w.summary || '')}" placeholder="La crudeza urbana contada sin filtros."></label>
+          <label class="gx__f gx__wk-wide"><span>Línea corta (la de la franja, las tarjetas y la entrada grande de la portada del proyecto)</span><input name="summary" maxlength="300" value="${esc(w.summary || '')}" placeholder="La crudeza urbana contada sin filtros."></label>
         </fieldset>
 
         ${k === 'video' ? `
-        <fieldset class="gx__fs gx__wk-grid"><legend class="mono">3 · Videos</legend>
-          ${fileBox('frag_url', 'Fragmento principal (arranca solo)', 'MP4 o WebM · 8–12 s · sin sonido · máx. 4 MB ideal', 'video/mp4,video/webm')}
-          ${fileBox('frag_v_url', 'Versión vertical para celular (opcional)', 'El mismo fragmento en 4:5 o 9:16', 'video/mp4,video/webm')}
-          ${fileBox('frag2_url', 'Fragmento 2 (para «La experiencia»)', 'El momento más vistoso', 'video/mp4,video/webm')}
+        <fieldset class="gx__fs gx__wk-grid"><legend class="mono">3 · Las escenas (videos de lado a lado)</legend>
+          <p class="gx__p gx__wk-wide">La página del proyecto alterna escenas de lado a lado con los textos: escena 1 → «El proyecto» → escena 2 → «La experiencia» → escena 3 → la frase. Cada escena: 8–12 s, horizontal 16:9, sin sonido, MP4 de menos de 4 MB. La que falte, no aparece.</p>
+          ${fileBox('frag_url', 'Escena 1 · fragmento principal (va debajo del título, con «Ver el video completo»)', 'MP4 o WebM · 8–12 s · sin sonido · máx. 4 MB ideal', 'video/mp4,video/webm')}
+          ${fileBox('frag_v_url', 'Escena 1 · versión vertical para celular (opcional)', 'El mismo fragmento en 4:5 o 9:16', 'video/mp4,video/webm')}
+          ${fileBox('frag2_url', 'Escena 2 (después de «El proyecto»)', 'El momento más vistoso', 'video/mp4,video/webm')}
+          ${fileBox('frag3_url', 'Escena 3 (después de «La experiencia»)', 'Otro momento: detrás de cámaras, un plano clave…', 'video/mp4,video/webm')}
           ${fileBox('cover_url', 'Foto fija (portada)', 'Si la dejas vacía se usa la miniatura de YouTube', 'image/*')}
           <label class="gx__f gx__wk-wide"><span>Video completo (enlace de YouTube)</span><input name="youtube" value="${esc(w.youtube_id ? `https://youtu.be/${w.youtube_id}` : '')}" placeholder="https://youtu.be/…"><small>Solo se carga si le dan play.</small></label>
         </fieldset>` : ''}
@@ -250,18 +252,17 @@ async function editWork(ctx, id) {
 
         ${k !== 'reel' ? `
         <fieldset class="gx__fs gx__wk-grid"><legend class="mono">4 · Textos</legend>
-          <label class="gx__f gx__wk-wide"><span>Descripción (la sección del ojo)</span><textarea name="description" rows="5">${esc(w.description || '')}</textarea></label>
+          <label class="gx__f gx__wk-wide"><span>Descripción («El proyecto»: texto centrado sobre rosado)</span><textarea name="description" rows="5">${esc(w.description || '')}</textarea></label>
           ${k === 'video' ? `
           <label class="gx__f"><span>La experiencia · título</span><input name="exp_title" maxlength="160" value="${esc(w.exp_title || '')}"></label>
           <label class="gx__f gx__wk-wide"><span>La experiencia · texto</span><textarea name="exp_text" rows="4">${esc(w.exp_text || '')}</textarea></label>
-          <label class="gx__f gx__wk-wide"><span>Frase centrada</span><input name="quote" maxlength="400" value="${esc(w.quote || '')}"></label>
+          <label class="gx__f gx__wk-wide"><span>Frase destacada (recuadro negro sobre rosado)</span><input name="quote" maxlength="400" value="${esc(w.quote || '')}"></label>
           <label class="gx__f"><span>Quién la dijo</span><input name="quote_by" maxlength="160" value="${esc(w.quote_by || '')}"></label>` : ''}
         </fieldset>` : ''}
 
-        ${k === 'video' || k === 'web' ? `
+        ${k === 'web' ? `
         <fieldset class="gx__fs gx__wk-grid"><legend class="mono">5 · Imágenes</legend>
           ${gallery('pieces', 'Piezas que salieron (posts, carruseles…)', 'JPG o PNG · se optimizan solas')}
-          ${k === 'video' ? gallery('bts', 'Detrás de cámaras y spinoffs (carrusel)', 'Fotos o clips cortos') : ''}
         </fieldset>` : ''}
 
         <fieldset class="gx__fs gx__wk-where"><legend class="mono">${k === 'reel' ? '4' : '6'} · Dónde aparece</legend>
@@ -395,7 +396,7 @@ async function editWork(ctx, id) {
     $('[data-del]', f)?.addEventListener('click', async () => {
       if (!window.confirm(`¿Eliminar «${w.title}» y todos sus archivos? No se puede deshacer.`)) return;
       msg.textContent = 'Eliminando…';
-      await removeFiles(sb, [w.cover_url, w.frag_url, w.frag_v_url, w.frag2_url, w.pdf_url, ...w.pages, ...w.pieces.map((p) => p.url), ...w.bts.map((p) => p.url)].filter(Boolean));
+      await removeFiles(sb, [w.cover_url, w.frag_url, w.frag_v_url, w.frag2_url, w.frag3_url, w.pdf_url, ...w.pages, ...w.pieces.map((p) => p.url), ...w.bts.map((p) => p.url)].filter(Boolean));
       const { error } = await sb.from('works').delete().eq('id', w.id);
       if (error) { msg.textContent = errorText(error); return; }
       go('trabajo');
@@ -425,6 +426,8 @@ async function editWork(ctx, id) {
         status: w.status, featured: w.kind === 'video' && !!w.featured, in_videoteca: w.kind === 'video' && !!w.in_videoteca,
         updated_at: new Date().toISOString(),
       };
+      // la escena 3 es de la fase 8: solo se manda si hay archivo (así no falla antes de correr fase8.sql)
+      if (w.kind === 'video' && (w.frag3_url || 'frag3_url' in w)) row.frag3_url = w.frag3_url || null;
       msg.textContent = 'Guardando…';
       let error;
       if (isNew) {
@@ -439,7 +442,7 @@ async function editWork(ctx, id) {
       } else {
         ({ error } = await sb.from('works').update(row).eq('id', w.id));
       }
-      if (error) { msg.textContent = errorText(error); return; }
+      if (error) { msg.textContent = /frag3_url/.test(error.message || "") ? "Para la escena 3 falta correr supabase/fase8.sql en Supabase." : errorText(error); return; }
       go('trabajo');
     });
   };
