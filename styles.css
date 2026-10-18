@@ -1748,3 +1748,26 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
 .start__go { font-size: .62rem; color: var(--pink); }
 .start-open body { overflow: hidden; }
 .start__box:focus { outline: none; }
+
+/* Puerta: «Solo vengo a mirar» como un cuarto boleto, oscuro y punteado (lienzo «Entrada · opción A») */
+.ticket.door__enter {
+  align-self: stretch; margin-top: 0; padding: 10px 28px 10px 22px; gap: 2px 18px; cursor: pointer;
+  background: transparent; color: var(--cream);
+  border: 2px dashed var(--mist); border-left: 10px solid var(--mist); box-shadow: none;
+  font: inherit; text-align: left;
+}
+.ticket.door__enter::after { display: none; }
+.ticket.door__enter .ticket__n { color: var(--mist); }
+.ticket.door__enter .ticket__name { font-size: clamp(1.3rem, 1.9vw, 1.8rem); color: var(--cream); }
+.ticket.door__enter .ticket__line { color: var(--mist); }
+.ticket > .door__enter-ar { grid-column: 2; grid-row: 1 / span 3; align-self: center; font-size: 1.6rem; line-height: 1; transition: transform .15s steps(2); }
+.ticket.door__enter:hover, .ticket.door__enter:focus-visible { color: var(--white); border-color: var(--cream); translate: -4px -4px; box-shadow: 8px 8px 0 rgba(0, 0, 0, .5); }
+.ticket.door__enter:hover .door__enter-ar, .ticket.door__enter:focus-visible .door__enter-ar { transform: translateX(4px); }
+@media (max-width: 700px) {
+  /* celular: compacto, en una sola línea, para que la tapa siga asomada abajo */
+  .ticket.door__enter { display: flex; align-items: center; gap: 10px; min-height: 48px; margin-top: 2px; padding: 10px 16px 10px 12px; border-left-width: 8px; }
+  .ticket.door__enter .ticket__n, .ticket.door__enter .ticket__line { display: none; }
+  .ticket.door__enter .ticket__name { flex: 1; font-size: 1.1rem; }
+  .door__enter-ar { font-size: 1.3rem; }
+}
+@media (min-width: 701px) { .door__ask:has(.ticket.door__enter) { gap: 16px; } }
