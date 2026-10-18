@@ -50,6 +50,8 @@ export async function submitLead(lead) {
   const sb = await getClient();
   const { error } = await sb.from('leads').insert(payload);
   if (error) throw error;
+  // píxel de Meta: una solicitud real (Quiero este plan o el guion de producción)
+  window.rkTrack?.('Lead', { content_name: payload.plan || WORLD_NAME[payload.world] || 'Solicitud', content_category: WORLD_NAME[payload.world] || payload.world });
   return { via: 'db' };
 }
 

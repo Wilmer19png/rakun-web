@@ -29,6 +29,10 @@ export function initContact(scope = document) {
   $$('a[data-social]', scope).forEach((a) => { if (SOCIAL[a.dataset.social]) a.href = SOCIAL[a.dataset.social]; });
 }
 initContact();
+// píxel de Meta: cada vez que alguien abre WhatsApp desde la página (también enlaces creados después)
+document.addEventListener('click', (e) => {
+  if (e.target.closest?.('a[href^="https://wa.me/"]')) window.rkTrack?.('Contact', { content_name: 'WhatsApp' });
+});
 
 /* ---------- Reloj (hora de Colombia) ---------- */
 export function initClock() {

@@ -115,6 +115,8 @@ function render(sb, q, rc) {
     msg.textContent = 'Aceptando…';
     const { data, error } = await sb.rpc('quote_accept', { t: token });
     if (error) { msg.textContent = errorText(error); btn.disabled = false; return; }
+    // píxel de Meta: el cliente aceptó la cotización (valor = el anticipo)
+    if (data === 'aceptada') window.rkTrack?.('SubmitApplication', { content_name: q.number, value: Math.round(t.parts[0].amount), currency: 'COP' });
     if (data !== 'aceptada') msg.textContent = data === 'vencida' ? 'Esta cotización ya venció. Escríbenos y te la actualizamos.' : `Esta cotización está ${data}.`;
     load();
   });
