@@ -620,7 +620,7 @@ function runDoor() {
       try { sessionStorage.setItem('rakun:door', '1'); } catch (e) { /* modo privado */ }
       eye.blink();                                            // guiño cómplice
       if (reduced || small) {                                 // en celular, sin tapa que se levanta ni corte: va directo
-        if (kind === 'page') location.href = href; else done();
+        if (kind === 'page') later(250, () => { location.href = href; }); else done();   // 250 ms: alcanza a salir el aviso al píxel
         return;
       }
       // la tapa de alcantarilla se levanta y se corre en 3 cuadros
@@ -635,9 +635,13 @@ function runDoor() {
     };
 
     // "Solo vengo a mirar": la tapa se corre y entras a la home
-    $('[data-door-enter]', door).addEventListener('click', () => leave('home'));
+    // píxel de Meta: qué eligen en «¿Qué buscas?» (un evento por opción, para verlos separados en Meta)
+    const PICK_EVENT = { marca: 'Entrada_Redes', prod: 'Entrada_Produccion', web: 'Entrada_Web' };
+    const trackPick = (name) => { try { window.fbq?.('trackCustom', name); } catch (e) { /* bloqueado */ } };
+    $('[data-door-enter]', door).addEventListener('click', () => { trackPick('Entrada_SoloMirar'); leave('home'); });
     // los otros mundos (Producción, Web y apps) son páginas aparte
     $$('a[data-door-pick]', door).forEach((a) => a.addEventListener('click', (e) => {
+      trackPick(PICK_EVENT[a.dataset.doorPick] || `Entrada_${a.dataset.doorPick}`);
       e.preventDefault();
       leave('page', e.currentTarget.href);
     }));
