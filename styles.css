@@ -686,6 +686,7 @@ html { scrollbar-color: var(--pink) var(--navy-deep); scrollbar-width: thin; }
   font-size: clamp(3.6rem, 7.6vw, 8.4rem); line-height: .85;
   font-variant-numeric: tabular-nums;
 }
+.stat--word dd { font-size: clamp(2rem, 3.6vw, 3.9rem); line-height: .95; color: var(--pink); margin-top: auto; }
 .stat sup { font-size: .45em; color: var(--pink); vertical-align: .9em; margin-left: .04em; }
 .placeholder-note { margin-top: 16px; color: var(--ink-soft); }
 

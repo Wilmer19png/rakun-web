@@ -8,6 +8,7 @@
 
 import { RakunEye, Pointer } from './eye.js';
 import { $, $$, root, reduced, fine, initClock, initCursor, initHeader, closeMenu, initMegaMenu } from './common.js';
+import { loadCatalog } from './app/catalog.js';
 
 const gsap = window.gsap;
 const anime = window.anime;
@@ -657,6 +658,12 @@ mountEyes();
 initMarquee();
 initTimeline();
 initCarousel();
+// «Lo que dicen» se apaga desde el gestor (09 → Inicio)
+loadCatalog('sitio').then((c) => {
+  if (c?.testimonios !== false) return;
+  const box = $('[data-testimonios]');
+  if (box) { box.hidden = true; window.ScrollTrigger?.refresh(); window.lenis?.resize?.(); }
+});
 initReels();
 initPillars();
 initHeroVideo();

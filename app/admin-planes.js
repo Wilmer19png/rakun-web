@@ -12,7 +12,9 @@ import { REDES as BASE_MARCA, WEB as BASE_WEB, LEVELS, PIECES, priceInCarta, isR
 import { BASE_RATES, BASE_RECIBO } from './quote-sources.js';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
-const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO };
+// lo que se puede prender y apagar en el Inicio (index.html lo lee de plan_catalog id 'sitio')
+const BASE_SITIO = { testimonios: true };
+const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO };
 const st = { world: 'marca', tab: 'planes', cat: 0, carta: 0, lib: 0, draft: {}, saved: {}, info: {} };
 const REC_OPTIONS = ['1 sesión de hasta 3 h', '1 jornada de hasta 6 h', '1 jornada de hasta 6 h con asistente'];
 const COLORS = [['var(--yellow)', 'Amarillo'], ['var(--blue)', 'Azul'], ['var(--pink)', 'Rosado']];
@@ -44,7 +46,7 @@ const TPL = {
 export async function viewPlans(ctx) {
   const { sb, loading, fail, main } = ctx;
   loading();
-  for (const w of ['marca', 'web', 'produccion', 'recibo']) {
+  for (const w of ['marca', 'web', 'produccion', 'recibo', 'sitio']) {
     if (st.draft[w]) continue;
     const { data, error } = await sb.from('plan_catalog').select('content, updated_at').eq('id', w).maybeSingle();
     if (error) { main.innerHTML = ''; fail(error); return; }
@@ -56,7 +58,7 @@ export async function viewPlans(ctx) {
     st.saved[w] = old ? '' : JSON.stringify(st.draft[w]);
     st.info[w] = old ? (w === 'marca' ? 'Lo publicado es del formato anterior (Marca personal): estos son los planes nuevos de Redes, publícalos para que se vean' : 'Aún no se han publicado las tarifas de producción')
       : data ? `Publicado por última vez el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}`
-        : 'Aún no se ha publicado: estos son los precios base';
+        : w === 'sitio' ? 'Aún no se ha publicado: «Lo que dicen» se ve en el Inicio' : 'Aún no se ha publicado: estos son los precios base';
   }
   render(ctx);
 }
@@ -66,9 +68,9 @@ function render(ctx) {
   const w = st.world;
   const scroll = window.scrollY;
   main.innerHTML = head('09', 'Lo que ve el cliente en la página', 'Planes y precios', `
-    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)'], ['recibo', 'Recibo', 'var(--navy)']]
+    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)'], ['recibo', 'Recibo', 'var(--navy)'], ['sitio', 'Inicio', 'var(--mist)']]
       .map(([k, n, c]) => `<button class="gx__chip gx__chip--world${st.world === k ? ' is-on' : ''}" style="--c:${c}" type="button" data-world="${k}">${n}</button>`).join('')}`) +
-    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : w === 'produccion' ? prodHTML() : reciboHTML()) + (`
+    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : w === 'produccion' ? prodHTML() : w === 'sitio' ? sitioHTML() : reciboHTML()) + (`
       <div class="gx__pubbar" data-pubbar>
         <span class="mono" data-pubstate></span>
         <span class="gx__btns">
@@ -171,7 +173,7 @@ async function publish(ctx) {
   btn.disabled = true;
   $('[data-pubstate]').textContent = 'Publicando…';
   const { error } = await sb.from('plan_catalog').upsert({ id: w, content: st.draft[w], updated_by: me.id, updated_at: new Date().toISOString() });
-  if (error) { $('[data-pubstate]').textContent = errorText(error); btn.disabled = false; return; }
+  if (error) { $('[data-pubstate]').textContent = /plan_catalog_id_check/.test(error.message || '') ? 'Falta correr supabase/fase8.sql en Supabase para guardar esto.' : errorText(error); btn.disabled = false; return; }
   st.saved[w] = JSON.stringify(st.draft[w]);
   st.info[w] = `Publicado ahora · ya se ve en la página`;
   syncBar();
@@ -379,6 +381,16 @@ function prodHTML() {
 }
 
 /* ---------- Recibo: los datos que salen en cada cotización ---------- */
+/* ---------- Inicio: secciones que se prenden y se apagan ---------- */
+function sitioHTML() {
+  const d = st.draft.sitio;
+  return `
+    <p class="gx__p">Secciones del Inicio que puedes mostrar u ocultar. Toca «Publicar en la página» para que se aplique.</p>
+    <div class="gx__recibo">
+      <label class="gx__check gx__switch"><input type="checkbox" data-path="testimonios"${d.testimonios !== false ? ' checked' : ''}><span><b>«Lo que dicen»</b> · los testimonios de clientes (en «¿Por qué RAKÜN?»)</span></label>
+    </div>`;
+}
+
 function reciboHTML() {
   const r = st.draft.recibo;
   const area = (label, path, value, rows = 3) => `<label class="gx__f"><span>${label}</span><textarea data-path="${path}" rows="${rows}">${esc(value || '')}</textarea></label>`;
