@@ -48,7 +48,10 @@ export async function submitLead(lead) {
     return { via: 'email' };
   }
   const sb = await getClient();
-  const { error } = await sb.from('leads').insert(payload);
+  // de qué anuncio vino (app/track.js); antes de la fase 11 esas columnas no existen y se envía sin ellas
+  const utm = window.rkUtm || {};
+  let { error } = await sb.from('leads').insert({ ...payload, ...utm });
+  if (error && Object.keys(utm).length && /utm_/.test(error.message || '')) ({ error } = await sb.from('leads').insert(payload));
   if (error) throw error;
   // píxel de Meta: una solicitud real (Quiero este plan o el guion de producción)
   window.rkTrack?.('Lead', { content_name: payload.plan || WORLD_NAME[payload.world] || 'Solicitud', content_category: WORLD_NAME[payload.world] || payload.world });

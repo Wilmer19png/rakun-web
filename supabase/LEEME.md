@@ -210,3 +210,30 @@ La factura electrónica y el pago en línea (Wompi) quedan para otra fase.
 4. **Pagos por tarea** (03 · Proyectos → abrir un proyecto → Dinero del proyecto): el valor de cada entregable. Cada persona ve en *Mis pendientes* lo que lleva por cobrar.
 5. **Comisiones del manager**: se anotan solas al registrar pagos de cotizaciones que están a su nombre, si él cubre el rol «Manager» en 09 → Tarifas y pagos. Planes de Redes → una comisión por cada mes pagado (desde el mes 2, con «Registrar pago del mes» en Dinero del proyecto). Ventas sueltas → una sola vez.
 6. **Pagos y comisiones** (10 · Equipo, solo admin): lo que se le debe a cada quien, con «Marcar pagado».
+
+## Fase 11 · Seguimiento por anuncio y conexión con Meta
+
+**A · Base de datos:** SQL Editor → pega todo `supabase/fase11.sql` → Run (después de las fases 9 y 10).
+
+**B · Seguimiento por anuncio (funciona ya, sin token):** en el Administrador de anuncios, en cada anuncio → *Parámetros de URL*, pega:
+```
+utm_source=meta&utm_medium=pauta&utm_campaign={{campaign.name}}&utm_content={{ad.name}}
+```
+Cada visita y cada solicitud quedan marcadas con su campaña y anuncio. En 11 · Métricas → «Por anuncio» ves personas, solicitudes, ventas y lo vendido de cada anuncio; en cada solicitud, «Vino de un anuncio».
+
+**C · Traer el gasto y los resultados de Meta (una sola vez):**
+1. **Crear la app:** developers.facebook.com → Mis apps → Crear app → tipo *Empresa*, conectada al Business Manager de RAKÜN. Agrega el producto **Marketing API**.
+2. **Usuario del sistema:** Configuración del negocio → Usuarios → *Usuarios del sistema* → Agregar (rol *Administrador*). Asígnale la cuenta publicitaria de RAKÜN (y la app) con permiso de ver rendimiento.
+3. **Token:** en ese usuario del sistema → *Generar token* → elige la app → marca **ads_read** (y *read_insights*) → vencimiento *Nunca*. Cópialo (no lo pegues en el chat ni en la página).
+4. **Guardar el token en Supabase:** Edge Functions → *Secrets* → nuevo secreto `META_TOKEN` = el token.
+5. **Subir la función:** Edge Functions → *Deploy a new function* → nombre `meta-sync` → pega `supabase/functions/meta-sync/index.ts` → Deploy (o `supabase functions deploy meta-sync`).
+6. En el gestor: 11 · Métricas → **Conectar cuenta de RAKÜN** → el ID de la cuenta (act_…) → Guardar. Trae los últimos 30 días.
+7. **Cada noche, solo (opcional):** crea el secreto `CRON_SECRET` con una clave cualquiera y en SQL Editor programa la llamada:
+```sql
+select cron.schedule('meta-sync-noche', '0 6 * * *', $$
+  select net.http_post(url := 'https://TU-PROYECTO.supabase.co/functions/v1/meta-sync',
+    headers := '{"Content-Type":"application/json","x-cron-secret":"TU_CLAVE"}'::jsonb, body := '{"days":7}'::jsonb) $$);
+```
+(necesita las extensiones *pg_cron* y *pg_net* activas en Database → Extensions).
+
+**D · Clientes:** el cliente agrega a RAKÜN como **socio** en su Business Manager (Configuración del negocio → Socios → Agregar socio → ID del negocio de RAKÜN) y le comparte su cuenta publicitaria. Luego en 11 · Métricas → Clientes → «Conectar un cliente» → su act_…. El token de RAKÜN lee su cuenta. Si no se puede, la opción B guarda un token propio del cliente (nadie lo vuelve a ver).

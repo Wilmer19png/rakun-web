@@ -7,8 +7,9 @@
    ========================================================================== */
 import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
+import { metaAdsHTML, metaClients, metaConnectRakun, wireMeta } from './admin-meta.js';
 
-const st = { days: 30, tab: 'rakun' };
+const st = { days: 30, tab: 'rakun', client: null };
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 const big = (n) => (n >= 1e6 ? `$${(n / 1e6).toLocaleString('es-CO', { maximumFractionDigits: 1 })} M` : cop(n));
 const bigH = (n) => `<span class="cur">$</span>${big(n).slice(1)}`;   // la letra grande dibuja el $ como /
@@ -33,13 +34,7 @@ export async function viewMetrics(ctx) {
   let body = '';
 
   if (st.tab === 'clientes') {
-    body = `
-      <div class="mx__soon">
-        <p class="mono">Próxima fase · conexión con Meta</p>
-        <h2>Las métricas de cada cliente, aquí mismo.</h2>
-        <p>Por cliente: su cuenta publicitaria, su píxel y su página de Facebook e Instagram, con alcance, mensajes, gasto y costo por resultado, y la opción de mostrárselas en su portal.</p>
-        <p>Para activarlo hace falta una app de Meta con permiso de lectura de anuncios y que cada cliente agregue a RAKÜN como socio en su Business Manager (sin compartir contraseñas). Los tokens quedan guardados en secreto en Supabase, nunca en la página.</p>
-      </div>`;
+    body = '<div data-meta-clients><p class="mono gx__empty">Cargando…</p></div>';
   } else if (error) {
     body = `<p class="gx__error">${esc(/metrics_summary|page_events/.test(error.message || '') ? 'Falta correr supabase/fase9.sql en Supabase.' : errorText(error))}</p>`;
   } else {
@@ -87,13 +82,12 @@ export async function viewMetrics(ctx) {
         </div>
       </section>
 
-      <section class="mx__card mx__card--meta">
-        <h2 class="mono">Campañas de Meta</h2>
-        <p>Próxima fase: el gasto, los clics y el costo por solicitud de tus campañas, al lado de estas cifras. Mientras tanto, los eventos del píxel (visitas, solicitudes, WhatsApp y «¿Qué buscas?») se ven en el Administrador de eventos de Meta.</p>
-      </section>`;
+      ${metaAdsHTML(m, ctx)}`;
   }
 
   main.innerHTML = head('11', 'Todo medido en un solo lugar', 'Métricas', st.tab === 'rakun' ? ranges : '') + tabs + body;
   $$('[data-days]', main).forEach((b) => b.addEventListener('click', () => { st.days = Number(b.dataset.days); viewMetrics(ctx); }));
   $$('[data-mtab]', main).forEach((b) => b.addEventListener('click', () => { st.tab = b.dataset.mtab; viewMetrics(ctx); }));
+  if (st.tab === 'clientes') metaClients(ctx, $('[data-meta-clients]', main), st);
+  else wireMeta(ctx, main, () => viewMetrics(ctx));
 }
