@@ -52,6 +52,7 @@ export async function submitLead(lead) {
   if (error) throw error;
   // píxel de Meta: una solicitud real (Quiero este plan o el guion de producción)
   window.rkTrack?.('Lead', { content_name: payload.plan || WORLD_NAME[payload.world] || 'Solicitud', content_category: WORLD_NAME[payload.world] || payload.world });
+  window.rkEvent?.('lead', payload.plan || WORLD_NAME[payload.world] || 'Solicitud');
   return { via: 'db' };
 }
 

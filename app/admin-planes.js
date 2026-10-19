@@ -10,11 +10,12 @@ import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
 import { REDES as BASE_MARCA, WEB as BASE_WEB, LEVELS, PIECES, priceInCarta, isRedes } from '../planes/data.js';
 import { BASE_RATES, BASE_RECIBO } from './quote-sources.js';
+import { ROLES, pctFor, leftFor, loadProducts, pctRows } from './pagos.js';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 // lo que se puede prender y apagar en el Inicio (index.html lo lee de plan_catalog id 'sitio')
 const BASE_SITIO = { testimonios: true };
-const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO };
+const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO, pagos: { rows: {}, cover: {} } };
 const st = { world: 'marca', tab: 'planes', cat: 0, carta: 0, lib: 0, draft: {}, saved: {}, info: {} };
 const REC_OPTIONS = ['1 sesión de hasta 3 h', '1 jornada de hasta 6 h', '1 jornada de hasta 6 h con asistente'];
 const COLORS = [['var(--yellow)', 'Amarillo'], ['var(--blue)', 'Azul'], ['var(--pink)', 'Rosado']];
@@ -60,6 +61,17 @@ export async function viewPlans(ctx) {
       : data ? `Publicado por última vez el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}`
         : w === 'sitio' ? 'Aún no se ha publicado: «Lo que dicen» se ve en el Inicio' : 'Aún no se ha publicado: estos son los precios base';
   }
+  // Tarifas y pagos: privado (app_settings, fase 9), solo el admin
+  if (ctx.me.role === 'admin' && !st.draft.pagos) {
+    const [{ data, error }, groups] = await Promise.all([
+      ctx.sb.from('app_settings').select('content, updated_at').eq('id', 'pagos').maybeSingle(),
+      loadProducts(),
+    ]);
+    st.products = groups;
+    st.draft.pagos = { rows: {}, cover: {}, ...clone(data?.content || {}) };
+    st.saved.pagos = JSON.stringify(st.draft.pagos);
+    st.info.pagos = error ? 'Falta correr supabase/fase9.sql en Supabase para guardar los %' : data?.updated_at ? `Guardado el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Aún no se ha guardado: estos son % de ejemplo';
+  }
   render(ctx);
 }
 
@@ -68,15 +80,15 @@ function render(ctx) {
   const w = st.world;
   const scroll = window.scrollY;
   main.innerHTML = head('09', 'Lo que ve el cliente en la página', 'Planes y precios', `
-    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)'], ['recibo', 'Recibo', 'var(--navy)'], ['sitio', 'Inicio', 'var(--mist)']]
+    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)'], ['recibo', 'Recibo', 'var(--navy)'], ['sitio', 'Inicio', 'var(--mist)'], ...(ctx.me.role === 'admin' ? [['pagos', 'Tarifas y pagos 🔒', '#1F8A5B']] : [])]
       .map(([k, n, c]) => `<button class="gx__chip gx__chip--world${st.world === k ? ' is-on' : ''}" style="--c:${c}" type="button" data-world="${k}">${n}</button>`).join('')}`) +
-    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : w === 'produccion' ? prodHTML() : w === 'sitio' ? sitioHTML() : reciboHTML()) + (`
+    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : w === 'produccion' ? prodHTML() : w === 'sitio' ? sitioHTML() : w === 'pagos' ? pagosHTML(ctx) : reciboHTML()) + (`
       <div class="gx__pubbar" data-pubbar>
         <span class="mono" data-pubstate></span>
         <span class="gx__btns">
-          <button class="gx__btn" type="button" data-reset>Volver a los precios base</button>
+          <button class="gx__btn" type="button" data-reset>${w === 'pagos' ? 'Volver a los % de ejemplo' : 'Volver a los precios base'}</button>
           <button class="gx__btn" type="button" data-discard>Descartar cambios</button>
-          <button class="gx__btn gx__btn--dark" type="button" data-publish>Publicar en la página →</button>
+          <button class="gx__btn gx__btn--dark" type="button" data-publish>${w === 'pagos' ? 'Guardar →' : 'Publicar en la página →'}</button>
         </span>
       </div>`);
   window.scrollTo(0, scroll);
@@ -105,6 +117,19 @@ function render(ctx) {
     if (fmt) fmt.textContent = typeof v === 'number' ? cop(v) : '';
     if (el.dataset.rerender) rerender(); else syncBar();
   }));
+  // Tarifas y pagos: cada % y quién cubre cada rol
+  $$('[data-pct]', main).forEach((el) => el.addEventListener('input', () => {
+    const [key, role] = el.dataset.pct.split('|');
+    const v = Math.max(0, Math.min(100, Number(el.value.replace(',', '.')) || 0));
+    d.rows[key] = { ...pctFor(d, key), [role]: v };
+    const left = $(`[data-left="${CSS.escape(key)}"]`, main);
+    if (left) { const l = leftFor(d.rows[key]); left.textContent = `${l} %`; left.classList.toggle('is-bad', l < 0); }
+    syncBar();
+  }));
+  $$('[data-cover]', main).forEach((el) => el.addEventListener('change', () => { d.cover[el.dataset.cover] = el.value || null; syncBar(); }));
+  $('[data-sim]', main)?.addEventListener('change', (e) => { st.sim = e.target.value; rerender(); });
+  // el simulador se actualiza al salir de un % (sin perder el cursor mientras escriben)
+  $$('[data-pct]', main).forEach((el) => el.addEventListener('change', rerender));
   // ★ Recomendado: uno solo por categoría
   $$('[data-hot]', main).forEach((el) => el.addEventListener('change', () => {
     const plans = d.cats[st.cat].plans;
@@ -172,10 +197,12 @@ async function publish(ctx) {
   const btn = $('[data-publish]');
   btn.disabled = true;
   $('[data-pubstate]').textContent = 'Publicando…';
-  const { error } = await sb.from('plan_catalog').upsert({ id: w, content: st.draft[w], updated_by: me.id, updated_at: new Date().toISOString() });
+  const table = w === 'pagos' ? 'app_settings' : 'plan_catalog';
+  const { error } = await sb.from(table).upsert({ id: w, content: st.draft[w], updated_by: me.id, updated_at: new Date().toISOString() });
+  if (error && w === 'pagos') { $('[data-pubstate]').textContent = /app_settings/.test(error.message || '') ? 'Falta correr supabase/fase9.sql en Supabase.' : errorText(error); btn.disabled = false; return; }
   if (error) { $('[data-pubstate]').textContent = /plan_catalog_id_check/.test(error.message || '') ? 'Falta correr supabase/fase8.sql en Supabase para guardar esto.' : errorText(error); btn.disabled = false; return; }
   st.saved[w] = JSON.stringify(st.draft[w]);
-  st.info[w] = `Publicado ahora · ya se ve en la página`;
+  st.info[w] = w === 'pagos' ? 'Guardado ahora · aplica a las ventas nuevas' : `Publicado ahora · ya se ve en la página`;
   syncBar();
 }
 
@@ -381,6 +408,63 @@ function prodHTML() {
 }
 
 /* ---------- Recibo: los datos que salen en cada cotización ---------- */
+/* ---------- Tarifas y pagos (solo admin): % de cada rol por producto ---------- */
+function pagosHTML(ctx) {
+  const d = st.draft.pagos;
+  const rows = pctRows(st.products || []);
+  // simulador: cualquier producto con precio
+  const sellable = (st.products || []).flatMap((g) => g.items.flatMap((it) => (g.kind === 'plan'
+    ? [{ id: `${it.key}|ed`, key: it.key, label: `${g.title.replace('Redes · ', '')} · ${it.name} · solo edición`, price: it.ed, monthly: true },
+      { id: `${it.key}|rec`, key: it.key, label: `${g.title.replace('Redes · ', '')} · ${it.name} · con grabación`, price: it.rec, monthly: true, rec: true }]
+    : it.price ? [{ id: `${it.key}|${it.name}`, key: it.key, label: `${it.name} (${g.title.replace('Carta del club · ', '')})`, price: it.price, monthly: false }] : [])));
+  const sim = sellable.find((x) => x.id === st.sim) || sellable.find((x) => /gestion:Equilibrio\|rec/.test(x.id)) || sellable[0];
+  let simHTML = '';
+  if (sim) {
+    const pct = pctFor(d, sim.key);
+    const parts = ROLES.filter(([r]) => pct[r] && (r !== 'camara' || !sim.key.startsWith('plan:') || sim.rec)).map(([r, n]) => [n, pct[r], sim.price * pct[r] / 100]);
+    const rakun = sim.price - parts.reduce((s, p) => s + p[2], 0);
+    simHTML = `
+      <div class="pg__sim">
+        <p class="mono pg__sim-k">Simulador · si se vende</p>
+        <select data-sim aria-label="Producto a simular">${sellable.map((x) => `<option value="${esc(x.id)}"${x.id === sim.id ? ' selected' : ''}>${esc(x.label)}</option>`).join('')}</select>
+        <p class="pg__sim-p"><span class="cur">$</span>${cop(sim.price).slice(1)}${sim.monthly ? ' / mes' : ''}</p>
+        ${parts.map(([n, p, v]) => `<p class="pg__sim-r"><span>${esc(n)} · ${p} %${n === 'Manager' ? (sim.monthly ? ' cada mes' : ' una vez') : ''}</span><span class="mono">${cop(Math.round(v))}</span></p>`).join('')}
+        <p class="pg__sim-r pg__sim-r--total"><span>Queda RAKÜN · ${Math.round(rakun / (sim.price || 1) * 100)} %</span><span class="mono">${cop(Math.round(rakun))}</span></p>
+      </div>`;
+  }
+  let section = '';
+  const body = rows.map((r) => {
+    const pct = pctFor(d, r.key);
+    const head = r.section !== section ? `<p class="mono pg__sec">${esc((section = r.section))}</p>` : '';
+    const left = leftFor(pct);
+    return `${head}
+      <div class="pg__row">
+        <span class="pg__name">${esc(r.label)}</span>
+        ${ROLES.map(([role]) => (r.key === 'produccion' && role !== 'manager'
+          ? '<span class="pg__na" title="Se arma en cada cotización">·</span>'
+          : `<label class="pg__cell"><input data-pct="${esc(r.key)}|${role}" inputmode="decimal" value="${esc(pct[role] ?? '')}" placeholder="—" aria-label="% ${role} · ${esc(r.label)}"><span>%</span>${role === 'manager' ? `<small class="mono">${r.key.startsWith('plan:') ? 'cada mes' : 'una vez'}</small>` : ''}</label>`)).join('')}
+        <b class="pg__left${left < 0 ? ' is-bad' : ''}" data-left="${esc(r.key)}">${r.key === 'produccion' ? 'según cotización' : `${left} %`}</b>
+      </div>`;
+  }).join('');
+  return `
+    <p class="gx__p">Solo tú ves esta pestaña. Por cada producto pones qué % del precio se lleva cada rol; lo que sobra queda para RAKÜN. El manager cobra <b>cada mes</b> en los planes de Redes (mientras el cliente siga) y <b>una sola vez</b> en todo lo demás. Los precios salen de las otras pestañas.</p>
+    <div class="pg">
+      <div class="pg__table">
+        <div class="pg__row pg__row--h"><span>Producto</span>${ROLES.map(([, n]) => `<span>${esc(n)}</span>`).join('')}<span>Queda RAKÜN</span></div>
+        ${body}
+        <p class="mono qx__dim" style="margin-top:12px">Cámara solo cuenta cuando el plan es «con grabación» · en Producción el reparto del equipo se arma en cada cotización</p>
+      </div>
+      <aside class="pg__side">
+        ${simHTML}
+        <div class="pg__cover">
+          <p class="mono pg__sim-k" style="color:var(--navy)">Quién cubre cada rol</p>
+          ${ROLES.map(([role, n]) => `<label class="pg__cov"><span>${esc(n)}</span><select data-cover="${role}"><option value="">Nadie aún</option>${ctx.staff.map((s) => `<option value="${s.id}"${d.cover?.[role] === s.id ? ' selected' : ''}>${esc(s.full_name || s.email)}</option>`).join('')}</select></label>`).join('')}
+          <p class="mono qx__dim" style="margin-top:8px">Esa persona ve en el tarifario cuánto gana por cada producto</p>
+        </div>
+      </aside>
+    </div>`;
+}
+
 /* ---------- Inicio: secciones que se prenden y se apagan ---------- */
 function sitioHTML() {
   const d = st.draft.sitio;

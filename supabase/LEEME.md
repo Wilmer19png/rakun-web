@@ -186,3 +186,18 @@ Recomendaciones para los archivos:
 3. El cliente abre `cotizacion.html?c=…`, la acepta y la descarga en PDF (el botón imprime la hoja; en el diálogo elige «Guardar como PDF»).
 
 La factura electrónica y el pago en línea (Wompi) quedan para otra fase.
+
+## Fase 8 · Escena 3 y ajustes del Inicio
+
+**SQL Editor → New query** → pega todo `supabase/fase8.sql` → **Run**. Agrega la escena 3 de los proyectos y deja guardar el interruptor de «Lo que dicen» (09 → Inicio).
+
+## Fase 9 · Métricas propias y tarifas del equipo
+
+1. **SQL Editor → New query** → pega todo `supabase/fase9.sql` → **Run**. Crea:
+   - `page_events`: el contador propio de la página (visitas, «¿Qué buscas?», solicitudes). Sin cookies ni datos personales; cualquiera anota, solo el equipo lee.
+   - `app_settings`: ajustes privados del gestor (los % de pago por rol). Solo el equipo lee, solo el admin cambia.
+   - la función `metrics_summary`, que entrega el resumen de **11 · Métricas** ya contado.
+2. En el gestor:
+   - **11 · Métricas**: visitas, páginas más vistas, «¿Qué buscas?», de dónde llegan, solicitudes, planes pedidos y vendidos, cotizaciones y cobros. Las visitas empiezan a contar desde que se suba la página (las pruebas en tu computador no cuentan).
+   - **12 · Tarifario**: todo lo que se vende con su precio y «Tu pago» según los %.
+   - **09 · Planes y precios → Tarifas y pagos 🔒**: los % de cada rol por producto y quién cubre cada rol.

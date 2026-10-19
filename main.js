@@ -637,7 +637,7 @@ function runDoor() {
     // "Solo vengo a mirar": la tapa se corre y entras a la home
     // píxel de Meta: qué eligen en «¿Qué buscas?» (un evento por opción, para verlos separados en Meta)
     const PICK_EVENT = { marca: 'Entrada_Redes', prod: 'Entrada_Produccion', web: 'Entrada_Web' };
-    const trackPick = (name) => { try { window.fbq?.('trackCustom', name); } catch (e) { /* bloqueado */ } };
+    const trackPick = (name) => { try { window.fbq?.('trackCustom', name); } catch (e) { /* bloqueado */ } window.rkEvent?.('pick', name.replace('Entrada_', '')); };
     $('[data-door-enter]', door).addEventListener('click', () => { trackPick('Entrada_SoloMirar'); leave('home'); });
     // los otros mundos (Producción, Web y apps) son páginas aparte
     $$('a[data-door-pick]', door).forEach((a) => a.addEventListener('click', (e) => {

@@ -12,6 +12,8 @@ import { viewDocuments } from './admin-documentos.js';
 import { viewShoots, viewMeetings } from './admin-agenda.js';
 import { viewWork } from './admin-trabajo.js';
 import { viewPending, refreshPendingBadge, teamLoad } from './admin-entregables.js';
+import { viewMetrics } from './admin-metricas.js';
+import { viewTarifario } from './admin-tarifario.js';
 import { openPasswordDialog } from './password.js';
 import { mountLocation } from './ubicacion.js';
 
@@ -503,4 +505,6 @@ const VIEWS = {
   trabajo: (o) => viewWork(ctx(), o),
   planes: (o) => viewPlans(ctx(), o),
   equipo: viewTeam,
+  metricas: () => viewMetrics(ctx()),
+  tarifario: () => viewTarifario(ctx()),
 };
