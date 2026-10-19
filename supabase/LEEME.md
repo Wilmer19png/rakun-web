@@ -201,3 +201,12 @@ La factura electrónica y el pago en línea (Wompi) quedan para otra fase.
    - **11 · Métricas**: visitas, páginas más vistas, «¿Qué buscas?», de dónde llegan, solicitudes, planes pedidos y vendidos, cotizaciones y cobros. Las visitas empiezan a contar desde que se suba la página (las pruebas en tu computador no cuentan).
    - **12 · Tarifario**: todo lo que se vende con su precio y «Tu pago» según los %.
    - **09 · Planes y precios → Tarifas y pagos 🔒**: los % de cada rol por producto y quién cubre cada rol.
+
+## Fase 10 · Permisos, mensajes, pagos por tarea y comisiones
+
+1. **SQL Editor → New query** → pega todo `supabase/fase10.sql` → **Run** (después de las fases 7, 8 y 9).
+2. **Permisos** (10 · Equipo → Personas y permisos → «Permisos» en cada persona): eliges un rol listo (Directora, Manager, Editor/a, Cámara) o marcas sección por sección qué ve y qué edita, y si **ve plata**. Lo que no tiene marcado no le aparece en el menú y la base de datos tampoco se lo entrega. Quien no tiene permisos guardados sigue viendo todo, como hasta ahora.
+3. **Mensajes** (10 · Equipo → Mensajes): a todo el equipo, a una persona o al equipo de un proyecto. Salen arriba en *Mis pendientes* hasta que se marcan como vistos.
+4. **Pagos por tarea** (03 · Proyectos → abrir un proyecto → Dinero del proyecto): el valor de cada entregable. Cada persona ve en *Mis pendientes* lo que lleva por cobrar.
+5. **Comisiones del manager**: se anotan solas al registrar pagos de cotizaciones que están a su nombre, si él cubre el rol «Manager» en 09 → Tarifas y pagos. Planes de Redes → una comisión por cada mes pagado (desde el mes 2, con «Registrar pago del mes» en Dinero del proyecto). Ventas sueltas → una sola vez.
+6. **Pagos y comisiones** (10 · Equipo, solo admin): lo que se le debe a cada quien, con «Marcar pagado».

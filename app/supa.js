@@ -32,7 +32,7 @@ export async function getProfile() {
   const sb = await getClient();
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return null;
-  const { data } = await sb.from('profiles').select('id, email, full_name, role, area, color').eq('id', session.user.id).single();
+  const { data } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
   return data ? { ...data, email: data.email || session.user.email } : null;
 }
 

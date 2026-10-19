@@ -48,6 +48,8 @@ create policy "el admin cambia los ajustes" on public.app_settings
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
 -- ---------- Resumen para 11 · Métricas (solo el equipo) ----------
+-- (la fase 10 cambia metrics_allowed para que respete el permiso de «11 Métricas»)
+create or replace function public.metrics_allowed() returns boolean language sql stable security definer set search_path = public as $$ select public.is_staff() $$;
 -- Devuelve todo ya contado: visitas por página, «¿Qué buscas?», de dónde llegan,
 -- solicitudes y planes pedidos, cotizaciones, lo vendido y lo cobrado.
 create or replace function public.metrics_summary(days int default 30)
@@ -56,7 +58,7 @@ declare
   since timestamptz := now() - greatest(1, least(days, 3650)) * interval '1 day';
   r jsonb;
 begin
-  if not public.is_staff() then raise exception 'Solo el equipo puede ver las métricas'; end if;
+  if not public.metrics_allowed() then raise exception 'Solo el equipo puede ver las métricas'; end if;
   select jsonb_build_object(
     'views',    (select count(*) from page_events where type = 'view' and created_at >= since),
     'visitors', (select count(distinct session) from page_events where type = 'view' and created_at >= since),

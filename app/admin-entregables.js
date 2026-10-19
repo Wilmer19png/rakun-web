@@ -9,6 +9,9 @@ import { $, $$, esc, initials, safeUrl } from './util.js';
 import { errorText } from './supa.js';
 import { WORLD_NAME, WORLD_COLOR } from './content.js';
 import { TEMPLATES, KINDS, DSTATUS } from './quote-sources.js';
+import { unreadMessages } from './admin-equipo.js';
+
+const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 
 const DAY = 86400000;
 const ui = { project: '', kind: '', done: false, open: null };
@@ -92,6 +95,7 @@ export async function viewPending(ctx) {
     <p class="dx__hello">${ui.done ? 'Lo último que entregaste y te aprobaron.' : items.length
       ? `Tienes <b>${items.length} ${items.length === 1 ? 'pendiente' : 'pendientes'}</b> en ${projects.length} ${projects.length === 1 ? 'proyecto' : 'proyectos'}${late ? ` · <b class="dx__red">${late} ${late === 1 ? 'vencido' : 'vencidos'}</b>` : ''}${today ? ` · ${today} para hoy` : ''}.`
       : 'No tienes pendientes. Cuando te asignen un entregable aparece aquí.'}</p>
+    <div data-extras></div>
     ${projects.length > 1 ? `<div class="dx__filters"><span class="mono">Proyecto</span>
       <button class="gx__chip${ui.project ? '' : ' is-on'}" type="button" data-fp="">Todos</button>
       ${projects.map(([id, p]) => `<button class="gx__chip dx__pchip${ui.project === id ? ' is-on' : ''}" type="button" data-fp="${id}" style="--w:${WORLD_COLOR[p?.world] || 'var(--mist)'}">${esc(p?.name || '—')} <b>${items.filter((d) => d.project_id === id).length}</b></button>`).join('')}</div>` : ''}
@@ -109,6 +113,32 @@ export async function viewPending(ctx) {
   $$('[data-fp]', main).forEach((b) => b.addEventListener('click', () => { ui.project = b.dataset.fp; viewPending(ctx); }));
   $$('[data-fk]', main).forEach((b) => b.addEventListener('click', () => { ui.kind = b.dataset.fk; viewPending(ctx); }));
   wireTasks(ctx, items, () => viewPending(ctx));
+  if (!ui.done) pendingExtras(ctx, $('[data-extras]', main));
+}
+
+/* mensajes sin ver + lo que gana (tareas con valor y comisiones) */
+async function pendingExtras(ctx, box) {
+  const { sb, me, staff } = ctx;
+  const [msgs, { data: pays }, { data: coms }] = await Promise.all([
+    unreadMessages(sb, me),
+    sb.from('deliverables').select('pay_amount, status').eq('assignee_id', me.id).not('pay_amount', 'is', null).is('paid_at', null),
+    sb.from('commissions').select('amount, kind, period, created_at').eq('manager_id', me.id).eq('status', 'por_pagar'),
+  ]);
+  const ok = (pays || []).filter((d) => d.status === 'aprobado').reduce((t, d) => t + Number(d.pay_amount), 0);
+  const doing = (pays || []).filter((d) => d.status !== 'aprobado').reduce((t, d) => t + Number(d.pay_amount), 0);
+  const com = (coms || []).reduce((t, c) => t + Number(c.amount), 0);
+  const monthly = (coms || []).filter((c) => c.kind === 'mensual').length;
+  const who = (id) => staff.find((p) => p.id === id);
+  box.innerHTML = `
+    ${msgs.slice(0, 3).map((m) => `<div class="dx__msg"><span class="mono">✉ ${esc(first(who(m.author_id)?.full_name) || 'Equipo')} · ${m.to_kind === 'persona' ? 'para ti' : 'para el equipo'}</span><p>${esc(m.body)}</p><button class="gx__btn" type="button" data-seen="${m.id}">Marcar visto</button></div>`).join('')}
+    ${ok || doing || com ? `<div class="dx__earn">
+      <div><span class="mono">Por cobrar</span><b><span class="cur">$</span>${cop(ok + com).slice(1)}</b><small>${ok ? `${cop(ok)} de tareas aprobadas` : ''}${ok && com ? ' · ' : ''}${com ? `${cop(com)} en comisiones${monthly ? ` (${monthly} mensuales)` : ''}` : ''}</small></div>
+      ${doing ? `<div><span class="mono">En curso</span><b><span class="cur">$</span>${cop(doing).slice(1)}</b><small>se suma cuando te aprueben</small></div>` : ''}
+    </div>` : ''}`;
+  $$('[data-seen]', box).forEach((b) => b.addEventListener('click', async () => {
+    await sb.from('message_reads').insert({ message_id: b.dataset.seen, user_id: me.id });
+    b.closest('.dx__msg').remove();
+  }));
 }
 
 function setBadge(n) {
@@ -133,7 +163,7 @@ function taskHTML(ctx, d) {
   return `
   <article class="dx__task${late ? ' is-late' : ''}${open ? ' is-open' : ''}" style="--w:${WORLD_COLOR[p.world] || 'var(--mist)'}" data-task="${d.id}">
     <div class="dx__task-main">
-      <p><span class="mono dx__pill">${d.review ? 'Revisión' : KINDS[d.kind]}</span> <b>${esc(d.title)}</b></p>
+      <p><span class="mono dx__pill">${d.review ? 'Revisión' : KINDS[d.kind]}</span> <b>${esc(d.title)}</b>${!d.review && d.pay_amount ? ` <span class="mono dx__pay">Ganas ${cop(d.pay_amount)}</span>` : ''}</p>
       <p class="dx__task-sub">${esc(WORLD_NAME[p.world] || '')} · ${esc(p.name || '—')}${p.clients?.name ? ` · ${esc(p.clients.name)}` : ''}${d.review ? ` · lo entregó: ${esc(first(who?.full_name) || '—')}` : rev ? ` · lo revisa: ${esc(first(rev.full_name))}` : ''}</p>
       ${d.delivery_note ? `<p class="dx__task-note">“${esc(d.delivery_note)}”</p>` : ''}
     </div>

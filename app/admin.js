@@ -13,6 +13,8 @@ import { viewShoots, viewMeetings } from './admin-agenda.js';
 import { viewWork } from './admin-trabajo.js';
 import { viewPending, refreshPendingBadge, teamLoad } from './admin-entregables.js';
 import { viewMetrics } from './admin-metricas.js';
+import { can, seesMoney, PRESETS, presetOf } from './perms.js';
+import { openPerms, viewMessages, viewPayouts } from './admin-equipo.js';
 import { viewTarifario } from './admin-tarifario.js';
 import { openPasswordDialog } from './password.js';
 import { mountLocation } from './ubicacion.js';
@@ -47,6 +49,8 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, col: 'nu
   $('[data-me-role]').textContent = me.area || ROLE[me.role];
   $('[data-logout]').addEventListener('click', async () => { await sb.auth.signOut(); location.replace('login.html'); });
   $('[data-change-pass]').addEventListener('click', () => openPasswordDialog(sb, me));
+  // el menú muestra solo las secciones que esta cuenta puede ver (permisos de 10 · Equipo)
+  $$('[data-view]').forEach((b) => { b.hidden = !can(me, b.dataset.view); });
   $$('[data-view]').forEach((b) => b.addEventListener('click', () => go(b.dataset.view)));
   const side = $('.gx__side');
   const navBtn = $('[data-nav-toggle]');
@@ -59,11 +63,11 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, col: 'nu
   $$('[data-close-modal]').forEach((b) => b.addEventListener('click', closeModal));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); closeDrawer(); } });
 
-  const { data } = await sb.from('profiles').select('id, full_name, email, role, area, color').in('role', ['admin', 'equipo']).order('full_name');
+  const { data } = await sb.from('profiles').select('*').in('role', ['admin', 'equipo']).order('full_name');
   staff = data || [];
 
   // avisos en el menú: reuniones que pidieron los clientes y aún no tienen fecha
-  sb.from('meetings').select('id', { count: 'exact', head: true }).eq('status', 'solicitada').then(({ count }) => {
+  if (can(me, 'reuniones')) sb.from('meetings').select('id', { count: 'exact', head: true }).eq('status', 'solicitada').then(({ count }) => {
     const b = $('[data-badge-meet]');
     if (b && count) { b.hidden = false; b.textContent = count; }
   });
@@ -75,7 +79,7 @@ const state = { view: 'solicitudes', world: '', q: '', showLost: false, col: 'nu
 })();
 
 function go(view, opts = {}) {
-  if (!VIEWS[view]) view = 'pendientes';
+  if (!VIEWS[view] || !can(me, view)) view = 'pendientes';
   state.view = view;
   history.replaceState(null, '', `#${view}`);
   $$('[data-view]').forEach((b) => b.classList.toggle('is-on', b.dataset.view === view));
@@ -89,7 +93,7 @@ function go(view, opts = {}) {
 }
 
 /** Herramientas que reciben las secciones que viven en otros módulos. */
-const ctx = () => ({ sb, me, staff, main, head, loading, fail, openModal, closeModal, openDrawer, closeDrawer, go, WORLD, openInvite });
+const ctx = () => ({ sb, me, staff, main, head, loading, fail, openModal, closeModal, openDrawer, closeDrawer, go, WORLD, openInvite, can: (s, e) => can(me, s, e), money: seesMoney(me) });
 
 function openDrawer(html, label = 'Detalle') {
   const box = $('[data-drawer-box]');
@@ -438,18 +442,23 @@ function closeModal() { const m = $('[data-modal]'); if (m) m.hidden = true; }
 const team = { tab: 'personas' };
 function teamHead(actions = '') {
   const tab = (k, n) => `<button type="button" role="tab" class="gx__chip${team.tab === k ? ' is-on' : ''}" aria-selected="${team.tab === k}" data-team-tab="${k}">${n}</button>`;
-  return head('10', 'Quién tiene qué', 'Equipo', actions) + `<div class="qx__tabs" role="tablist" aria-label="Equipo">${tab('personas', 'Personas y accesos')}${tab('carga', 'Carga de trabajo')}</div>`;
+  return head('10', 'Quién tiene qué', 'Equipo', actions) + `<div class="qx__tabs" role="tablist" aria-label="Equipo">${tab('personas', me.role === 'admin' ? 'Personas y permisos' : 'Personas')}${tab('carga', 'Carga de trabajo')}${tab('mensajes', 'Mensajes')}${me.role === 'admin' ? tab('pagos', 'Pagos y comisiones') : ''}</div>`;
 }
 const wireTeamTabs = () => $$('[data-team-tab]', main).forEach((b) => b.addEventListener('click', () => { team.tab = b.dataset.teamTab; viewTeam(); }));
 
 async function viewTeam() {
+  if (team.tab === 'mensajes' || (team.tab === 'pagos' && me.role === 'admin')) {
+    main.innerHTML = `${teamHead(team.tab === 'mensajes' ? '' : '')}<div data-team-box><p class="mono gx__empty">Cargando…</p></div>`;
+    wireTeamTabs();
+    return team.tab === 'mensajes' ? viewMessages(ctx(), $('[data-team-box]', main)) : viewPayouts(ctx(), $('[data-team-box]', main));
+  }
   if (team.tab === 'carga') {
     main.innerHTML = `${teamHead()}<div data-load><p class="mono gx__empty">Cargando…</p></div>`;
     wireTeamTabs();
     return teamLoad(ctx(), $('[data-load]', main));
   }
   loading();
-  const { data, error } = await sb.from('profiles').select('id, full_name, email, role, area, color').in('role', ['admin', 'equipo']).order('full_name');
+  const { data, error } = await sb.from('profiles').select('*').in('role', ['admin', 'equipo']).order('full_name');
   if (error) { main.innerHTML = ''; fail(error); return; }
   staff = data;
   const isAdmin = me.role === 'admin';
@@ -460,6 +469,7 @@ async function viewTeam() {
           <span class="gx__ava gx__ava--lg" style="background:${esc(s.color)}">${esc(initials(s.full_name || s.email))}</span>
           <div><b>${esc(s.full_name || s.email)}</b><p class="mono">${esc(s.area || ROLE[s.role])}</p><small>${esc(s.email || '')}</small></div>
           ${isAdmin ? `<label class="gx__f gx__f--inline"><span>Área</span><input value="${esc(s.area || '')}" data-area="${s.id}" placeholder="Edición y montaje"></label>` : ''}
+          ${isAdmin && s.role !== 'admin' ? `<div class="gx__perm"><span class="mono">${esc((PRESETS[presetOf(s.perms)] || { name: 'Personalizado' }).name.split(' (')[0])}</span><button class="gx__btn" type="button" data-perms="${s.id}">Permisos</button></div>` : s.role === 'admin' ? '<div class="gx__perm"><span class="mono">Admin · todo</span></div>' : ''}
         </div>`).join('')}
     </div>`;
   wireTeamTabs();
@@ -483,6 +493,7 @@ async function viewTeam() {
       openInvite({ name: fd.name.trim(), email: fd.email.trim().toLowerCase(), phone: fd.phone.trim() }, 'equipo');
     });
   });
+  $$('[data-perms]', main).forEach((b) => b.addEventListener('click', () => openPerms(ctx(), staff.find((x) => x.id === b.dataset.perms), viewTeam)));
   $$('[data-area]', main).forEach((input) => input.addEventListener('change', async () => {
     const { error } = await sb.from('profiles').update({ area: input.value.trim() || null }).eq('id', input.dataset.area);
     input.classList.toggle('is-bad', Boolean(error));

@@ -12,6 +12,7 @@ import { errorText } from './supa.js';
 import { STAGES } from './content.js';
 import { totals, blockTotal, lineTotal, cop, partLabel, expired, validUntil, WORLD_LABEL, WORLD_HEX, BILLING } from './quote-calc.js';
 import { loadSources, TEMPLATES, KINDS, PROD_TYPES } from './quote-sources.js';
+import { recordCommissions } from './comisiones.js';
 
 const COLS = [
   ['borrador', 'Borrador', 'var(--mist)'], ['enviada', 'Enviada', 'var(--blue)'],
@@ -497,8 +498,10 @@ async function payQuote(ctx, st) {
     const pay = await sb.from('quote_payments').insert({
       quote_id: q.id, amount, method: fd.get('method'), paid_on: fd.get('paid_on') || today,
       proof_path: proofPath, proof_url: String(fd.get('proof_url') || '').trim() || null, created_by: me.id,
-    });
+    }).select('id, amount, paid_on').single();
     if (pay.error) { msg.textContent = errorText(pay.error); btn.disabled = false; return; }
+    // la comisión del manager (si la cotización es suya): mensual por planes, única por lo demás
+    await recordCommissions(sb, { quote: q, payment: pay.data, first: !paid }).catch(() => {});
     const status = paid + amount >= t.total ? 'pagada' : 'anticipo';
     await patchQuote(ctx, st, { status, ...(q.accepted_at ? {} : { accepted_at: new Date().toISOString() }) });
 

@@ -10,24 +10,25 @@ import { errorText } from './supa.js';
 import { STAGES, WORLD_NAME, WORLD_COLOR } from './content.js';
 import { viewQuotes, editQuote, quoteUrl } from './admin-cotizaciones.js';
 import { deliverablesPanel } from './admin-entregables.js';
+import { moneyPanel } from './admin-dinero.js';
 
 /** Encabezado con las pestañas (los proyectos y las cotizaciones viven juntos). */
 function tabsHTML(ctx, active, actions = '') {
   const tab = (k, n) => `<button type="button" role="tab" class="gx__chip${active === k ? ' is-on' : ''}" aria-selected="${active === k}" data-tab="${k}">${n}</button>`;
   return `${ctx.head('03', 'Del sí al proyecto', 'Proyectos', actions)}
-  <div class="qx__tabs" role="tablist" aria-label="Proyectos o cotizaciones">${tab('proyectos', 'Proyectos')}${tab('cotizaciones', 'Cotizaciones')}</div>`;
+  <div class="qx__tabs" role="tablist" aria-label="Proyectos o cotizaciones">${tab('proyectos', 'Proyectos')}${ctx.money ? tab('cotizaciones', 'Cotizaciones') : ''}</div>`;
 }
 const wireTabs = (ctx) => $$('[data-tab]', ctx.main).forEach((b) => b.addEventListener('click', () => ctx.go('proyectos', { tab: b.dataset.tab })));
 
 export async function viewProjects(ctx, opts = {}) {
   const { sb, main, loading, fail, staff, go } = ctx;
   if (opts.quote) return editQuote(ctx, opts.quote, opts.preset);
-  if (opts.tab === 'cotizaciones') {
+  if (opts.tab === 'cotizaciones' && ctx.money) {
     await viewQuotes(ctx, (active, actions) => tabsHTML(ctx, active, actions));
     wireTabs(ctx);
     return;
   }
-  if (opts.open) return viewProject(ctx, opts.open);
+  if (opts.open) return viewProject(ctx, opts.open, opts.ptab);
   loading();
   const [{ data: projects, error }, { data: clients }] = await Promise.all([
     sb.from('projects').select('*, clients(name)').order('created_at', { ascending: false }),
@@ -65,7 +66,7 @@ export async function viewProjects(ctx, opts = {}) {
 }
 
 /* ---------- un proyecto: sus datos y sus entregables ---------- */
-async function viewProject(ctx, id) {
+async function viewProject(ctx, id, ptab = 'entregables') {
   const { sb, main, loading, fail } = ctx;
   loading();
   let res = await sb.from('projects').select('*, clients(name), quotes(number, token)').eq('id', id).single();
@@ -88,10 +89,15 @@ async function viewProject(ctx, id) {
       ${p.start_date ? `<span>Inicio: ${date(p.start_date)}</span>` : ''}
       ${p.quotes?.token ? `<a class="qx__link" href="${esc(quoteUrl(p.quotes.token))}" target="_blank" rel="noopener">Cotización ${esc(p.quotes.number)} ↗</a>` : ''}
     </div>
+    ${ctx.money ? `<div class="qx__tabs" role="tablist" aria-label="Del proyecto">
+      <button type="button" role="tab" class="gx__chip${ptab === 'entregables' ? ' is-on' : ''}" aria-selected="${ptab === 'entregables'}" data-ptab="entregables">Entregables</button>
+      <button type="button" role="tab" class="gx__chip${ptab === 'dinero' ? ' is-on' : ''}" aria-selected="${ptab === 'dinero'}" data-ptab="dinero">Dinero del proyecto</button></div>` : ''}
     <div data-deliv><p class="mono gx__empty">Cargando…</p></div>`;
   $('[data-back]', main).addEventListener('click', () => ctx.go('proyectos'));
   $('[data-grid]', main)?.addEventListener('click', () => ctx.go('parrillas', { project: p.id }));
-  deliverablesPanel(ctx, p, $('[data-deliv]', main));
+  $$('[data-ptab]', main).forEach((b) => b.addEventListener('click', () => ctx.go('proyectos', { open: p.id, ptab: b.dataset.ptab })));
+  if (ptab === 'dinero' && ctx.money) moneyPanel(ctx, p, $('[data-deliv]', main));
+  else deliverablesPanel(ctx, p, $('[data-deliv]', main));
 }
 
 function newProject(ctx, clients) {
