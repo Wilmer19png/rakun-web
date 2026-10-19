@@ -41,6 +41,15 @@ export async function loadAds(sb, m, days) {
     ['visitors', 'views', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'meta_leads', 'messages'].forEach((f) => { prev[f] = (Number(prev[f]) || 0) + (Number(r[f]) || 0); });
     if (r.spend != null) prev.spend = (Number(prev.spend) || 0) + Number(r.spend);
   }
+  // anuncios que llegaron con el ID de Meta en vez del nombre ({{ad.id}}): se traducen con lo que trajo meta-sync
+  const byId = [...rows.values()].filter((r) => /^\d{10,}$/.test(r.ad || ''));
+  if (byId.length) {
+    const { data: names } = await sb.from('meta_insights').select('ad_id, ad_name, campaign_name').in('ad_id', byId.map((r) => r.ad)).limit(byId.length * 60);
+    for (const r of byId) {
+      const n = (names || []).find((x) => x.ad_id === r.ad);
+      if (n) Object.assign(r, { ad: n.ad_name, campaign: n.campaign_name, from_id: true });
+    }
+  }
   // lo de Meta que no cruzó por campaña + anuncio (p. ej. la campaña cambió de nombre): se une por el nombre del anuncio
   for (const [k, r] of [...rows]) {
     if (r.spend == null || r.visitors || r.leads || !r.ad) continue;
@@ -65,7 +74,9 @@ export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
   const spend = Number(m.meta_spend) || sum('spend');
   const t = { reach: sum('reach'), impressions: sum('impressions'), clicks: sum('clicks'), visitors: sum('visitors'), leads: sum('leads'), won: sum('won') };
   const hasMeta = ads.some((a) => a.spend != null);
-  const name = (a) => (a.ad || a.campaign || '—');
+  const isId = (v) => /^\d{10,}$/.test(v || '');
+  const name = (a) => (isId(a.ad) ? `Anuncio ID ${a.ad}` : a.ad || a.campaign || '—');
+  const sub = (a) => (isId(a.ad) ? 'llegó con el ID y no con el nombre · revisa sus parámetros de URL' : a.ad ? a.campaign : 'sin nombre de anuncio');
   return `
     <section class="mx__card mx__card--wide ma">
       <div class="ma__h">
@@ -86,7 +97,7 @@ export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
       ${ads.map((a, i) => `
       <div class="ma__ad">
         <button type="button" class="ma__row ma__row--btn" data-ad-open="${i}" aria-expanded="false"${a.list.length ? '' : ' disabled'}>
-          <span><b>${esc(name(a))}</b><small>${esc(a.ad ? a.campaign : 'sin nombre de anuncio')}</small></span>
+          <span><b>${esc(name(a))}</b><small>${esc(sub(a))}</small></span>
           <span class="mono">${a.spend != null ? cop(a.spend) : '—'}</span>
           <span class="mono">${a.spend != null ? num(a.reach) : '—'}</span>
           <span class="mono">${a.spend != null ? `${num(a.clicks)}<small>${pct(a.clicks, a.impressions)}</small>` : '—'}</span>
