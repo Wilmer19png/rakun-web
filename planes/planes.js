@@ -183,7 +183,6 @@ function initPlans() {
   const fromHash = location.hash.slice(1);
   if (fromHash === 'gestion' || fromHash === 'contenido') {
     setCat(fromHash);
-    requestAnimationFrame(() => $('#planes').scrollIntoView());
   } else render(false);
   renderCarta();
 
@@ -194,6 +193,7 @@ function initPlans() {
     if (!D.cats.some((x) => x.key === state.cat)) state.cat = D.cats[0].key;
     render(false);
     renderCarta();
+    window.rkLand?.();                                     // si llegaron con #planes, que sigan en los planes
   });
 }
 
@@ -278,7 +278,7 @@ function initPillars() {
 /* ---------- smooth scroll + anclas ---------- */
 let lenis = null;
 function initLenis() {
-  if (reduced || !window.Lenis) return;
+  if (lenis || reduced || !window.Lenis) return;
   lenis = new window.Lenis({ lerp: 0.16, smoothWheel: true });
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
@@ -314,11 +314,37 @@ function initAnchors() {
   });
 }
 
+/* Llegar con un enlace directo (marca.html#planes, #gestion, #extras…): el navegador salta
+   antes de que carguen las imágenes y la página sigue creciendo, así que se queda corto.
+   Se vuelve a apuntar al destino cuando todo carga y cuando llegan los planes del gestor.
+   Mientras tanto el scroll es el normal del navegador: el suave (Lenis) se queda con el alto
+   viejo de la página y no deja llegar, así que arranca después de aterrizar. */
+function landOnHash() {
+  const id = location.hash.slice(1);
+  const target = () => (id ? document.getElementById(id === 'contenido' || id === 'gestion' ? 'planes' : id) : null);
+  if (!target()) return false;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  let userMoved = false;
+  let done = false;
+  ['wheel', 'touchstart', 'keydown'].forEach((t) => window.addEventListener(t, () => { userMoved = true; }, { once: true, passive: true }));
+  const go = () => {
+    if (userMoved || done || !target()) return;
+    // la página tiene scroll-behavior: smooth; para aterrizar el salto tiene que ser instantáneo
+    window.scrollTo({ top: Math.max(0, target().getBoundingClientRect().top + window.scrollY - 40), behavior: 'instant' });
+  };
+  const finish = () => { if (done) return; go(); done = true; initLenis(); };
+  [0, 300, 900].forEach((ms) => setTimeout(go, ms));
+  window.addEventListener('load', () => { go(); setTimeout(go, 400); setTimeout(finish, 1500); }, { once: true });
+  setTimeout(finish, 6000);                                  // por si la página tarda en terminar de cargar
+  window.rkLand = go;                                       // initPlans lo llama al pintar los planes del gestor
+  return true;
+}
+
 /* ==========================================================================
    Arranque
    ========================================================================== */
 initClock();
-initLenis();
+if (!landOnHash()) initLenis();               // llegaron con #planes, #extras…: Lenis arranca al aterrizar
 initHeader(() => lenis);
 initMegaMenu();
 initCursor();
