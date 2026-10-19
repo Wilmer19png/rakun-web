@@ -41,6 +41,14 @@ export async function loadAds(sb, m, days) {
     ['visitors', 'views', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'meta_leads', 'messages'].forEach((f) => { prev[f] = (Number(prev[f]) || 0) + (Number(r[f]) || 0); });
     if (r.spend != null) prev.spend = (Number(prev.spend) || 0) + Number(r.spend);
   }
+  // lo de Meta que no cruzó por campaña + anuncio (p. ej. la campaña cambió de nombre): se une por el nombre del anuncio
+  for (const [k, r] of [...rows]) {
+    if (r.spend == null || r.visitors || r.leads || !r.ad) continue;
+    const twins = [...rows.values()].filter((x) => x !== r && x.spend == null && x.ad === r.ad);
+    if (twins.length !== 1) continue;
+    ['spend', 'impressions', 'reach', 'clicks', 'meta_leads', 'messages'].forEach((f) => { twins[0][f] = r[f]; });
+    rows.delete(k);
+  }
   const leads = l.error ? [] : (l.data || []).filter((x) => x.utm_source && (x.utm_campaign || x.utm_content));
   for (const x of leads) {
     const k = keyOf(x.utm_campaign, x.utm_content);
