@@ -165,11 +165,14 @@
 
 /* equipo */
 .gx__team { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
-.gx__person { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; padding: 18px; background: var(--white); box-shadow: 4px 5px 0 rgba(27, 26, 53, .12); }
-.gx__person b { font-weight: 500; }
+.gx__person { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; align-content: start; padding: 18px; background: var(--white); box-shadow: 4px 5px 0 rgba(27, 26, 53, .12); }
+.gx__person > div:nth-child(2) { min-width: 0; }
+.gx__person b { display: block; font-weight: 500; line-height: 1.25; }
 .gx__person .mono { margin: 3px 0; font-size: .55rem; color: var(--ink-soft); }
-.gx__person small { color: var(--ink-soft); }
-.gx__person .gx__f--inline { grid-column: 1 / -1; }
+.gx__person small { display: block; color: var(--ink-soft); overflow-wrap: anywhere; }
+.gx__person .gx__f--inline { grid-column: 1 / -1; min-width: 0; }
+.gx__person .gx__f--inline input { width: 100%; box-sizing: border-box; }
+.gx__person .gx__perm { grid-column: 1 / -1; justify-content: space-between; margin: 0; padding-top: 12px; border-top: 1px dashed rgba(27, 26, 53, .2); }
 .gx__soon { max-width: 640px; padding: 28px; background: var(--white); border-left: 6px solid var(--yellow); box-shadow: 5px 6px 0 rgba(27, 26, 53, .12); }
 .gx__soon p { margin: 0 0 10px; font-size: 1.05rem; }
 .gx__soon .mono { margin: 0; font-size: .58rem; color: var(--ink-soft); }

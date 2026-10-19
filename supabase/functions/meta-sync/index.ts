@@ -102,14 +102,17 @@ Deno.serve(async (req) => {
     const report: { name: string; rows?: number; error?: string }[] = [];
 
     for (const acc of accounts ?? []) {
-      const token = tokens?.find((t) => t.account_id === acc.id)?.token || metaToken;
-      if (!token) {
+      // el token propio de la cuenta (opción B) y, si ese falla, el de RAKÜN (META_TOKEN)
+      const own = tokens?.find((t) => t.account_id === acc.id)?.token;
+      const candidates = [...new Set([own, metaToken].filter(Boolean))] as string[];
+      if (!candidates.length) {
         const msg = 'Falta el token de Meta (secreto META_TOKEN en Supabase).';
         await admin.from('meta_accounts').update({ last_error: msg }).eq('id', acc.id);
         report.push({ name: acc.name, error: msg });
         continue;
       }
-      try {
+      // trae todo lo de la cuenta con un token; si Meta niega el permiso devuelve { denied }
+      const pull = async (token: string) => {
         const rows: Record<string, unknown>[] = [];
         let next: string | null = `${GRAPH}/${acc.ad_account_id}/insights?` + new URLSearchParams({
           level: 'ad', time_increment: '1', limit: '500',
@@ -121,8 +124,8 @@ Deno.serve(async (req) => {
           const res = await fetch(next);
           const data = await res.json();
           if (data.error) {
-            const denied = [200, 190, 10].includes(Number(data.error.code)) || /permission/i.test(data.error.message);
-            throw new Error(denied ? await diagnose(token, acc.ad_account_id) : data.error.message);
+            if ([200, 190, 10].includes(Number(data.error.code)) || /permission/i.test(data.error.message)) return { denied: true, rows };
+            throw new Error(data.error.message);
           }
           for (const r of data.data ?? []) {
             rows.push({
@@ -134,6 +137,16 @@ Deno.serve(async (req) => {
           }
           next = data.paging?.next ?? null;
         }
+        return { denied: false, rows };
+      };
+      try {
+        let got = { denied: true, rows: [] as Record<string, unknown>[] };
+        for (const token of candidates) {
+          got = await pull(token);
+          if (!got.denied) break;
+        }
+        if (got.denied) throw new Error(await diagnose(candidates[candidates.length - 1], acc.ad_account_id));
+        const rows = got.rows;
         for (let i = 0; i < rows.length; i += 500) {
           const { error: e } = await admin.from('meta_insights').upsert(rows.slice(i, i + 500));
           if (e) throw new Error(e.message);
