@@ -1087,13 +1087,39 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 .ma { margin-bottom: 18px; }
 .ma__h { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 10px; }
 .ma__h h2 { margin: 0 auto 0 0; }
-.ma__row { display: grid; grid-template-columns: minmax(180px, 1.6fr) repeat(7, minmax(70px, .7fr)); gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); font-size: .88rem; }
+.ma__row { display: grid; grid-template-columns: minmax(200px, 1.8fr) repeat(7, minmax(72px, .7fr)); gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); font-size: .88rem; }
 .ma__row--h { font-size: .5rem; color: var(--ink-soft); border-bottom: 2px solid var(--navy); }
 .ma__row > :nth-child(n+2) { text-align: right; }
-.ma__row b { display: block; font-weight: 500; }
-.ma__row small { display: block; font-size: .74rem; color: var(--ink-soft); }
+.ma__row b { display: block; font-weight: 500; font-size: 1.02rem; line-height: 1.2; }
+.ma__row small { display: block; margin-top: 2px; font-size: .7rem; color: var(--ink-soft); }
 .ma__row .mono { font-size: .74rem; letter-spacing: .02em; }
-.ma__row .mono small { display: inline; font-size: .62rem; }
+.ma__row .mono small { display: block; font-size: .6rem; }
+.ma__row--btn { width: 100%; background: none; border: 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.ma__row--btn:disabled { cursor: default; }
+.ma__row--btn:not(:disabled):hover { background: rgba(27, 26, 53, .04); }
+.ma__row--btn[aria-expanded="true"] { background: rgba(255, 42, 109, .07); }
+.ma__forms { font-weight: 700; }
+.ma__forms i { margin-right: 5px; font-style: normal; color: var(--pink); }
+.ma__row--btn[aria-expanded="true"] .ma__forms i { display: inline-block; transform: rotate(180deg); }
+.ma__kpis { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 6px 0 16px; }
+.ma__kpis > div { padding: 12px 14px; background: var(--white); border: 2px solid var(--navy); }
+.ma__kpis .mono { font-size: .52rem; color: var(--ink-soft); }
+.ma__kpis b { display: block; margin-top: 6px; font: 900 1.7rem/.95 var(--f-display); }
+.ma__kpis small { display: block; margin-top: 4px; font-size: .74rem; color: var(--ink-soft); }
+.ma__kpis .ma__kpi--dark { background: var(--navy); color: var(--cream); }
+.ma__kpis .ma__kpi--dark .mono, .ma__kpis .ma__kpi--dark small { color: rgba(244, 239, 230, .7); }
+.ma__leads { display: flex; flex-direction: column; padding: 4px 0 10px 18px; border-left: 4px solid var(--pink); margin: 0 0 6px; background: rgba(255, 42, 109, .04); }
+.ma__leads--all { padding-left: 0; border: 0; background: none; }
+.ma__lead { display: grid; grid-template-columns: minmax(140px, 1fr) minmax(0, 1.6fr) auto 70px; gap: 12px; align-items: center; padding: 8px 10px; background: none; border: 0; border-bottom: 1px dotted rgba(27, 26, 53, .2); font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.ma__lead:hover { background: var(--white); }
+.ma__lead b { font-weight: 500; }
+.ma__lead small { color: var(--ink-soft); font-size: .62rem; }
+.ma__lead > :last-child { text-align: right; font-size: .6rem; }
+.ma__st { padding: 2px 7px; font-size: .52rem; background: var(--mist); }
+.ma__st--nueva { background: var(--yellow); }
+.ma__st--ganado { background: #DFF7E7; color: #1F6B47; }
+.ma__st--perdido { opacity: .6; }
+.ma__foot { margin-top: 10px; }
 .ma__sold { color: #1F8A5B; font-weight: 500; }
 .ma__empty p { margin: 0 0 10px; line-height: 1.55; color: var(--ink-soft); }
 .ma__empty .gx__copy { max-width: 900px; margin-bottom: 8px; }
@@ -1123,5 +1149,8 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
   .mc { grid-template-columns: minmax(0, 1fr); }
   .mc__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ma__row { grid-template-columns: minmax(0, 1fr) repeat(3, auto); }
-  .ma__row > :nth-child(3), .ma__row > :nth-child(4), .ma__row > :nth-child(7), .ma__row--h > :nth-child(n+3) { display: none; }
+  .ma__row > :nth-child(3), .ma__row > :nth-child(4), .ma__row > :nth-child(5), .ma__row > :nth-child(7) { display: none; }
+  .ma__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ma__lead { grid-template-columns: minmax(0, 1fr) auto; }
+  .ma__lead > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
 }

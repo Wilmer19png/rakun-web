@@ -13,6 +13,7 @@ import { viewShoots, viewMeetings } from './admin-agenda.js';
 import { viewWork } from './admin-trabajo.js';
 import { viewPending, refreshPendingBadge, teamLoad } from './admin-entregables.js';
 import { viewMetrics } from './admin-metricas.js';
+import { plain } from './admin-meta.js';
 import { can, seesMoney, PRESETS, presetOf } from './perms.js';
 import { openPerms, viewMessages, viewPayouts } from './admin-equipo.js';
 import { viewTarifario } from './admin-tarifario.js';
@@ -93,7 +94,7 @@ function go(view, opts = {}) {
 }
 
 /** Herramientas que reciben las secciones que viven en otros módulos. */
-const ctx = () => ({ sb, me, staff, main, head, loading, fail, openModal, closeModal, openDrawer, closeDrawer, go, WORLD, openInvite, can: (s, e) => can(me, s, e), money: seesMoney(me) });
+const ctx = () => ({ sb, me, staff, main, head, loading, fail, openModal, closeModal, openDrawer, closeDrawer, go, WORLD, openInvite, can: (s, e) => can(me, s, e), money: seesMoney(me), openLead: async (id) => { await go('solicitudes'); openLead(id); } });
 
 function openDrawer(html, label = 'Detalle') {
   const box = $('[data-drawer-box]');
@@ -170,7 +171,7 @@ function leadCard(l) {
   const owner = staff.find((s) => s.id === l.assigned_to);
   return `<button class="gx__card" type="button" data-lead-id="${l.id}" style="--w:${wc}">
     <span class="gx__card-top"><b>${esc(l.name)}</b><span class="mono">${ago(l.created_at)}</span></span>
-    <span class="mono gx__card-plan">${esc(l.plan || wn)}</span>${l.utm_source ? `<span class="mono gx__card-ad">▸ ${l.utm_campaign ? esc(l.utm_campaign) : 'Anuncio de Meta'}</span>` : ''}
+    <span class="mono gx__card-plan">${esc(l.plan || wn)}</span>${l.utm_source ? `<span class="mono gx__card-ad">▸ ${l.utm_content || l.utm_campaign ? esc(plain(l.utm_content || l.utm_campaign)) : 'Anuncio de Meta'}</span>` : ''}
     <span class="gx__card-meta">📍 ${esc(l.city || '—')} · 🔗 ${(l.links || []).length}</span>
     <span class="gx__card-foot"><span class="mono gx__tag" style="background:${wc}">${wn}</span>${owner ? `<span class="gx__ava gx__ava--sm" style="background:${esc(owner.color)}" title="${esc(owner.full_name)}">${esc(initials(owner.full_name))}</span>` : ''}</span>
   </button>`;
@@ -190,7 +191,7 @@ function openLead(id) {
     <h2 class="gx__lead-name">${esc(l.name)}</h2>
     <p class="gx__lead-job">${esc(l.occupation || '')}</p>
     <div class="gx__plan"><p class="mono">Plan elegido</p><p class="gx__plan-name">${esc(l.plan || wn)}</p>${l.plan_detail ? `<p class="gx__plan-detail">${esc(l.plan_detail)}</p>` : ''}${l.price_label ? `<p class="mono gx__plan-price">${esc(l.price_label)}</p>` : ''}</div>
-    ${l.utm_source ? `<p class="gx__ad"><span class="mono">Vino de un anuncio</span>${esc([l.utm_campaign, l.utm_content].filter(Boolean).join(' · ') || l.utm_source)}</p>` : ''}
+    ${l.utm_source ? `<p class="gx__ad"><span class="mono">Vino de un anuncio</span>${esc([l.utm_content, l.utm_campaign].filter(Boolean).map(plain).join(' · ') || l.utm_source)}</p>` : ''}
     <dl class="gx__dl">
       <div><dt>WhatsApp</dt><dd>${esc(l.phone)}</dd></div>
       <div><dt>Correo</dt><dd><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></dd></div>

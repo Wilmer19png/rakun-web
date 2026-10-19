@@ -17,39 +17,110 @@ const missing = (e) => (/meta_|utm_|relation|column|function/.test(e?.message ||
 export const UTM = 'utm_source=meta&utm_medium=pauta&utm_campaign={{campaign.name}}&utm_content={{ad.name}}';
 
 /* ---------- RAKÜN: el bloque «Por anuncio» dentro de Métricas ---------- */
-export function metaAdsHTML(m, ctx) {
-  const ads = m.ads || [];
+// los nombres que llegaron antes de la fase 12 vienen codificados (RAK%C3%9CN+%7C+Leads…)
+export const plain = (v) => { let t = String(v ?? ''); try { if (/%[0-9a-f]{2}|\+/i.test(t)) t = decodeURIComponent(t.replace(/\+/g, ' ')); } catch { /* lo deja igual */ } return t.trim(); };
+const keyOf = (campaign, ad) => `${plain(campaign)}|${plain(ad)}`;
+const pct = (a, b) => (b ? `${(a / b * 100).toLocaleString('es-CO', { maximumFractionDigits: 1 })} %` : '—');
+const ago = (d) => new Date(d).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });
+const LEAD_ST = { nueva: 'Nueva', contactado: 'Contactado', reunion: 'Reunión', propuesta: 'Propuesta', ganado: 'Ganado', perdido: 'Perdido' };
+
+// por anuncio (fase 12, con alcance e impresiones; si no está, lo de la fase 11) + las solicitudes de cada uno
+export async function loadAds(sb, m, days) {
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+  const [a, l] = await Promise.all([
+    sb.rpc('metrics_ads', { days }),
+    sb.from('leads').select('id, name, plan, world, status, created_at, utm_campaign, utm_content')
+      .not('utm_source', 'is', null).gte('created_at', since).order('created_at', { ascending: false }).limit(300),
+  ]);
+  const rows = new Map();
+  for (const r of (a.error || a.data == null ? m.ads : a.data) || []) {
+    const k = keyOf(r.campaign, r.ad);
+    const prev = rows.get(k);
+    if (!prev) { rows.set(k, { ...r, campaign: plain(r.campaign), ad: plain(r.ad), list: [] }); continue; }
+    // antes de la fase 12 el mismo anuncio puede salir dos veces (codificado y no): se suman
+    ['visitors', 'views', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'meta_leads', 'messages'].forEach((f) => { prev[f] = (Number(prev[f]) || 0) + (Number(r[f]) || 0); });
+    if (r.spend != null) prev.spend = (Number(prev.spend) || 0) + Number(r.spend);
+  }
+  const leads = l.error ? [] : (l.data || []).filter((x) => x.utm_source && (x.utm_campaign || x.utm_content));
+  for (const x of leads) {
+    const k = keyOf(x.utm_campaign, x.utm_content);
+    if (!rows.has(k)) rows.set(k, { campaign: plain(x.utm_campaign), ad: plain(x.utm_content), visitors: 0, leads: 0, list: [] });
+    rows.get(k).list.push(x);
+  }
+  return { ads: [...rows.values()], leads, leadsHidden: Boolean(l.error) };
+}
+
+export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
+  const { ads, leads } = data;
   const isAdmin = ctx.me.role === 'admin';
-  const spend = Number(m.meta_spend) || 0;
+  const sum = (f) => ads.reduce((s, a) => s + (Number(a[f]) || 0), 0);
+  const spend = Number(m.meta_spend) || sum('spend');
+  const t = { reach: sum('reach'), impressions: sum('impressions'), clicks: sum('clicks'), visitors: sum('visitors'), leads: sum('leads'), won: sum('won') };
+  const hasMeta = ads.some((a) => a.spend != null);
+  const name = (a) => (a.ad || a.campaign || '—');
   return `
     <section class="mx__card mx__card--wide ma">
       <div class="ma__h">
         <h2 class="mono">Por anuncio <span class="mx__tag">Página</span> <span class="mx__tag">Gestor</span> <span class="mx__tag">Meta</span></h2>
-        <span class="mono qx__dim">${m.meta_synced ? `Meta actualizado: ${when(m.meta_synced)}` : 'Meta aún sin conectar'}${spend ? ` · gasto ${cop(spend)}` : ''}</span>
+        <span class="mono qx__dim">${m.meta_synced ? `Meta actualizado: ${when(m.meta_synced)}` : 'Meta aún sin conectar'}</span>
         ${isAdmin ? '<button type="button" class="gx__btn" data-meta-sync>Actualizar ahora</button><button type="button" class="gx__btn gx__btn--dark" data-meta-rakun>Conectar cuenta de RAKÜN</button>' : ''}
       </div>
       ${ads.length ? `
-      <div class="ma__row ma__row--h mono"><span>Campaña · anuncio</span><span>Gasto</span><span>Clics</span><span>Personas</span><span>Solicitudes</span><span>Costo / solicitud</span><span>Ventas</span><span>Vendido</span></div>
-      ${ads.map((a) => `
-      <div class="ma__row">
-        <span><b>${esc(a.campaign || '—')}</b><small>${esc(a.ad || 'sin nombre de anuncio')}</small></span>
-        <span class="mono">${a.spend != null ? cop(a.spend) : '—'}</span><span class="mono">${num(a.clicks)}</span><span class="mono">${num(a.visitors)}</span>
-        <span class="mono">${num(a.leads)}${a.meta_leads && a.meta_leads !== a.leads ? ` <small title="Lo que cuenta Meta">(${num(a.meta_leads)} en Meta)</small>` : ''}</span>
-        <span class="mono">${a.spend != null ? per(a.spend, a.leads) : '—'}</span><span class="mono">${num(a.won)}</span><span class="mono ma__sold">${a.sold ? cop(a.sold) : '—'}</span>
-      </div>`).join('')}` : `
+      <div class="ma__kpis">
+        <div><span class="mono">Gasto <span class="mx__tag">Meta</span></span><b>${hasMeta ? `<span class="cur">$</span>${Math.round(spend).toLocaleString('es-CO')}` : '—'}</b></div>
+        <div><span class="mono">Alcance <span class="mx__tag">Meta</span></span><b>${hasMeta ? num(t.reach) : '—'}</b><small>${hasMeta ? `${num(t.impressions)} impresiones` : 'conecta Meta'}</small></div>
+        <div><span class="mono">Clics · CTR <span class="mx__tag">Meta</span></span><b>${hasMeta ? num(t.clicks) : '—'}</b><small>${hasMeta ? `${pct(t.clicks, t.impressions)} de las impresiones` : ''}</small></div>
+        <div><span class="mono">Llegaron a la web <span class="mx__tag">Página</span></span><b>${num(t.visitors)}</b><small>personas</small></div>
+        <div><span class="mono">Llenaron el formulario <span class="mx__tag">Gestor</span></span><b>${num(t.leads)}</b><small>${pct(t.leads, t.visitors)} de las que llegaron</small></div>
+        <div class="ma__kpi--dark"><span class="mono">Costo por solicitud</span><b>${hasMeta && t.leads ? `<span class="cur">$</span>${Math.round(spend / t.leads).toLocaleString('es-CO')}` : '—'}</b><small>${num(t.won)} ${t.won === 1 ? 'venta' : 'ventas'}</small></div>
+      </div>
+      <div class="ma__row ma__row--h mono"><span>Anuncio · campaña</span><span>Gasto</span><span>Alcance</span><span>Clics · CTR</span><span>Llegaron</span><span>Formularios</span><span>Costo / form.</span><span>Ventas</span></div>
+      ${ads.map((a, i) => `
+      <div class="ma__ad">
+        <button type="button" class="ma__row ma__row--btn" data-ad-open="${i}" aria-expanded="false"${a.list.length ? '' : ' disabled'}>
+          <span><b>${esc(name(a))}</b><small>${esc(a.ad ? a.campaign : 'sin nombre de anuncio')}</small></span>
+          <span class="mono">${a.spend != null ? cop(a.spend) : '—'}</span>
+          <span class="mono">${a.spend != null ? num(a.reach) : '—'}</span>
+          <span class="mono">${a.spend != null ? `${num(a.clicks)}<small>${pct(a.clicks, a.impressions)}</small>` : '—'}</span>
+          <span class="mono">${num(a.visitors)}</span>
+          <span class="mono ma__forms">${a.list.length ? '<i aria-hidden="true">▾</i>' : ''}${num(a.leads)}<small>${a.visitors ? pct(a.leads, a.visitors) : ''}${a.meta_leads && a.meta_leads !== a.leads ? ` · ${num(a.meta_leads)} en Meta` : ''}</small></span>
+          <span class="mono">${a.spend != null ? per(a.spend, a.leads) : '—'}</span>
+          <span class="mono ma__sold">${a.won ? `${num(a.won)}<small>${cop(a.sold)}</small>` : '0'}</span>
+        </button>
+        ${a.list.length ? `<div class="ma__leads" data-ad-list="${i}" hidden>${a.list.map(leadHTML).join('')}</div>` : ''}
+      </div>`).join('')}
+      <p class="mono qx__dim ma__foot">Toca un anuncio para ver quién llenó el formulario · «Formularios» y «Ventas» salen del gestor, no de Meta · Parámetros de URL para cada anuncio: <button class="qx__link" type="button" data-copy-utm>copiar</button></p>
+      ${leads.length ? `
+      <h2 class="mono mx__h2b">Últimos formularios desde anuncios</h2>
+      <div class="ma__leads ma__leads--all">${leads.slice(0, 12).map((x) => leadHTML(x, true)).join('')}</div>` : data.leadsHidden ? '<p class="mono qx__dim">Los nombres de quienes llenaron el formulario solo los ve quien tiene acceso a 01 Solicitudes.</p>' : ''}` : `
       <div class="ma__empty">
         <p>Aún no hay visitas desde anuncios en este periodo. Para que cada anuncio quede identificado, en el Administrador de anuncios → cada anuncio → <b>Parámetros de URL</b>, pega:</p>
         <div class="gx__copy"><input readonly value="${esc(UTM)}" aria-label="Parámetros de URL"><button class="gx__btn" type="button" data-copy-utm>Copiar</button></div>
         <p class="mono qx__dim">Meta cambia solo {{campaign.name}} y {{ad.name}} por los nombres reales. Con eso ves aquí qué anuncio trajo cada visita, solicitud y venta (aunque la persona tenga bloqueador de anuncios).</p>
       </div>`}
-      ${ads.length ? `<p class="mono qx__dim" style="margin-top:10px">«Solicitudes» y «Ventas» salen del gestor (formularios y cotizaciones pagadas), no de Meta · Parámetros de URL para cada anuncio: <button class="qx__link" type="button" data-copy-utm>copiar</button></p>` : ''}
       <p class="mono gx__saved" data-meta-msg aria-live="polite"></p>
     </section>`;
+}
+
+function leadHTML(x, withAd = false) {
+  return `<button type="button" class="ma__lead" data-lead="${x.id}">
+    <b>${esc(x.name)}</b>
+    <span>${esc(x.plan || '—')}${withAd && x.utm_content ? ` <small class="mono">▸ ${esc(plain(x.utm_content))}</small>` : ''}</span>
+    <span class="mono ma__st ma__st--${esc(x.status)}">${esc(LEAD_ST[x.status] || x.status)}</span>
+    <span class="mono qx__dim">${ago(x.created_at)}</span>
+  </button>`;
 }
 
 export function wireMeta(ctx, root, reload) {
   const { sb } = ctx;
   $$('[data-copy-utm]', root).forEach((b) => b.addEventListener('click', async () => { try { await navigator.clipboard.writeText(UTM); b.textContent = '✓ Copiado'; } catch { /* sin permiso */ } }));
+  $$('[data-ad-open]', root).forEach((b) => b.addEventListener('click', () => {
+    const list = $(`[data-ad-list="${b.dataset.adOpen}"]`, root);
+    if (!list) return;
+    list.hidden = !list.hidden;
+    b.setAttribute('aria-expanded', String(!list.hidden));
+  }));
+  $$('[data-lead]', root).forEach((b) => b.addEventListener('click', () => ctx.openLead?.(b.dataset.lead)));
   $('[data-meta-sync]', root)?.addEventListener('click', async (e) => {
     const msg = $('[data-meta-msg]', root);
     e.target.disabled = true;

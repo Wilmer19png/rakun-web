@@ -237,3 +237,9 @@ select cron.schedule('meta-sync-noche', '0 6 * * *', $$
 (necesita las extensiones *pg_cron* y *pg_net* activas en Database → Extensions).
 
 **D · Clientes:** el cliente agrega a RAKÜN como **socio** en su Business Manager (Configuración del negocio → Socios → Agregar socio → ID del negocio de RAKÜN) y le comparte su cuenta publicitaria. Luego en 11 · Métricas → Clientes → «Conectar un cliente» → su act_…. El token de RAKÜN lee su cuenta. Si no se puede, la opción B guarda un token propio del cliente (nadie lo vuelve a ver).
+
+## Fase 12 · Métricas por anuncio, más completas
+Corre `supabase/fase12.sql` en el SQL Editor (después de la fase 11). Hace tres cosas:
+- decodifica los nombres de campaña y anuncio que llegaban como `RAK%C3%9CN+%7C+Leads…` (los que ya estaban y los nuevos);
+- agrega `metrics_ads(days)`: por anuncio, gasto, alcance, impresiones, clics y CTR de Meta junto a las personas, formularios y ventas del gestor;
+- en 11 · Métricas → Por anuncio, cada anuncio se abre y muestra quién llenó el formulario (y abre su solicitud).

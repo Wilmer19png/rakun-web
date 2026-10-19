@@ -21,8 +21,10 @@ export const utm = (() => {
     if (now.utm_source || now.utm_campaign) sessionStorage.setItem('rakun:utm', JSON.stringify(now));
     else Object.assign(now, JSON.parse(sessionStorage.getItem('rakun:utm') || '{}'));
   } catch { /* modo privado */ }
+  // Meta manda los nombres codificados dos veces (RAK%C3%9CN+%7C+Leads…): se dejan legibles
+  const plain = (v) => { let t = String(v); try { if (/%[0-9a-f]{2}|\+/i.test(t)) t = decodeURIComponent(t.replace(/\+/g, ' ')); } catch { /* lo deja igual */ } return t.trim(); };
   const clean = {};
-  Object.entries(now).forEach(([k, v]) => { if (v) clean[k] = String(v).slice(0, k === 'utm_source' ? 80 : 160); });
+  Object.entries(now).forEach(([k, v]) => { if (v) clean[k] = plain(v).slice(0, k === 'utm_source' ? 80 : 160); });
   return clean;
 })();
 window.rkUtm = utm;
