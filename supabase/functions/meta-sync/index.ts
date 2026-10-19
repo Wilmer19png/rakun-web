@@ -47,6 +47,26 @@ const count = (actions: { action_type: string; value: string }[] | undefined, ty
 };
 const ymd = (d: Date) => d.toISOString().slice(0, 10);
 
+// cuando Meta niega el permiso (#200 / #190), mira qué ve el token y lo explica en español
+async function diagnose(token: string, act: string): Promise<string> {
+  const get = (path: string) => fetch(`${GRAPH}/${path}${path.includes('?') ? '&' : '?'}access_token=${encodeURIComponent(token)}`).then((r) => r.json()).catch(() => ({}));
+  const me = await get('me?fields=id,name');
+  if (me.error) return `Meta no reconoce el token (${me.error.message}). Genera uno nuevo y pégalo en el secreto META_TOKEN de Supabase.`;
+  const perms = await get('me/permissions');
+  const granted = (perms.data ?? []).filter((p: { status: string }) => p.status === 'granted').map((p: { permission: string }) => p.permission);
+  const accs = await get('me/adaccounts?fields=account_id,name&limit=200');
+  const list = (accs.data ?? []) as { id: string; name: string }[];
+  const who = `El token es de «${me.name}»`;
+  if (granted.length && !granted.includes('ads_read') && !granted.includes('ads_management')) {
+    return `${who} y le falta el permiso ads_read. Genera el token otra vez marcando ads_read y actualiza META_TOKEN en Supabase.`;
+  }
+  if (!list.some((a) => a.id === act)) {
+    const seen = list.length ? `Solo ve: ${list.slice(0, 6).map((a) => `${a.name} (${a.id})`).join(', ')}.` : 'No ve ninguna cuenta publicitaria.';
+    return `${who} pero no tiene asignada la cuenta ${act}. ${seen} En Business Manager → Usuarios del sistema → ${me.name} → Asignar activos → Cuentas publicitarias → elige la cuenta y activa «Ver rendimiento». Si el ID no coincide, corrígelo en el gestor.`;
+  }
+  return `${who}, ve la cuenta ${act} y tiene permiso, pero Meta aún la niega. Genera un token nuevo (con ads_read) y actualiza META_TOKEN; a veces el viejo no toma los activos asignados después.`;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   if (req.method !== 'POST') return json({ error: 'Método no permitido.' }, 405);
@@ -100,7 +120,10 @@ Deno.serve(async (req) => {
         while (next) {
           const res = await fetch(next);
           const data = await res.json();
-          if (data.error) throw new Error(data.error.message);
+          if (data.error) {
+            const denied = [200, 190, 10].includes(Number(data.error.code)) || /permission/i.test(data.error.message);
+            throw new Error(denied ? await diagnose(token, acc.ad_account_id) : data.error.message);
+          }
           for (const r of data.data ?? []) {
             rows.push({
               account_id: acc.id, day: r.date_start, ad_id: r.ad_id, ad_name: r.ad_name, adset_name: r.adset_name,
@@ -118,7 +141,7 @@ Deno.serve(async (req) => {
         await admin.from('meta_accounts').update({ last_sync: new Date().toISOString(), last_error: null }).eq('id', acc.id);
         report.push({ name: acc.name, rows: rows.length });
       } catch (e) {
-        const msg = String((e as Error).message || e).slice(0, 300);
+        const msg = String((e as Error).message || e).slice(0, 600);
         await admin.from('meta_accounts').update({ last_error: msg }).eq('id', acc.id);
         report.push({ name: acc.name, error: msg });
       }
