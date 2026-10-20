@@ -7,6 +7,7 @@
    ========================================================================== */
 import { REDES, WEB, PIECES, priceInCarta, isRedes } from '../planes/data.js';
 import { loadCatalog } from './catalog.js';
+import { mergePiezas, partsOf } from '../planes/piezas.js';
 
 // Tarifas base de producción: [nombre, etapa, unidad, precio]. El precio en 0 se llena al cotizar.
 export const BASE_RATES = {
@@ -56,11 +57,19 @@ const WEB_EXTRAS = [
 
 export const PROD_TYPES = ['Videoclip', 'Comercial', 'Documental', 'Cortometraje', 'Video institucional', 'Evento', 'Podcast', 'Otro'];
 
+// las piezas de un plan para la cotización: cada una recuerda cómo venía (o) para saber qué cambió
+function pzOf(piezas, catKey, pl, mode) {
+  const parts = partsOf(piezas, catKey, { ...pl, ed: n(pl.ed), rec: n(pl.rec) }, mode);
+  return parts ? { base: n(mode === 'grabacion' ? pl.rec : pl.ed), parts: parts.map((x) => ({ ...x, o: { k: x.k, q: x.q, p: x.p } })), adds: [] } : null;
+}
+
 const n = (v) => (typeof v === 'number' ? v : Number(String(v || '').replace(/\D/g, '')) || 0);
 
 /** Carga todo lo publicado una vez y arma las listas para el selector de cada bloque. */
-export async function loadSources() {
-  const [m, w, p, r] = await Promise.all(['marca', 'web', 'produccion', 'recibo'].map(loadCatalog));
+export async function loadSources(sb = null) {
+  const [m, w, p, r, pzRow] = await Promise.all([...['marca', 'web', 'produccion', 'recibo'].map(loadCatalog),
+    sb ? sb.from('app_settings').select('content').eq('id', 'piezas').maybeSingle().then((x) => x.data?.content, () => null) : null]);
+  const piezas = mergePiezas(pzRow);                    // las piezas de cada plan (09 → Piezas)
   const redes = isRedes(m) ? { ...REDES, ...m } : REDES;
   const web = w?.plans ? w : WEB;
   const prod = Array.isArray(p?.rates) ? p : BASE_RATES;
@@ -72,8 +81,8 @@ export async function loadSources() {
   const plans = redes.cats.flatMap((c) => c.plans.filter((pl) => !pl.hidden).flatMap((pl) => {
     const rows = (pl.rows || []).map(([k, v]) => `${v} ${k.toLowerCase()}`).join(' · ');
     return [
-      { group: c.name, name: `${c.name} · ${pl.name} · solo edición`, detail: rows, unit: 'mes', price: n(pl.ed), source: 'plan' },
-      { group: c.name, name: `${c.name} · ${pl.name} · con grabación`, detail: `${rows} · ${pl.recText || 'grabación incluida'}`, unit: 'mes', price: n(pl.rec), source: 'plan' },
+      { group: c.name, name: `${c.name} · ${pl.name} · solo edición`, detail: rows, unit: 'mes', price: n(pl.ed), source: 'plan', pz: pzOf(piezas, c.key, pl, 'edicion') },
+      { group: c.name, name: `${c.name} · ${pl.name} · con grabación`, detail: `${rows} · ${pl.recText || 'grabación incluida'}`, unit: 'mes', price: n(pl.rec), source: 'plan', pz: pzOf(piezas, c.key, pl, 'grabacion') },
     ];
   }));
   const changes = Object.values(PIECES).map((pc) => {
@@ -92,6 +101,8 @@ export async function loadSources() {
 
   return {
     recibo,
+    piezas,
+    carta,
     tabs: {
       marca: [['Planes', plans], ['Cambios al plan', changes], ['Carta del club', carta], ['Librería', library]],
       web: [['Planes de web', webPlans], ['Carta del club', carta], ['Sugeridos', webExtras]],

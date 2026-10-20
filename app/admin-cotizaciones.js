@@ -13,6 +13,7 @@ import { STAGES } from './content.js';
 import { totals, blockTotal, lineTotal, cop, partLabel, expired, validUntil, WORLD_LABEL, WORLD_HEX, BILLING } from './quote-calc.js';
 import { loadSources, TEMPLATES, KINDS, PROD_TYPES } from './quote-sources.js';
 import { recordCommissions } from './comisiones.js';
+import { planPartsHTML, wirePlanParts } from './quote-plan.js';
 
 const COLS = [
   ['borrador', 'Borrador', 'var(--mist)'], ['enviada', 'Enviada', 'var(--blue)'],
@@ -85,7 +86,7 @@ export async function editQuote(ctx, id, preset = {}) {
   loading();
   const [{ data: clients }, src, found] = await Promise.all([
     sb.from('clients').select('id, name, company, email, phone, user_id').order('name'),
-    sources ? Promise.resolve(sources) : loadSources(),
+    sources ? Promise.resolve(sources) : loadSources(ctx.sb),
     id && id !== 'new' ? sb.from('quotes').select('*').eq('id', id).single() : Promise.resolve({ data: null }),
   ]);
   sources = src;
@@ -209,10 +210,11 @@ function blockHTML(st, b, i) {
         <span><span class="mono qx__src">${esc(srcName(l.source))}</span></span>
         <input data-path="blocks.${i}.lines.${j}.qty" data-kind="num" inputmode="decimal" value="${esc(l.qty)}" aria-label="Cantidad">
         <input data-path="blocks.${i}.lines.${j}.unit" value="${esc(l.unit || '')}" aria-label="Unidad">
-        <input data-path="blocks.${i}.lines.${j}.price" data-kind="money" inputmode="numeric" value="${esc(l.price)}" aria-label="Valor unitario">
+        <input data-path="blocks.${i}.lines.${j}.price" data-kind="money" inputmode="numeric" value="${esc(l.price)}" aria-label="Valor unitario"${l.pz ? ' readonly title="Sale del plan y sus cambios"' : ''}>
         <b class="mono" data-lt="${i}.${j}">${cop(lineTotal(l))}</b>
         <button type="button" class="gx__mini" data-del-line="${i}.${j}" aria-label="Quitar línea">✕</button>
-      </div>`).join('')}
+      </div>
+      ${planPartsHTML(l, `${i}.${j}`, st.qp === `${i}.${j}`, sources.piezas, sources.carta || [])}`).join('')}
       <button type="button" class="gx__add mono" data-picker="${i}">${open ? '− Cerrar' : '+ Agregar'}</button>
       ${b.world === 'marca' && blockMonthly(b) ? `<span class="mono qx__dim qx__monthly">Desde el mes 2: ${cop(blockMonthly(b))} / mes (solo el plan)</span>` : ''}
     </div>
@@ -282,6 +284,7 @@ function wireEditor(ctx, st) {
   $$('[data-del-line]', main).forEach((b) => b.addEventListener('click', () => {
     const [i, j] = b.dataset.delLine.split('.').map(Number);
     q.blocks[i].lines.splice(j, 1);
+    st.qp = null;
     changed(true);
   }));
   $$('[data-picker]', main).forEach((b) => b.addEventListener('click', () => {
@@ -298,9 +301,13 @@ function wireEditor(ctx, st) {
   $$('[data-pick]', main).forEach((b) => b.addEventListener('click', () => {
     const blk = q.blocks[st.picker];
     const it = sources.tabs[blk.world][st.tab][1][Number(b.dataset.pick)];
-    blk.lines.push({ name: it.name, detail: it.detail || '', source: it.source, qty: 1, unit: it.unit || '', price: it.price || 0 });
+    const line = { name: it.name, detail: it.detail || '', source: it.source, qty: 1, unit: it.unit || '', price: it.price || 0 };
+    if (it.pz) Object.assign(line, { pz: JSON.parse(JSON.stringify(it.pz)), changes: [] });   // el plan viene con sus piezas
+    blk.lines.push(line);
     changed(true);
   }));
+  // cambiar partes de un plan de Redes
+  wirePlanParts(main, st, sources.piezas, sources.carta || [], (path) => { const [i, j] = path.split('.').map(Number); return q.blocks[i].lines[j]; }, (edited) => (edited ? changed(true) : rerender()));
   $('[data-free]', main)?.addEventListener('click', () => {
     q.blocks[st.picker].lines.push({ name: '', detail: '', source: 'libre', qty: 1, unit: '', price: 0 });
     changed(true);

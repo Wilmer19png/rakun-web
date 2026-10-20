@@ -7,15 +7,16 @@
    ========================================================================== */
 import { $, $$, esc } from './util.js';
 import { ROLES, ROLE_NAME, pctFor, isMonthly, loadProducts } from './pagos.js';
+import { loadPiezas, piezasViewHTML } from './admin-piezas.js';
 
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 const st = { tab: 'todo', q: '', open: null };
-const TABS = [['todo', 'Todo'], ['plan', 'Planes de Redes'], ['carta', 'Carta del club'], ['web', 'Web'], ['produccion', 'Producción']];
+const TABS = [['todo', 'Todo'], ['plan', 'Planes de Redes'], ['piezas', 'Piezas de cada plan'], ['carta', 'Carta del club'], ['web', 'Web'], ['produccion', 'Producción']];
 
 export async function viewTarifario(ctx) {
   const { sb, me, main, head, loading } = ctx;
   loading();
-  const [groups, { data }] = await Promise.all([loadProducts(), sb.from('app_settings').select('content').eq('id', 'pagos').maybeSingle()]);
+  const [groups, { data }, piezas] = await Promise.all([loadProducts(), sb.from('app_settings').select('content').eq('id', 'pagos').maybeSingle(), loadPiezas(sb)]);
   const pagos = data?.content || { rows: {}, cover: {} };
   // qué roles cubre quien mira (el admin ve la del manager para saber cuánto se paga)
   let mine = ROLES.map(([r]) => r).filter((r) => pagos.cover?.[r] === me.id);
@@ -43,7 +44,7 @@ export async function viewTarifario(ctx) {
         <div class="tf2__main">
           <input class="gx__search tf2__search" type="search" data-q value="${esc(st.q)}" placeholder="Buscar: «reel», «pauta», «fotos», «videoclip»…" aria-label="Buscar en el tarifario">
           <div class="gx__subtabs">${TABS.map(([k, n]) => `<button type="button" class="gx__chip${st.tab === k ? ' is-on' : ''}" data-tab="${k}">${n}</button>`).join('')}</div>
-          ${show.map((g) => `
+          ${st.tab === 'piezas' ? piezasViewHTML(piezas) : show.map((g) => `
           <section class="tf2__g">
             <h2 class="mono tf2__gt">${g.color ? `<i style="background:${g.color}"></i>` : ''}${esc(g.title)}${g.kind === 'plan' ? ' <span>· mensual</span>' : ''}</h2>
             ${g.kind === 'plan' ? `

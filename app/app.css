@@ -1371,3 +1371,63 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 
 /* el anuncio se corre a la derecha solo en su nombre, para que las columnas queden alineadas con la campaña y el conjunto */
 .cp__row--a .cp__name { padding-left: 32px; }
+
+/* ==========================================================================
+   Cotización → cambiar partes de un plan de Redes
+   ========================================================================== */
+.qp { margin: -2px 0 10px; border-left: 4px solid var(--yellow); background: rgba(255, 240, 43, .08); }
+.qp__toggle { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 38px; padding: 0 12px; border: 0; background: none; color: var(--navy); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; text-align: left; cursor: pointer; }
+.qp__toggle b { font-weight: 500; color: #9B0D35; }
+.qp__rows { padding: 4px 12px 8px; }
+.qp__row { display: grid; grid-template-columns: minmax(0, 1fr) 70px 110px 32px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); font-size: .9rem; }
+.qp__row select { min-height: 36px; padding: 4px 8px; border: 2px solid var(--navy); background: var(--white); font: inherit; }
+.qp__name small { color: var(--ink-soft); font-size: .78rem; }
+.qp__qty { width: 70px; min-height: 36px; padding: 4px 8px; border: 2px solid var(--navy); font: inherit; box-sizing: border-box; }
+.qp__q { color: var(--ink-soft); font-size: .72rem; }
+.qp__p { text-align: right; font-size: .78rem; }
+.qp__row.is-changed { background: #FFF7B8; }
+.qp__row.is-off .qp__name { text-decoration: line-through; color: var(--ink-soft); }
+.qp__row.is-add { background: #DFF7E7; }
+.qp__add { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.qp__add .mono { flex: none; font-size: .56rem; color: #C2134A; }
+.qp__add select { flex: 1; min-width: 0; min-height: 38px; padding: 4px 8px; border: 2px dashed var(--navy); background: var(--white); font: inherit; }
+.qp__sum { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px 12px; border-top: 2px solid var(--navy); font-size: .86rem; }
+.qp__sum > span { display: flex; justify-content: space-between; gap: 12px; }
+.qp__sum b { font-weight: 500; }
+.qp__sum .is-neg { color: #1F8A5B; }
+.qp__tot { padding-top: 6px; border-top: 1px solid rgba(27, 26, 53, .2); font-weight: 500; }
+.qp__tot b { font-size: 1rem; }
+.qx__ln input[readonly] { background: var(--cream); color: var(--ink-soft); }
+@media (max-width: 760px) {
+  .qp__row { grid-template-columns: minmax(0, 1fr) 64px 32px; }
+  .qp__row .qp__p { grid-column: 1 / -1; text-align: left; }
+}
+
+/* ==========================================================================
+   12 Tarifario / 09 Planes y precios → piezas de cada plan
+   ========================================================================== */
+.pz__intro { max-width: 80ch; }
+.pz { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 14px 0 24px; }
+.pz__plan { padding: 14px 16px; background: var(--white); border: 2px solid var(--navy); border-top: 8px solid var(--c, var(--pink)); }
+.pz__h { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 6px 10px; margin-bottom: 8px; }
+.pz__h h3 { margin: 0; font: 900 1.4rem/.95 var(--f-display); text-transform: uppercase; }
+.pz__h h3 small { display: block; margin-bottom: 4px; font: 400 .52rem/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: var(--ink-soft); }
+.pz__ok, .pz__no { padding: 3px 8px; font-family: "JetBrains Mono", monospace; font-size: .52rem; letter-spacing: .1em; text-transform: uppercase; }
+.pz__ok { background: #DFF7E7; color: #14573A; }
+.pz__no { background: #FFE0E8; color: #9B0D35; }
+.pz__ln { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0; padding: 7px 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); font-size: .9rem; }
+.pz__ln small { color: var(--ink-soft); font-size: .78rem; }
+.pz__ln b { font-weight: 400; font-size: .8rem; white-space: nowrap; }
+.pz__tot { display: flex; justify-content: space-between; gap: 10px; margin: 8px 0 0; padding: 8px 10px; background: #010221; color: var(--cream); font-size: .86rem; }
+.pz__tot b { font-weight: 500; }
+.pz__rec { margin: 6px 0 0; font-size: .54rem; }
+.pz__t { margin: 22px 0 8px; font-size: .62rem; }
+.pz__items { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 0 24px; padding: 6px 16px; background: var(--white); border: 2px solid var(--navy); }
+.pz__in { width: 130px; min-height: 36px; padding: 4px 8px; border: 2px solid var(--navy); font: inherit; text-align: right; box-sizing: border-box; }
+.pz__er { display: grid; grid-template-columns: minmax(0, 1fr) 60px 120px 32px; gap: 6px; align-items: center; padding: 5px 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); }
+.pz__er select { min-width: 0; min-height: 36px; padding: 4px 6px; border: 2px solid var(--navy); background: var(--white); font: inherit; font-size: .85rem; }
+.pz__er .pz__in { width: 100%; }
+.pz__q { width: 100%; min-height: 36px; padding: 4px 6px; border: 2px solid var(--navy); font: inherit; text-align: center; box-sizing: border-box; }
+/* 09 → piezas: el nombre de la pieza en su propia línea (no se corta); cantidad, precio y quitar debajo */
+.pz__er { grid-template-columns: 70px minmax(0, 1fr) 32px; padding: 8px 0; }
+.pz__er select { grid-column: 1 / -1; }

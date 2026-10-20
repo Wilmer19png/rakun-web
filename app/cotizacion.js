@@ -13,6 +13,11 @@ const box = $('[data-quote]');
 const token = new URLSearchParams(location.search).get('c') || '';
 const date = (d, opts = { day: 'numeric', month: 'long', year: 'numeric' }) => new Date(d).toLocaleDateString('es-CO', opts);
 const money = (n) => `<span class="cq__cur">$</span>${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
+// un plan con cambios: el precio del plan y debajo solo lo que cambió o se agregó
+const changesHTML = (l) => (l.changes?.length ? `<span class="cq__chg">
+  <small>Precio del plan: ${cop(l.pz?.base)}</small>
+  ${l.changes.map((c) => `<small>${esc(c.t)} <b>${c.amount < 0 ? '−' : '+'}${cop(Math.abs(c.amount))}</b></small>`).join('')}
+</span>` : '');
 
 function sorry(text) {
   box.innerHTML = `<div class="cq__sorry"><p class="cq__brand">RAKÜN</p><h1>${esc(text)}</h1><p>Si crees que es un error, escríbenos y te enviamos el enlace de nuevo.</p></div>`;
@@ -43,7 +48,7 @@ function render(sb, q, rc) {
     <table class="cq__tbl">
       <thead><tr><th>Concepto</th><th class="r">Cant.</th><th class="r">Valor unitario</th><th class="r">Total</th></tr></thead>
       <tbody>${b.lines.map((l) => `
-        <tr><td><span class="cq__name${l.source === 'plan' ? ' is-plan' : ''}">${esc(l.name)}</span>${l.detail ? `<small>${esc(l.detail)}</small>` : ''}</td>
+        <tr><td><span class="cq__name${l.source === 'plan' ? ' is-plan' : ''}">${esc(l.name)}</span>${l.detail ? `<small>${esc(l.detail)}</small>` : ''}${changesHTML(l)}</td>
           <td class="r">${esc(l.qty)}${l.unit ? ` <small class="cq__unit">${esc(l.unit)}</small>` : ''}</td><td class="r mono">${money(l.price)}</td><td class="r mono">${money(lineTotal(l))}</td></tr>`).join('')}
       </tbody>
     </table>`;

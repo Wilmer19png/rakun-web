@@ -11,11 +11,14 @@ import { errorText } from './supa.js';
 import { REDES as BASE_MARCA, WEB as BASE_WEB, LEVELS, PIECES, priceInCarta, isRedes } from '../planes/data.js';
 import { BASE_RATES, BASE_RECIBO } from './quote-sources.js';
 import { ROLES, pctFor, leftFor, loadProducts, pctRows } from './pagos.js';
+import { PIEZAS, mergePiezas } from '../planes/piezas.js';
+import { piezasEditHTML } from './admin-piezas.js';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 // lo que se puede prender y apagar en el Inicio (index.html lo lee de plan_catalog id 'sitio')
 const BASE_SITIO = { testimonios: true };
-const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO, pagos: { rows: {}, cover: {} } };
+const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO, pagos: { rows: {}, cover: {} }, piezas: PIEZAS };
+const PRIVATE = ['pagos', 'piezas'];                  // se guardan en app_settings (no se ven en la página)
 const st = { world: 'marca', tab: 'planes', cat: 0, carta: 0, lib: 0, draft: {}, saved: {}, info: {} };
 const REC_OPTIONS = ['1 sesión de hasta 3 h', '1 jornada de hasta 6 h', '1 jornada de hasta 6 h con asistente'];
 const COLORS = [['var(--yellow)', 'Amarillo'], ['var(--blue)', 'Azul'], ['var(--pink)', 'Rosado']];
@@ -72,6 +75,13 @@ export async function viewPlans(ctx) {
     st.saved.pagos = JSON.stringify(st.draft.pagos);
     st.info.pagos = error ? 'Falta correr supabase/fase9.sql en Supabase para guardar los %' : data?.updated_at ? `Guardado el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Aún no se ha guardado: estos son % de ejemplo';
   }
+  // Piezas de cada plan: privado (app_settings), solo el admin · lo usan la cotización y el Tarifario
+  if (ctx.me.role === 'admin' && !st.draft.piezas) {
+    const { data, error } = await ctx.sb.from('app_settings').select('content, updated_at').eq('id', 'piezas').maybeSingle();
+    st.draft.piezas = mergePiezas(data?.content);
+    st.saved.piezas = data?.content ? JSON.stringify(st.draft.piezas) : '';
+    st.info.piezas = error ? 'Falta correr supabase/fase9.sql en Supabase' : data?.updated_at ? `Guardado el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Aún no se han guardado: estas son las piezas base (cuadran con los precios de hoy)';
+  }
   render(ctx);
 }
 
@@ -80,15 +90,15 @@ function render(ctx) {
   const w = st.world;
   const scroll = window.scrollY;
   main.innerHTML = head('09', 'Lo que ve el cliente en la página', 'Planes y precios', `
-    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)'], ['recibo', 'Recibo', 'var(--navy)'], ['sitio', 'Inicio', 'var(--mist)'], ...(ctx.me.role === 'admin' ? [['pagos', 'Tarifas y pagos 🔒', '#1F8A5B']] : [])]
+    ${[['marca', 'Redes', 'var(--yellow)'], ['web', 'Web y apps', 'var(--pink)'], ['produccion', 'Producción', 'var(--blue)'], ['recibo', 'Recibo', 'var(--navy)'], ['sitio', 'Inicio', 'var(--mist)'], ...(ctx.me.role === 'admin' ? [['pagos', 'Tarifas y pagos 🔒', '#1F8A5B'], ['piezas', 'Piezas de cada plan 🔒', '#C2134A']] : [])]
       .map(([k, n, c]) => `<button class="gx__chip gx__chip--world${st.world === k ? ' is-on' : ''}" style="--c:${c}" type="button" data-world="${k}">${n}</button>`).join('')}`) +
-    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : w === 'produccion' ? prodHTML() : w === 'sitio' ? sitioHTML() : w === 'pagos' ? pagosHTML(ctx) : reciboHTML()) + (`
+    (w === 'marca' ? marcaHTML() : w === 'web' ? webHTML() : w === 'produccion' ? prodHTML() : w === 'sitio' ? sitioHTML() : w === 'pagos' ? pagosHTML(ctx) : w === 'piezas' ? piezasEditHTML(st.draft.piezas, st.draft.marca || BASE_MARCA) : reciboHTML()) + (`
       <div class="gx__pubbar" data-pubbar>
         <span class="mono" data-pubstate></span>
         <span class="gx__btns">
           <button class="gx__btn" type="button" data-reset>${w === 'pagos' ? 'Volver a los % de ejemplo' : 'Volver a los precios base'}</button>
           <button class="gx__btn" type="button" data-discard>Descartar cambios</button>
-          <button class="gx__btn gx__btn--dark" type="button" data-publish>${w === 'pagos' ? 'Guardar →' : 'Publicar en la página →'}</button>
+          <button class="gx__btn gx__btn--dark" type="button" data-publish>${PRIVATE.includes(w) ? 'Guardar →' : 'Publicar en la página →'}</button>
         </span>
       </div>`);
   window.scrollTo(0, scroll);
@@ -178,6 +188,10 @@ function render(ctx) {
     rerender();
   });
   $('[data-publish]', main).addEventListener('click', () => publish(ctx));
+  // piezas: los totales se rehacen al salir de un campo (sin perder el cursor mientras escriben)
+  $$('[data-rerender-change]', main).forEach((el) => el.addEventListener('change', rerender));
+  $$('[data-pz-add]', main).forEach((b) => b.addEventListener('click', () => { d.plans[b.dataset.pzAdd].push(['guion', 1, 0]); rerender(); }));
+  $$('[data-pz-new]', main).forEach((b) => b.addEventListener('click', () => { d.plans[b.dataset.pzNew] = [['gestion', 1, 0]]; rerender(); }));
   syncBar();
 }
 
@@ -197,12 +211,12 @@ async function publish(ctx) {
   const btn = $('[data-publish]');
   btn.disabled = true;
   $('[data-pubstate]').textContent = 'Publicando…';
-  const table = w === 'pagos' ? 'app_settings' : 'plan_catalog';
+  const table = PRIVATE.includes(w) ? 'app_settings' : 'plan_catalog';
   const { error } = await sb.from(table).upsert({ id: w, content: st.draft[w], updated_by: me.id, updated_at: new Date().toISOString() });
-  if (error && w === 'pagos') { $('[data-pubstate]').textContent = /app_settings/.test(error.message || '') ? 'Falta correr supabase/fase9.sql en Supabase.' : errorText(error); btn.disabled = false; return; }
+  if (error && PRIVATE.includes(w)) { $('[data-pubstate]').textContent = /app_settings/.test(error.message || '') ? 'Falta correr supabase/fase9.sql en Supabase.' : errorText(error); btn.disabled = false; return; }
   if (error) { $('[data-pubstate]').textContent = /plan_catalog_id_check/.test(error.message || '') ? 'Falta correr supabase/fase8.sql en Supabase para guardar esto.' : errorText(error); btn.disabled = false; return; }
   st.saved[w] = JSON.stringify(st.draft[w]);
-  st.info[w] = w === 'pagos' ? 'Guardado ahora · aplica a las ventas nuevas' : `Publicado ahora · ya se ve en la página`;
+  st.info[w] = w === 'pagos' ? 'Guardado ahora · aplica a las ventas nuevas' : w === 'piezas' ? 'Guardado ahora · aplica a las cotizaciones nuevas' : `Publicado ahora · ya se ve en la página`;
   syncBar();
 }
 
