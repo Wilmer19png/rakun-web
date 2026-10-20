@@ -1263,7 +1263,7 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 .cp__cnt { display: inline-grid; place-items: center; min-width: 18px; height: 18px; margin-left: 4px; padding: 0 4px; background: var(--pink); color: #010221; font-size: .55rem; }
 .cp__row--s { background: var(--cream); border-bottom: 1px solid rgba(27, 26, 53, .15); cursor: pointer; }
 .cp__row--s b { font-weight: 500; font-size: .9rem; }
-.cp__row--a { padding-left: 46px; border-bottom: 1px dashed rgba(27, 26, 53, .18); cursor: pointer; }
+.cp__row--a { padding-left: 14px; border-bottom: 1px dashed rgba(27, 26, 53, .18); cursor: pointer; }
 .cp__row--a:disabled { cursor: default; }
 .cp__row--a[aria-expanded="true"] { background: rgba(255, 44, 104, .07); }
 .cp__row--a b { font-weight: 500; font-size: .92rem; }
@@ -1354,3 +1354,20 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 .cp__seg-f label { flex-direction: row; }
 .cp__tpl-ck input { margin-top: 2px; }
 .cp__seg-f legend { font-family: "JetBrains Mono", monospace; font-size: .56rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* 11 · Métricas → ordenar y fijar campañas; símbolos alineados en cada columna */
+.cp__sort { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 4px 0 12px; }
+.cp__sort > .mono { font-size: .56rem; color: var(--ink-soft); margin-right: 4px; }
+.cp__pin { display: flex; align-items: center; gap: 6px; margin-left: auto; padding-bottom: 6px; }
+.cp__pin .gx__btn { min-height: 34px; padding: 0 10px; font-size: .56rem; }
+.cp__pin .gx__btn[aria-pressed="true"] { background: var(--yellow); }
+.cp__row:not(.cp__row--h) > span:nth-child(n+2) { display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; }
+.mi-v { display: inline-block; min-width: 8.5ch; text-align: right; }
+.cp__row .mi-v { min-width: 8.5ch; }
+.cp__row:not(.cp__row--h) > span:nth-child(n+2) > .mi-dot { margin-right: 0; }
+.cp__row:not(.cp__row--h) > span:nth-child(6), .cp__row:not(.cp__row--h) > span:nth-child(9) { flex-direction: column; align-items: flex-end; gap: 2px; }
+.cp__row:not(.cp__row--h) > span:nth-child(6) small { display: flex; align-items: center; justify-content: flex-end; align-self: stretch; gap: 4px; }
+.cp__row:not(.cp__row--h) > span:nth-child(6) small .mi-v { min-width: 6.5ch; }
+
+/* el anuncio se corre a la derecha solo en su nombre, para que las columnas queden alineadas con la campaña y el conjunto */
+.cp__row--a .cp__name { padding-left: 32px; }

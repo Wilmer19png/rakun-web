@@ -120,11 +120,43 @@ const cols = (t, x) => `
   <span class="mono">${cell('freq', x.freq)}</span>
   <span class="mono cp__sold">${t.won ? `${num(t.won)}<small>${cop(t.sold)}</small>` : '0'}</span>`;
 
+/* ---------- el orden: activas y recientes primero, o el que elija cada quien ---------- */
+const SORTS = [['recientes', 'Activas y recientes'], ['gasto', 'Más gasto'], ['formularios', 'Más formularios'], ['nombre', 'A–Z']];
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(`rakun:cp:${k}`)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(`rakun:cp:${k}`, JSON.stringify(v)); } catch { /* sin almacenamiento: solo por esta visita */ } },
+};
+const pinsOf = (scope) => store.get(`pins:${scope}`, []);
+function sortCampaigns(groups, scope) {
+  const by = store.get('sort', 'recientes');
+  const pins = pinsOf(scope);
+  const active = (c) => (campState(c)[0] === 'Activa' ? 1 : 0);
+  const cmp = {
+    recientes: (a, b) => active(b) - active(a) || String(b.last || '').localeCompare(String(a.last || '')) || String(b.first || '').localeCompare(String(a.first || '')),
+    gasto: (a, b) => (Number(b.t.spend) || 0) - (Number(a.t.spend) || 0),
+    formularios: (a, b) => (b.t.leads || 0) - (a.t.leads || 0) || (Number(b.t.spend) || 0) - (Number(a.t.spend) || 0),
+    nombre: (a, b) => a.name.localeCompare(b.name, 'es'),
+  }[by] || (() => 0);
+  return [...groups].sort((a, b) => {
+    if ((a.name === NONE) !== (b.name === NONE)) return a.name === NONE ? 1 : -1;   // «sin campaña» siempre al final
+    const pa = pins.indexOf(a.name); const pb = pins.indexOf(b.name);
+    if (pa !== -1 || pb !== -1) return (pa === -1 ? Infinity : pa) - (pb === -1 ? Infinity : pb);   // las fijadas, en su orden
+    return cmp(a, b);
+  });
+}
+
 export function campaignsHTML(groups, ctx, o) {
   const scope = o.scope;
+  groups = sortCampaigns(groups, scope);
   // de entrada, la primera campaña abierta
   if (!ui.seeded.has(scope) && groups[0]) { ui.open.add(`${scope}|${groups[0].name}`); ui.seeded.add(scope); }
+  const by = store.get('sort', 'recientes');
   return `
+    <div class="cp__sort" role="group" aria-label="Ordenar campañas">
+      <span class="mono">Ordenar</span>
+      ${SORTS.map(([k, n]) => `<button type="button" class="gx__chip gx__chip--sm${by === k ? ' is-on' : ''}" aria-pressed="${by === k}" data-cp-sort="${k}">${n}</button>`).join('')}
+      ${pinsOf(scope).length ? '<span class="mono qx__dim">· las fijadas ★ van primero</span>' : ''}
+    </div>
     <div class="cp__scroll">
       <div class="cp__row cp__row--h mono">${H('Campaña · conjunto · anuncio')}${H('Gasto')}${H('CPM', 'cpm')}${H('Gancho', 'hook')}${H('CTR', 'ctr')}${H('Formularios', 'conv')}${H('Costo / lead', 'cpl')}${H('Frec.', 'freq')}${H('Ventas')}</div>
       ${groups.map((c) => campHTML(c, ctx, o)).join('')}
@@ -155,6 +187,10 @@ function campHTML(c, ctx, o) {
       <div class="cp__tabs" role="tablist">
         <button type="button" role="tab" class="gx__chip${tab === 'ads' ? ' is-on' : ''}" aria-selected="${tab === 'ads'}" data-cp-tab="${esc(key)}" data-t="ads">Conjuntos y anuncios · ${c.sets.size} · ${c.ads.length}</button>
         ${none ? '' : `<button type="button" role="tab" class="gx__chip${tab === 'seg' ? ' is-on' : ''}" aria-selected="${tab === 'seg'}" data-cp-tab="${esc(key)}" data-t="seg">Seguimiento${pend ? ` <span class="cp__cnt">${pend}</span>` : ''}</button>`}
+        ${none ? '' : (() => { const pins = pinsOf(o.scope); const at = pins.indexOf(c.name); return `<span class="cp__pin">
+          <button type="button" class="gx__btn gx__btn--sm" data-cp-pin="${esc(c.name)}" aria-pressed="${at !== -1}">${at !== -1 ? '★ Fijada arriba' : '☆ Fijar arriba'}</button>
+          ${at !== -1 ? `<button type="button" class="gx__btn gx__btn--sm" data-cp-move="${esc(c.name)}" data-d="-1" aria-label="Subir"${at === 0 ? ' disabled' : ''}>↑</button><button type="button" class="gx__btn gx__btn--sm" data-cp-move="${esc(c.name)}" data-d="1" aria-label="Bajar"${at === pins.length - 1 ? ' disabled' : ''}>↓</button>` : ''}
+        </span>`; })()}
       </div>
       ${tab === 'seg' && !none ? segHTML(c, fu, ctx, o) : setsHTML(c, o)}` : ''}
     </section>`;
@@ -251,6 +287,21 @@ export function wireCampaigns(root, ctx, o, rerender) {
   $$('[data-cp]', root).forEach((b) => b.addEventListener('click', () => { const k = b.dataset.cp; ui.open.has(k) ? ui.open.delete(k) : ui.open.add(k); rerender(); }));
   $$('[data-cp-tab]', root).forEach((b) => b.addEventListener('click', () => { ui.tab[b.dataset.cpTab] = b.dataset.t; rerender(); }));
   $$('[data-cs]', root).forEach((b) => b.addEventListener('click', () => { const k = b.dataset.cs; ui.sets.has(k) ? ui.sets.delete(k) : ui.sets.add(k); rerender(); }));
+  $$('[data-cp-sort]', root).forEach((b) => b.addEventListener('click', () => { store.set('sort', b.dataset.cpSort); rerender(); }));
+  $$('[data-cp-pin]', root).forEach((b) => b.addEventListener('click', () => {
+    const pins = pinsOf(o.scope).filter((n) => n !== b.dataset.cpPin);
+    if (b.getAttribute('aria-pressed') !== 'true') pins.push(b.dataset.cpPin);
+    store.set(`pins:${o.scope}`, pins);
+    rerender();
+  }));
+  $$('[data-cp-move]', root).forEach((b) => b.addEventListener('click', () => {
+    const pins = pinsOf(o.scope);
+    const i = pins.indexOf(b.dataset.cpMove); const j = i + Number(b.dataset.d);
+    if (i < 0 || j < 0 || j >= pins.length) return;
+    [pins[i], pins[j]] = [pins[j], pins[i]];
+    store.set(`pins:${o.scope}`, pins);
+    rerender();
+  }));
   $$('[data-fu-done]', root).forEach((b) => b.addEventListener('click', () => { const k = b.dataset.fuDone; ui.done.has(k) ? ui.done.delete(k) : ui.done.add(k); rerender(); }));
   const byId = (el) => o.followups.find((f) => f.id === el.closest('[data-fu]').dataset.fu);
   const save = async (f, fields) => {

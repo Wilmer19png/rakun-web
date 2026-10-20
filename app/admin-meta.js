@@ -59,6 +59,8 @@ export async function loadAds(sb, m, days) {
     const twins = [...rows.values()].filter((x) => x !== r && x.spend == null && x.ad === r.ad);
     if (twins.length !== 1) continue;
     ['spend', 'impressions', 'reach', 'clicks', 'link_clicks', 'video_3s', 'thruplay', 'meta_leads', 'messages'].forEach((f) => { twins[0][f] = r[f]; });
+    // y lo de la campaña según Meta: su nombre, el conjunto y en qué días tuvo gasto
+    ['campaign', 'adset', 'first_day', 'last_day'].forEach((f) => { if (r[f]) twins[0][f] = r[f]; });
     rows.delete(k);
   }
   const leads = l.error ? [] : (l.data || []).filter((x) => x.utm_source && (x.utm_campaign || x.utm_content));

@@ -105,7 +105,8 @@ const rangeText = (k) => {
 // el valor con su forma de semáforo (círculo, rombo, triángulo): no depende solo del color
 export const dot = (s) => (s ? `<i class="mi-dot mi-dot--${s}" aria-hidden="true"></i>` : '');
 export const val = (k, v) => (v == null || !Number.isFinite(v) ? '—' : METRICS[k].fmt(v));
-export const cell = (k, v) => { const s = status(k, v); return `${dot(s)}${val(k, v)}${s ? `<span class="sr-only"> · ${ST_NAME[s]}</span>` : ''}`; };
+// el número va en una caja de ancho fijo: así el símbolo queda en la misma línea en toda la columna
+export const cell = (k, v) => { const s = status(k, v); return `${dot(s)}<span class="mi-v">${val(k, v)}</span>${s ? `<span class="sr-only"> · ${ST_NAME[s]}</span>` : ''}`; };
 export const chip = (s) => (s ? `<span class="mi-st mi-st--${s}">${dot(s)}${ST_NAME[s]}</span>` : '<span class="mi-st">Sin datos aún</span>');
 export const info = (k, v = null) => `<button type="button" class="mi" data-mi="${k}"${v != null && Number.isFinite(v) ? ` data-mi-v="${v}"` : ''} aria-label="Qué es ${esc(METRICS[k].name)} y cuál es el ideal">i</button>`;
 
