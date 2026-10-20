@@ -243,10 +243,14 @@
 .mk-plans-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap; margin-bottom: 8px; }
 .mk-plans-title { text-shadow: none; font-size: clamp(2.8rem, 5.6vw, 5.2rem); }
 .pl-who--dark { color: var(--ink-soft); margin-top: 40px; }
-.pl-plans .ptk { background: var(--white); }
-.pl-plans .ptk::after { background: var(--cream); }
-.pl-plans .ptk[aria-selected="true"] { background: var(--navy); color: var(--white); }
-.pl-plans .ptk[aria-selected="true"] .ptk__n, .pl-plans .ptk[aria-selected="true"] .ptk__line { color: var(--mist); }
+/* en la sección y en la ventana «Ver los planes»: la elegida, oscura; la otra, blanca y más quieta */
+:is(.pl-plans, .pov) .ptk { background: var(--white); }
+:is(.pl-plans, .pov) .ptk::after { background: var(--cream); }
+:is(.pl-plans, .pov) .ptk[aria-selected="false"] { box-shadow: 4px 4px 0 rgba(27, 26, 53, .22); }
+:is(.pl-plans, .pov) .ptk[aria-selected="false"] .ptk__name { color: var(--ink-soft); }
+:is(.pl-plans, .pov) .ptk[aria-selected="false"]:hover { background: var(--cream); }
+:is(.pl-plans, .pov) .ptk[aria-selected="true"] { background: var(--navy); color: var(--white); box-shadow: 8px 8px 0 var(--t); }
+:is(.pl-plans, .pov) .ptk[aria-selected="true"] .ptk__n, :is(.pl-plans, .pov) .ptk[aria-selected="true"] .ptk__line { color: var(--mist); }
 .mk-panel { margin-top: clamp(40px, 5vw, 64px); padding-top: clamp(32px, 4vw, 48px); border-top: 2px solid var(--navy); }
 
 @media (max-width: 960px) {
