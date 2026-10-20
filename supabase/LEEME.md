@@ -251,3 +251,17 @@ Corre `supabase/fase13.sql` en el SQL Editor (después de la fase 12) y vuelve a
 - 11 · Métricas → Por anuncio muestra CPM, gancho, retención, CTR, CPC, leads ÷ visitas, costo por lead y frecuencia, cada uno con su semáforo (bien / en medio / alerta) y una «i» que explica qué es y cuál es el ideal;
 - el botón «¿Qué significa cada métrica?» abre el glosario; el admin cambia ahí los rangos (se guardan en `app_settings` id `metas`).
 Después de desplegar, dale a «Actualizar ahora» para que se vuelvan a traer los 30 días con los datos nuevos.
+
+## Fase 14 · Métricas por campaña con su seguimiento
+Corre `supabase/fase14.sql` en el SQL Editor (después de la fase 13). Con eso:
+- 11 · Métricas → «Por campaña»: campaña → conjunto de anuncios → anuncio, cada uno con su semáforo;
+- cada campaña tiene su pestaña «Seguimiento»: tareas, revisiones del día N de la campaña (se cuentan desde el primer día con gasto en Meta), reglas como «responder cada lead en menos de 15 min» y configuraciones; la plantilla «Lanzamiento de campaña» crea las del día 0, 3, 7, 14 y la regla de una vez;
+- lo asignado a cada persona le sale en 00 · Mis pendientes, con la cuenta regresiva.
+Lo ve y lo edita quien tenga el permiso de 11 · Métricas; la persona asignada puede marcarlo como hecho.
+
+## Aviso por WhatsApp cuando entra un lead (función `aviso-lead`)
+1. **Activa CallMeBot en el WhatsApp de RAKÜN (350 446 1460):** busca el número actual en callmebot.com (WhatsApp API), guárdalo en tus contactos y mándale el mensaje `I allow callmebot to send me messages`. Te responde con tu **apikey**.
+2. **Secretos** (Edge Functions → Secrets): `CALLMEBOT_APIKEY` = la apikey · `CALLMEBOT_PHONE` = `573504461460` · `WEBHOOK_SECRET` = una clave larga que inventes · `SITE_URL` = la dirección de la página (opcional, para el enlace al gestor).
+3. **Sube la función:** Edge Functions → Deploy a new function → nombre `aviso-lead` → pega `supabase/functions/aviso-lead/index.ts` → Deploy.
+4. **El webhook:** Database → Webhooks → Create a new hook → nombre `aviso-lead` · tabla `leads` · evento **Insert** · tipo **Supabase Edge Functions** → `aviso-lead` · método POST · activa «Add auth header with service key» · agrega el encabezado `x-webhook-secret` con la misma clave de `WEBHOOK_SECRET`.
+5. Llena el formulario de la página para probar: en segundos llega el WhatsApp.

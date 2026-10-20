@@ -9,13 +9,15 @@
 import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
 import { METRICS, compute, status, cell, chip, dot, info, val, wireInfo, glossaryHTML, wireGlossary } from './metas.js';
+import { groupCampaigns, campaignsHTML, wireCampaigns, loadFollowups } from './admin-campanas.js';
 
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 const num = (n) => Number(n || 0).toLocaleString('es-CO');
 const per = (a, b) => (b ? cop(a / b) : '—');
 const when = (d) => (d ? new Date(d).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' }) : 'nunca');
 const missing = (e) => (/meta_|utm_|relation|column|function/.test(e?.message || '') ? 'Falta correr supabase/fase11.sql en Supabase.' : errorText(e));
-export const UTM = 'utm_source=meta&utm_medium=pauta&utm_campaign={{campaign.name}}&utm_content={{ad.name}}';
+let last = null;                                      // lo último pintado: para volver a pintar solo las campañas
+export const UTM ='utm_source=meta&utm_medium=pauta&utm_campaign={{campaign.name}}&utm_content={{ad.name}}';
 
 /* ---------- RAKÜN: el bloque «Por anuncio» dentro de Métricas ---------- */
 // los nombres que llegaron antes de la fase 12 vienen codificados (RAK%C3%9CN+%7C+Leads…)
@@ -65,11 +67,15 @@ export async function loadAds(sb, m, days) {
     if (!rows.has(k)) rows.set(k, { campaign: plain(x.utm_campaign), ad: plain(x.utm_content), visitors: 0, leads: 0, list: [] });
     rows.get(k).list.push(x);
   }
-  return { ads: [...rows.values()], leads, leadsHidden: Boolean(l.error) };
+  const followups = await loadFollowups(sb, null);
+  const ads = [...rows.values()];
+  ads.forEach((a, i) => { a._i = i; });
+  return { ads, leads, leadsHidden: Boolean(l.error), followups };
 }
 
-export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
+export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [], followups: { list: [] } }) {
   const { ads, leads } = data;
+  last = { data, ctx };
   const isAdmin = ctx.me.role === 'admin';
   const sum = (f) => ads.reduce((s, a) => s + (Number(a[f]) || 0), 0);
   const hasMeta = ads.some((a) => a.spend != null);
@@ -97,7 +103,7 @@ export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
   return `
     <section class="mx__card mx__card--wide ma">
       <div class="ma__h">
-        <h2 class="mono">Por anuncio <span class="mx__tag">Página</span> <span class="mx__tag">Gestor</span> <span class="mx__tag">Meta</span></h2>
+        <h2 class="mono">Por campaña <span class="mx__tag">Página</span> <span class="mx__tag">Gestor</span> <span class="mx__tag">Meta</span></h2>
         <span class="mono qx__dim">${m.meta_synced ? `Meta actualizado: ${when(m.meta_synced)}` : 'Meta aún sin conectar'}</span>
         ${isAdmin ? '<button type="button" class="gx__btn" data-meta-sync>Actualizar ahora</button><button type="button" class="gx__btn gx__btn--dark" data-meta-rakun>Conectar cuenta de RAKÜN</button>' : ''}
       </div>
@@ -110,26 +116,8 @@ export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
       <div class="ma__kpis ma__kpis--8">
         ${tiles.map(([k, src, small]) => `<div${status(k, v[k]) === 'bad' ? ' class="is-bad"' : ''}><span class="mono ma__kl"><span>${METRICS[k].name}${src ? ` <span class="mx__tag">${src}</span>` : ''}</span>${info(k, v[k])}</span><b>${big(k)}</b><small>${small}</small>${chip(status(k, v[k]))}</div>`).join('')}
       </div>
-      <div class="ma__scroll">
-        <div class="ma__row ma__row--h mono">${H('Anuncio · campaña')}${H('Gasto')}${H('CPM', 'cpm')}${H('Gancho', 'hook')}${H('Retención', 'hold')}${H('CTR', 'ctr')}${H('Formularios', 'conv')}${H('Costo / lead', 'cpl')}${H('Frec.', 'freq')}${H('Ventas')}</div>
-        ${ads.map((a, i) => { const x = compute(a); return `
-        <div class="ma__ad">
-          <button type="button" class="ma__row ma__row--btn" data-ad-open="${i}" aria-expanded="false"${a.list.length ? '' : ' disabled'}>
-            <span><b>${esc(name(a))}</b><small>${esc(sub(a))}</small></span>
-            <span class="mono">${a.spend != null ? cop(a.spend) : '—'}</span>
-            <span class="mono">${cell('cpm', x.cpm)}</span>
-            <span class="mono">${cell('hook', x.hook)}</span>
-            <span class="mono">${cell('hold', x.hold)}</span>
-            <span class="mono">${cell('ctr', x.ctr)}</span>
-            <span class="mono ma__forms">${a.list.length ? '<i aria-hidden="true">▾</i>' : ''}${num(a.leads)}<small>${a.visitors ? `${cell('conv', x.conv)} de ${num(a.visitors)}` : 'sin visitas'}${a.meta_leads && a.meta_leads !== a.leads ? ` · ${num(a.meta_leads)} en Meta` : ''}</small></span>
-            <span class="mono">${cell('cpl', x.cpl)}</span>
-            <span class="mono">${cell('freq', x.freq)}</span>
-            <span class="mono ma__sold">${a.won ? `${num(a.won)}<small>${cop(a.sold)}</small>` : '0'}</span>
-          </button>
-          ${a.list.length ? `<div class="ma__leads" data-ad-list="${i}" hidden>${a.list.map(leadHTML).join('')}</div>` : ''}
-        </div>`; }).join('')}
-      </div>
-      <p class="mono qx__dim ma__foot">Toca un anuncio para ver quién llenó el formulario · «Formularios» y «Ventas» salen del gestor, no de Meta · el gancho y la retención solo aplican a videos · Parámetros de URL para cada anuncio: <button class="qx__link" type="button" data-copy-utm>copiar</button></p>
+      <div data-cps></div>
+      <p class="mono qx__dim ma__foot">Abre una campaña para ver sus conjuntos, sus anuncios y su seguimiento · toca un anuncio para ver quién llenó el formulario · «Formularios» y «Ventas» salen del gestor, no de Meta · el gancho y la retención solo aplican a videos · Parámetros de URL para cada anuncio: <button class="qx__link" type="button" data-copy-utm>copiar</button></p>
       ${leads.length ? `
       <h2 class="mono mx__h2b">Últimos formularios desde anuncios</h2>
       <div class="ma__leads ma__leads--all">${leads.slice(0, 12).map((x) => leadHTML(x, true)).join('')}</div>` : data.leadsHidden ? '<p class="mono qx__dim">Los nombres de quienes llenaron el formulario solo los ve quien tiene acceso a 01 Solicitudes.</p>' : ''}` : `
@@ -140,6 +128,48 @@ export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
       </div>`}
       <p class="mono gx__saved" data-meta-msg aria-live="polite"></p>
     </section>`;
+}
+
+// un anuncio dentro de su conjunto (se abre para ver quién llenó el formulario)
+function adRowHTML(a) {
+  const isId = (x) => /^\d{10,}$/.test(x || '');
+  const x = compute(a);
+  const sub = isId(a.ad) ? 'llegó con el ID · revisa sus parámetros de URL'
+    : a.list.length ? `▾ ${a.list.length} ${a.list.length === 1 ? 'formulario' : 'formularios'}` : `${num(a.visitors)} llegaron a la web`;
+  return `
+    <div class="ma__ad cp__ad">
+      <button type="button" class="cp__row cp__row--a" data-ad-open="${a._i}" aria-expanded="false"${a.list.length ? '' : ' disabled'}>
+        <span class="cp__name"><span><b>${esc(isId(a.ad) ? `Anuncio ID ${a.ad}` : a.ad || '—')}</b><small>${sub}</small></span></span>
+        <span class="mono">${a.spend != null ? cop(a.spend) : '—'}</span>
+        <span class="mono">${cell('cpm', x.cpm)}</span>
+        <span class="mono">${cell('hook', x.hook)}</span>
+        <span class="mono">${cell('ctr', x.ctr)}</span>
+        <span class="mono ma__forms">${num(a.leads)}<small>${a.visitors ? `${cell('conv', x.conv)} de ${num(a.visitors)}` : 'sin visitas'}${a.meta_leads && a.meta_leads !== a.leads ? ` · ${num(a.meta_leads)} en Meta` : ''}</small></span>
+        <span class="mono">${cell('cpl', x.cpl)}</span>
+        <span class="mono">${cell('freq', x.freq)}</span>
+        <span class="mono ma__sold">${a.won ? `${num(a.won)}<small>${cop(a.sold)}</small>` : '0'}</span>
+      </button>
+      ${a.list.length ? `<div class="ma__leads" data-ad-list="${a._i}" hidden>${a.list.map((l) => leadHTML(l)).join('')}</div>` : ''}
+    </div>`;
+}
+
+// las campañas se vuelven a pintar solas (abrir, pestañas, tareas) sin recargar toda la vista
+function renderCps(root) {
+  const box = $('[data-cps]', root);
+  if (!box || !last) return;
+  const { data, ctx } = last;
+  if (!data.followups) data.followups = { list: [] };
+  const o = { scope: 'rakun', clientId: null, followups: data.followups.list, missing: data.followups.missing, leads: data.leads || [], adRow: adRowHTML };
+  box.innerHTML = campaignsHTML(groupCampaigns(data.ads), ctx, o);
+  wireCampaigns(box, ctx, o, () => renderCps(root));
+  $$('[data-ad-open]', box).forEach((b) => b.addEventListener('click', () => {
+    const list = $(`[data-ad-list="${b.dataset.adOpen}"]`, box);
+    if (!list) return;
+    list.hidden = !list.hidden;
+    b.setAttribute('aria-expanded', String(!list.hidden));
+  }));
+  $$('[data-lead]', box).forEach((b) => b.addEventListener('click', () => ctx.openLead?.(b.dataset.lead)));
+  wireInfo(box);
 }
 
 function leadHTML(x, withAd = false) {
@@ -153,15 +183,12 @@ function leadHTML(x, withAd = false) {
 
 export function wireMeta(ctx, root, reload) {
   const { sb } = ctx;
+  renderCps(root);
   $$('[data-copy-utm]', root).forEach((b) => b.addEventListener('click', async () => { try { await navigator.clipboard.writeText(UTM); b.textContent = '✓ Copiado'; } catch { /* sin permiso */ } }));
-  $$('[data-ad-open]', root).forEach((b) => b.addEventListener('click', () => {
-    const list = $(`[data-ad-list="${b.dataset.adOpen}"]`, root);
-    if (!list) return;
-    list.hidden = !list.hidden;
-    b.setAttribute('aria-expanded', String(!list.hidden));
-  }));
-  $$('[data-lead]', root).forEach((b) => b.addEventListener('click', () => ctx.openLead?.(b.dataset.lead)));
-  wireInfo(root);
+  // lo de dentro de las campañas lo conecta renderCps (se vuelve a pintar solo)
+  const outside = (b) => !b.closest('[data-cps]');
+  $$('[data-lead]', root).filter(outside).forEach((b) => b.addEventListener('click', () => ctx.openLead?.(b.dataset.lead)));
+  wireInfo(root, outside);
   $('[data-glossary]', root)?.addEventListener('click', () => {
     const box = ctx.openDrawer(glossaryHTML(ctx.me.role === 'admin'), 'Qué significa cada métrica');
     wireGlossary(ctx, box, reload);

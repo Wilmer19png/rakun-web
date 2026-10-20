@@ -10,6 +10,7 @@ import { errorText } from './supa.js';
 import { WORLD_NAME, WORLD_COLOR } from './content.js';
 import { TEMPLATES, KINDS, DSTATUS } from './quote-sources.js';
 import { unreadMessages } from './admin-equipo.js';
+import { myFollowups, myFollowupsHTML, myFollowupsBadge } from './admin-campanas.js';
 
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 
@@ -96,6 +97,7 @@ export async function viewPending(ctx) {
       ? `Tienes <b>${items.length} ${items.length === 1 ? 'pendiente' : 'pendientes'}</b> en ${projects.length} ${projects.length === 1 ? 'proyecto' : 'proyectos'}${late ? ` · <b class="dx__red">${late} ${late === 1 ? 'vencido' : 'vencidos'}</b>` : ''}${today ? ` · ${today} para hoy` : ''}.`
       : 'No tienes pendientes. Cuando te asignen un entregable aparece aquí.'}</p>
     <div data-extras></div>
+    <div data-fu-mine></div>
     ${projects.length > 1 ? `<div class="dx__filters"><span class="mono">Proyecto</span>
       <button class="gx__chip${ui.project ? '' : ' is-on'}" type="button" data-fp="">Todos</button>
       ${projects.map(([id, p]) => `<button class="gx__chip dx__pchip${ui.project === id ? ' is-on' : ''}" type="button" data-fp="${id}" style="--w:${WORLD_COLOR[p?.world] || 'var(--mist)'}">${esc(p?.name || '—')} <b>${items.filter((d) => d.project_id === id).length}</b></button>`).join('')}</div>` : ''}
@@ -113,7 +115,15 @@ export async function viewPending(ctx) {
   $$('[data-fp]', main).forEach((b) => b.addEventListener('click', () => { ui.project = b.dataset.fp; viewPending(ctx); }));
   $$('[data-fk]', main).forEach((b) => b.addEventListener('click', () => { ui.kind = b.dataset.fk; viewPending(ctx); }));
   wireTasks(ctx, items, () => viewPending(ctx));
-  if (!ui.done) pendingExtras(ctx, $('[data-extras]', main));
+  if (!ui.done) {
+    pendingExtras(ctx, $('[data-extras]', main));
+    // lo del seguimiento de campañas (11 Métricas) asignado a mí
+    myFollowups(sb, me).then((mine) => {
+      const box = $('[data-fu-mine]', main);
+      if (box) box.innerHTML = myFollowupsHTML(mine);
+      setBadge(items.length + myFollowupsBadge(mine));
+    }).catch(() => {});
+  }
 }
 
 /* mensajes sin ver + lo que gana (tareas con valor y comisiones) */
@@ -148,7 +158,8 @@ function setBadge(n) {
 export async function refreshPendingBadge(sb, me) {
   const { count } = await sb.from('deliverables').select('id', { count: 'exact', head: true })
     .or(`assignee_id.eq.${me.id},and(reviewer_id.eq.${me.id},status.eq.en_revision)`).neq('status', 'aprobado');
-  setBadge(count || 0);
+  const mine = await myFollowups(sb, me).catch(() => ({ list: [], rules: [], leads: [] }));
+  setBadge((count || 0) + myFollowupsBadge(mine));
 }
 
 function taskHTML(ctx, d) {

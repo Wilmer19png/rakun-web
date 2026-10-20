@@ -181,8 +181,8 @@ function hide() {
   openBtn = null;
 }
 
-export function wireInfo(root) {
-  $$('[data-mi]', root).forEach((b) => {
+export function wireInfo(root, only = () => true) {
+  $$('[data-mi]', root).filter(only).forEach((b) => {
     b.setAttribute('aria-expanded', 'false');
     b.addEventListener('mouseenter', () => { if (!touch()) show(b, false); });
     b.addEventListener('mouseleave', () => { if (!touch()) hide(); });
