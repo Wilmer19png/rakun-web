@@ -260,8 +260,15 @@ Corre `supabase/fase14.sql` en el SQL Editor (después de la fase 13). Con eso:
 Lo ve y lo edita quien tenga el permiso de 11 · Métricas; la persona asignada puede marcarlo como hecho.
 
 ## Aviso por WhatsApp cuando entra un lead (función `aviso-lead`)
-1. **Activa CallMeBot en el WhatsApp de RAKÜN (350 446 1460):** busca el número actual en callmebot.com (WhatsApp API), guárdalo en tus contactos y mándale el mensaje `I allow callmebot to send me messages`. Te responde con tu **apikey**.
-2. **Secretos** (Edge Functions → Secrets): `CALLMEBOT_APIKEY` = la apikey · `CALLMEBOT_PHONE` = `573504461460` · `WEBHOOK_SECRET` = una clave larga que inventes · `SITE_URL` = la dirección de la página (opcional, para el enlace al gestor).
-3. **Sube la función:** Edge Functions → Deploy a new function → nombre `aviso-lead` → pega `supabase/functions/aviso-lead/index.ts` → Deploy.
-4. **El webhook:** Database → Webhooks → Create a new hook → nombre `aviso-lead` · tabla `leads` · evento **Insert** · tipo **Supabase Edge Functions** → `aviso-lead` · método POST · activa «Add auth header with service key» · agrega el encabezado `x-webhook-secret` con la misma clave de `WEBHOOK_SECRET`.
-5. Llena el formulario de la página para probar: en segundos llega el WhatsApp.
+Envía con el **WhatsApp oficial de Meta** (Cloud API). Si algún día se usa CallMeBot, basta con sus secretos (`CALLMEBOT_APIKEY`, `CALLMEBOT_PHONE`).
+1. **Agrega WhatsApp a la app:** developers.facebook.com → tu app → Agregar producto (o Casos de uso) → **WhatsApp** → Configurar, con el negocio de RAKÜN. Meta crea una cuenta de WhatsApp Business y un **número de prueba** que envía.
+2. **El número que recibe:** WhatsApp → Configuración de la API → «Para» → agrega **+57 350 446 1460** y confírmalo con el código que te llega.
+3. **Copia el «Identificador del número de teléfono»** (del número de prueba) → secreto `WA_PHONE_ID`.
+4. **El token:** Business Manager → Usuarios del sistema → tu usuario → Asignar activos → **Cuentas de WhatsApp** (control total) → Generar nuevo token con **whatsapp_business_messaging** y **whatsapp_business_management**, caducidad «Nunca» → secreto `WA_TOKEN`.
+5. **La plantilla:** WhatsApp Manager → Plantillas de mensajes → Crear → categoría **Utilidad** · nombre `aviso_lead` · idioma **Español** · cuerpo:
+   `Nuevo lead en RAKÜN: {{1}}. Plan: {{2}}. Vino de: {{3}}. Escríbele: {{4}}. Responde en menos de 15 minutos.`
+   (ejemplos para la revisión: «Laura Gómez · Redes», «Gestión completa · Equilibrio», «H1-Agenda», «wa.me/573001234567»). Mientras la aprueban, prueba con `WA_TEMPLATE` = `hello_world` y `WA_LANG` = `en_US`.
+6. **Secretos** (Edge Functions → Secrets): `WA_TOKEN` · `WA_PHONE_ID` · `WA_TO` = `573504461460` · `WEBHOOK_SECRET` = una clave larga que inventes.
+7. **Sube la función:** Edge Functions → Deploy a new function → nombre `aviso-lead` → pega `supabase/functions/aviso-lead/index.ts` → Deploy.
+8. **El webhook:** Database → Webhooks → Create a new hook → nombre `aviso-lead` · tabla `leads` · evento **Insert** · tipo **Supabase Edge Functions** → `aviso-lead` · POST · activa «Add auth header with service key» · encabezado `x-webhook-secret` con la clave de `WEBHOOK_SECRET`.
+9. Llena el formulario de la página para probar.
