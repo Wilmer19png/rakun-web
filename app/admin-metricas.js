@@ -8,6 +8,7 @@
 import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
 import { loadAds, metaAdsHTML, metaClients, wireMeta } from './admin-meta.js';
+import { loadRanges } from './metas.js';
 
 const st = { days: 30, tab: 'rakun', client: null };
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
@@ -25,7 +26,7 @@ export async function viewMetrics(ctx) {
   const { sb, main, head, loading } = ctx;
   loading();
   const { data: m, error } = st.tab === 'rakun' ? await sb.rpc('metrics_summary', { days: st.days }) : { data: null, error: null };
-  const ads = m && !error ? await loadAds(sb, m, st.days) : undefined;
+  const [ads] = m && !error ? await Promise.all([loadAds(sb, m, st.days), loadRanges(sb)]) : [undefined];
   const tabs = `
     <div class="qx__tabs" role="tablist" aria-label="Métricas">
       <button type="button" role="tab" class="gx__chip${st.tab === 'rakun' ? ' is-on' : ''}" aria-selected="${st.tab === 'rakun'}" data-mtab="rakun">RAKÜN</button>

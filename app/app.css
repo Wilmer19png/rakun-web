@@ -1090,7 +1090,7 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 .ma { margin-bottom: 18px; }
 .ma__h { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 10px; }
 .ma__h h2 { margin: 0 auto 0 0; }
-.ma__row { display: grid; grid-template-columns: minmax(200px, 1.8fr) repeat(7, minmax(72px, .7fr)); gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); font-size: .88rem; }
+.ma__row { display: grid; grid-template-columns: minmax(210px, 1.7fr) repeat(9, minmax(78px, .7fr)); gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(27, 26, 53, .2); font-size: .88rem; }
 .ma__row--h { font-size: .5rem; color: var(--ink-soft); border-bottom: 2px solid var(--navy); }
 .ma__row > :nth-child(n+2) { text-align: right; }
 .ma__row b { display: block; font-weight: 500; font-size: 1.02rem; line-height: 1.2; }
@@ -1151,9 +1151,82 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
 @media (max-width: 1100px) {
   .mc { grid-template-columns: minmax(0, 1fr); }
   .mc__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ma__row { grid-template-columns: minmax(0, 1fr) repeat(3, auto); }
-  .ma__row > :nth-child(3), .ma__row > :nth-child(4), .ma__row > :nth-child(5), .ma__row > :nth-child(7) { display: none; }
   .ma__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ma__lead { grid-template-columns: minmax(0, 1fr) auto; }
   .ma__lead > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* ==========================================================================
+   11 · Métricas → la «i», el semáforo y el glosario (fase 13)
+   ========================================================================== */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mi { display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; margin-left: 4px; padding: 0; border: 1.5px solid var(--navy); border-radius: 50%; background: var(--white); color: var(--navy); font: 500 12px/1 var(--f-body, Jost, sans-serif); text-transform: none; letter-spacing: 0; vertical-align: middle; cursor: help; position: relative; }
+.mi::after { content: ""; position: absolute; inset: -11px; }   /* 44 px para tocar */
+.mi:hover, .mi.is-on { background: var(--navy); color: var(--cream); box-shadow: 0 0 0 3px var(--pink); }
+.mi:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+.mi--inv { margin: 0 6px 0 0; border-color: currentColor; background: transparent; color: inherit; cursor: inherit; }
+.mi--inv::after { display: none; }
+.ma__row--h .mi { width: 18px; height: 18px; font-size: 10px; margin-left: 3px; }
+.mi-dot { display: inline-block; flex: none; width: 8px; height: 8px; margin-right: 6px; vertical-align: 1px; }
+.mi-dot--ok { background: #1F8A5B; border-radius: 50%; }
+.mi-dot--mid { width: 7px; height: 7px; background: #C9AE00; transform: rotate(45deg); }
+.mi-dot--bad { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 9px solid var(--pink); }
+.mi-st { display: inline-flex; align-items: center; margin-top: 8px; padding: 3px 8px 3px 6px; font-family: var(--f-mono, "JetBrains Mono", monospace); font-size: .56rem; letter-spacing: .1em; text-transform: uppercase; background: var(--mist); color: var(--navy); }
+.mi-st--ok { background: #DFF7E7; color: #14573A; }
+.mi-st--mid { background: #FFF7B8; color: #5E5200; }
+.mi-st--bad { background: #FFE0E8; color: #9B0D35; }
+
+.ma__legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 4px 0 12px; font-size: .86rem; }
+.ma__legend > span { display: inline-flex; align-items: center; }
+.ma__glossary { margin-left: auto; }
+.ma__kpis--8 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ma__kpis--8 > div { display: flex; flex-direction: column; align-items: flex-start; }
+.ma__kpis--8 > div.is-bad { box-shadow: 5px 5px 0 var(--pink); }
+.ma__kl { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; }
+.ma__kpis--8 .mi-st { margin-top: auto; }
+.ma__kpis--8 small { margin-bottom: 8px; }
+.ma__scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.ma__scroll > * { min-width: 1080px; }
+.ma__row--h > span { display: inline-flex; align-items: center; justify-content: flex-end; }
+.ma__row--h > span:first-child { justify-content: flex-start; }
+
+.mi-veil { position: fixed; inset: 0; z-index: 90; background: rgba(1, 2, 33, .55); }
+.mi-pop { position: fixed; z-index: 91; width: min(340px, calc(100vw - 24px)); box-sizing: border-box; padding: 16px 18px; background: var(--navy-deep, #010221); color: #F3F0EA; box-shadow: 8px 8px 0 var(--pink); font-size: .9rem; line-height: 1.45; pointer-events: none; }
+.mi-pop::before { content: ""; position: absolute; top: -8px; left: var(--ax, 30px); width: 16px; height: 16px; background: inherit; transform: rotate(45deg); }
+.mi-pop--up::before { top: auto; bottom: -8px; }
+.mi-pop--sheet { left: 0 !important; right: 0; top: auto !important; bottom: 0; width: auto; max-height: 85vh; overflow: auto; padding: 12px 20px calc(22px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 0 var(--pink); pointer-events: auto; font-size: 1rem; }
+.mi-pop--sheet::before { display: none; }
+.mi-grab { display: block; width: 44px; height: 4px; margin: 0 auto 14px; background: #5C5A7A; }
+.mi-name { margin: 0 0 4px; font: 900 1.6rem/.95 var(--f-display); text-transform: uppercase; }
+.mi-pop--sheet .mi-name { font-size: 2.1rem; }
+.mi-how { margin: 0 0 8px; font-family: var(--f-mono, "JetBrains Mono", monospace); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #FF7DA0; }
+.mi-what { margin: 0 0 6px; color: #E4E1EE; }
+.mi-scale { position: relative; display: flex; height: 10px; margin: 26px 0 6px; }
+.mi-scale--ok { background: #3FCB86; } .mi-scale--mid { background: #FFF02B; } .mi-scale--bad { background: var(--pink); }
+.mi-scale i { position: absolute; top: -18px; transform: translateX(-50%); font-style: normal; font-family: var(--f-mono, "JetBrains Mono", monospace); font-size: .6rem; white-space: nowrap; color: #fff; }
+.mi-scale i::after { content: ""; position: absolute; left: 50%; top: 14px; width: 2px; height: 18px; margin-left: -1px; background: #fff; }
+.mi-ticks { display: flex; gap: 0; font-family: var(--f-mono, "JetBrains Mono", monospace); font-size: .52rem; color: #8B88AE; white-space: nowrap; }
+.mi-rg { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; margin: 12px 0 0; }
+.mi-rg dt { font-family: var(--f-mono, "JetBrains Mono", monospace); font-size: .56rem; letter-spacing: .1em; text-transform: uppercase; padding-top: 3px; }
+.mi-rg dd { margin: 0; }
+.mi-rg--ok { color: #3FCB86; } .mi-rg--bad { color: #FF7DA0; }
+.mi-verdict { margin: 12px 0 0; padding: 9px 11px; background: #1B1A35; border-left: 4px solid #FFF02B; font-size: .86rem; }
+.mi-verdict--ok { border-left-color: #3FCB86; } .mi-verdict--bad { border-left-color: var(--pink); }
+.mi-close { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; margin-top: 16px; border: 2px solid #F3F0EA; background: transparent; color: #F3F0EA; font-family: var(--f-mono, "JetBrains Mono", monospace); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+
+.mi-intro { margin: 0 0 8px; font-size: .92rem; line-height: 1.5; color: var(--ink-soft); }
+.mi-gi { padding: 12px 0; border-bottom: 1px dashed rgba(27, 26, 53, .25); }
+.mi-gi b { display: block; font-weight: 500; }
+.mi-gi p { margin: 3px 0 6px; font-size: .9rem; line-height: 1.45; color: var(--ink-soft); }
+.mi-gi .mi-how { margin: 0 0 8px; font-size: .58rem; color: #9B0D35; }
+.mi-gi__r { display: flex; flex-wrap: wrap; gap: 6px; }
+.mi-gi__r .mi-st { margin: 0; }
+.mi-gi__edit { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.mi-gi__edit label { display: flex; flex-direction: column; gap: 4px; }
+.mi-gi__edit .mono { font-size: .5rem; color: var(--ink-soft); }
+.mi-gi__edit input { min-height: 40px; padding: 6px 10px; border: 2px solid var(--navy); font: inherit; background: var(--white); }
+@media (max-width: 1100px) {
+  .ma__kpis--8 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ma__glossary { margin-left: 0; width: 100%; justify-content: center; }
+}
+.ma__hint { color: var(--ink-soft); font-size: .84rem; }

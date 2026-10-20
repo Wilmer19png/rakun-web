@@ -8,6 +8,7 @@
    ========================================================================== */
 import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
+import { METRICS, compute, status, cell, chip, dot, info, val, wireInfo, glossaryHTML, wireGlossary } from './metas.js';
 
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 const num = (n) => Number(n || 0).toLocaleString('es-CO');
@@ -38,7 +39,7 @@ export async function loadAds(sb, m, days) {
     const prev = rows.get(k);
     if (!prev) { rows.set(k, { ...r, campaign: plain(r.campaign), ad: plain(r.ad), list: [] }); continue; }
     // antes de la fase 12 el mismo anuncio puede salir dos veces (codificado y no): se suman
-    ['visitors', 'views', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'meta_leads', 'messages'].forEach((f) => { prev[f] = (Number(prev[f]) || 0) + (Number(r[f]) || 0); });
+    ['visitors', 'views', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'link_clicks', 'video_3s', 'thruplay', 'meta_leads', 'messages'].forEach((f) => { prev[f] = (Number(prev[f]) || 0) + (Number(r[f]) || 0); });
     if (r.spend != null) prev.spend = (Number(prev.spend) || 0) + Number(r.spend);
   }
   // anuncios que llegaron con el ID de Meta en vez del nombre ({{ad.id}}): se traducen con lo que trajo meta-sync
@@ -55,7 +56,7 @@ export async function loadAds(sb, m, days) {
     if (r.spend == null || r.visitors || r.leads || !r.ad) continue;
     const twins = [...rows.values()].filter((x) => x !== r && x.spend == null && x.ad === r.ad);
     if (twins.length !== 1) continue;
-    ['spend', 'impressions', 'reach', 'clicks', 'meta_leads', 'messages'].forEach((f) => { twins[0][f] = r[f]; });
+    ['spend', 'impressions', 'reach', 'clicks', 'link_clicks', 'video_3s', 'thruplay', 'meta_leads', 'messages'].forEach((f) => { twins[0][f] = r[f]; });
     rows.delete(k);
   }
   const leads = l.error ? [] : (l.data || []).filter((x) => x.utm_source && (x.utm_campaign || x.utm_content));
@@ -71,12 +72,28 @@ export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
   const { ads, leads } = data;
   const isAdmin = ctx.me.role === 'admin';
   const sum = (f) => ads.reduce((s, a) => s + (Number(a[f]) || 0), 0);
-  const spend = Number(m.meta_spend) || sum('spend');
-  const t = { reach: sum('reach'), impressions: sum('impressions'), clicks: sum('clicks'), visitors: sum('visitors'), leads: sum('leads'), won: sum('won') };
   const hasMeta = ads.some((a) => a.spend != null);
-  const isId = (v) => /^\d{10,}$/.test(v || '');
+  const t = {
+    spend: hasMeta ? sum('spend') : null, reach: sum('reach'), impressions: sum('impressions'), clicks: sum('clicks'), link_clicks: sum('link_clicks'),
+    video_3s: sum('video_3s'), thruplay: sum('thruplay'), visitors: sum('visitors'), leads: sum('leads'), won: sum('won'), sold: sum('sold'),
+  };
+  const v = compute(t);
+  const isId = (x) => /^\d{10,}$/.test(x || '');
   const name = (a) => (isId(a.ad) ? `Anuncio ID ${a.ad}` : a.ad || a.campaign || '—');
   const sub = (a) => (isId(a.ad) ? 'llegó con el ID y no con el nombre · revisa sus parámetros de URL' : a.ad ? a.campaign : 'sin nombre de anuncio');
+  const lc = t.link_clicks || t.clicks;
+  const tiles = [
+    ['cpm', 'Meta', `${num(t.impressions)} impresiones`],
+    ['hook', 'Meta', 'frenaron el scroll 3 s'],
+    ['hold', 'Meta', 'vieron hasta el final'],
+    ['ctr', 'Meta', `${num(lc)} clics al enlace`],
+    ['cpc', 'Meta', 'por cada clic a la web'],
+    ['conv', 'Gestor', `${num(t.leads)} de ${num(t.visitors)} personas`],
+    ['cpl', '', hasMeta ? `gasto ${cop(t.spend)}` : 'gasto ÷ formularios'],
+    ['freq', 'Meta', `alcance ${num(t.reach)}`],
+  ];
+  const big = (k) => { const x = val(k, v[k]); return x.startsWith('$') ? `<span class="cur">$</span>${x.slice(1)}` : x; };
+  const H = (label, k) => `<span>${label}${k ? info(k) : ''}</span>`;
   return `
     <section class="mx__card mx__card--wide ma">
       <div class="ma__h">
@@ -85,30 +102,34 @@ export function metaAdsHTML(m, ctx, data = { ads: m.ads || [], leads: [] }) {
         ${isAdmin ? '<button type="button" class="gx__btn" data-meta-sync>Actualizar ahora</button><button type="button" class="gx__btn gx__btn--dark" data-meta-rakun>Conectar cuenta de RAKÜN</button>' : ''}
       </div>
       ${ads.length ? `
-      <div class="ma__kpis">
-        <div><span class="mono">Gasto <span class="mx__tag">Meta</span></span><b>${hasMeta ? `<span class="cur">$</span>${Math.round(spend).toLocaleString('es-CO')}` : '—'}</b></div>
-        <div><span class="mono">Alcance <span class="mx__tag">Meta</span></span><b>${hasMeta ? num(t.reach) : '—'}</b><small>${hasMeta ? `${num(t.impressions)} impresiones` : 'conecta Meta'}</small></div>
-        <div><span class="mono">Clics · CTR <span class="mx__tag">Meta</span></span><b>${hasMeta ? num(t.clicks) : '—'}</b><small>${hasMeta ? `${pct(t.clicks, t.impressions)} de las impresiones` : ''}</small></div>
-        <div><span class="mono">Llegaron a la web <span class="mx__tag">Página</span></span><b>${num(t.visitors)}</b><small>personas</small></div>
-        <div><span class="mono">Llenaron el formulario <span class="mx__tag">Gestor</span></span><b>${num(t.leads)}</b><small>${pct(t.leads, t.visitors)} de las que llegaron</small></div>
-        <div class="ma__kpi--dark"><span class="mono">Costo por solicitud</span><b>${hasMeta && t.leads ? `<span class="cur">$</span>${Math.round(spend / t.leads).toLocaleString('es-CO')}` : '—'}</b><small>${num(t.won)} ${t.won === 1 ? 'venta' : 'ventas'}</small></div>
+      <div class="ma__legend">
+        <span>${dot('ok')}Bien</span><span>${dot('mid')}En medio</span><span>${dot('bad')}Alerta</span>
+        <span class="ma__hint">Pasa el mouse (o toca) la <b>i</b> para ver qué es y cuál es el ideal</span>
+        <button type="button" class="gx__btn ma__glossary" data-glossary><span class="mi mi--inv" aria-hidden="true">i</span>¿Qué significa cada métrica?</button>
       </div>
-      <div class="ma__row ma__row--h mono"><span>Anuncio · campaña</span><span>Gasto</span><span>Alcance</span><span>Clics · CTR</span><span>Llegaron</span><span>Formularios</span><span>Costo / form.</span><span>Ventas</span></div>
-      ${ads.map((a, i) => `
-      <div class="ma__ad">
-        <button type="button" class="ma__row ma__row--btn" data-ad-open="${i}" aria-expanded="false"${a.list.length ? '' : ' disabled'}>
-          <span><b>${esc(name(a))}</b><small>${esc(sub(a))}</small></span>
-          <span class="mono">${a.spend != null ? cop(a.spend) : '—'}</span>
-          <span class="mono">${a.spend != null ? num(a.reach) : '—'}</span>
-          <span class="mono">${a.spend != null ? `${num(a.clicks)}<small>${pct(a.clicks, a.impressions)}</small>` : '—'}</span>
-          <span class="mono">${num(a.visitors)}</span>
-          <span class="mono ma__forms">${a.list.length ? '<i aria-hidden="true">▾</i>' : ''}${num(a.leads)}<small>${a.visitors ? pct(a.leads, a.visitors) : ''}${a.meta_leads && a.meta_leads !== a.leads ? ` · ${num(a.meta_leads)} en Meta` : ''}</small></span>
-          <span class="mono">${a.spend != null ? per(a.spend, a.leads) : '—'}</span>
-          <span class="mono ma__sold">${a.won ? `${num(a.won)}<small>${cop(a.sold)}</small>` : '0'}</span>
-        </button>
-        ${a.list.length ? `<div class="ma__leads" data-ad-list="${i}" hidden>${a.list.map(leadHTML).join('')}</div>` : ''}
-      </div>`).join('')}
-      <p class="mono qx__dim ma__foot">Toca un anuncio para ver quién llenó el formulario · «Formularios» y «Ventas» salen del gestor, no de Meta · Parámetros de URL para cada anuncio: <button class="qx__link" type="button" data-copy-utm>copiar</button></p>
+      <div class="ma__kpis ma__kpis--8">
+        ${tiles.map(([k, src, small]) => `<div${status(k, v[k]) === 'bad' ? ' class="is-bad"' : ''}><span class="mono ma__kl"><span>${METRICS[k].name}${src ? ` <span class="mx__tag">${src}</span>` : ''}</span>${info(k, v[k])}</span><b>${big(k)}</b><small>${small}</small>${chip(status(k, v[k]))}</div>`).join('')}
+      </div>
+      <div class="ma__scroll">
+        <div class="ma__row ma__row--h mono">${H('Anuncio · campaña')}${H('Gasto')}${H('CPM', 'cpm')}${H('Gancho', 'hook')}${H('Retención', 'hold')}${H('CTR', 'ctr')}${H('Formularios', 'conv')}${H('Costo / lead', 'cpl')}${H('Frec.', 'freq')}${H('Ventas')}</div>
+        ${ads.map((a, i) => { const x = compute(a); return `
+        <div class="ma__ad">
+          <button type="button" class="ma__row ma__row--btn" data-ad-open="${i}" aria-expanded="false"${a.list.length ? '' : ' disabled'}>
+            <span><b>${esc(name(a))}</b><small>${esc(sub(a))}</small></span>
+            <span class="mono">${a.spend != null ? cop(a.spend) : '—'}</span>
+            <span class="mono">${cell('cpm', x.cpm)}</span>
+            <span class="mono">${cell('hook', x.hook)}</span>
+            <span class="mono">${cell('hold', x.hold)}</span>
+            <span class="mono">${cell('ctr', x.ctr)}</span>
+            <span class="mono ma__forms">${a.list.length ? '<i aria-hidden="true">▾</i>' : ''}${num(a.leads)}<small>${a.visitors ? `${cell('conv', x.conv)} de ${num(a.visitors)}` : 'sin visitas'}${a.meta_leads && a.meta_leads !== a.leads ? ` · ${num(a.meta_leads)} en Meta` : ''}</small></span>
+            <span class="mono">${cell('cpl', x.cpl)}</span>
+            <span class="mono">${cell('freq', x.freq)}</span>
+            <span class="mono ma__sold">${a.won ? `${num(a.won)}<small>${cop(a.sold)}</small>` : '0'}</span>
+          </button>
+          ${a.list.length ? `<div class="ma__leads" data-ad-list="${i}" hidden>${a.list.map(leadHTML).join('')}</div>` : ''}
+        </div>`; }).join('')}
+      </div>
+      <p class="mono qx__dim ma__foot">Toca un anuncio para ver quién llenó el formulario · «Formularios» y «Ventas» salen del gestor, no de Meta · el gancho y la retención solo aplican a videos · Parámetros de URL para cada anuncio: <button class="qx__link" type="button" data-copy-utm>copiar</button></p>
       ${leads.length ? `
       <h2 class="mono mx__h2b">Últimos formularios desde anuncios</h2>
       <div class="ma__leads ma__leads--all">${leads.slice(0, 12).map((x) => leadHTML(x, true)).join('')}</div>` : data.leadsHidden ? '<p class="mono qx__dim">Los nombres de quienes llenaron el formulario solo los ve quien tiene acceso a 01 Solicitudes.</p>' : ''}` : `
@@ -140,6 +161,11 @@ export function wireMeta(ctx, root, reload) {
     b.setAttribute('aria-expanded', String(!list.hidden));
   }));
   $$('[data-lead]', root).forEach((b) => b.addEventListener('click', () => ctx.openLead?.(b.dataset.lead)));
+  wireInfo(root);
+  $('[data-glossary]', root)?.addEventListener('click', () => {
+    const box = ctx.openDrawer(glossaryHTML(ctx.me.role === 'admin'), 'Qué significa cada métrica');
+    wireGlossary(ctx, box, reload);
+  });
   $('[data-meta-sync]', root)?.addEventListener('click', async (e) => {
     const msg = $('[data-meta-msg]', root);
     e.target.disabled = true;

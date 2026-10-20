@@ -243,3 +243,11 @@ Corre `supabase/fase12.sql` en el SQL Editor (después de la fase 11). Hace tres
 - decodifica los nombres de campaña y anuncio que llegaban como `RAK%C3%9CN+%7C+Leads…` (los que ya estaban y los nuevos);
 - agrega `metrics_ads(days)`: por anuncio, gasto, alcance, impresiones, clics y CTR de Meta junto a las personas, formularios y ventas del gestor;
 - en 11 · Métricas → Por anuncio, cada anuncio se abre y muestra quién llenó el formulario (y abre su solicitud).
+
+## Fase 13 · Métricas que se explican solas
+Corre `supabase/fase13.sql` en el SQL Editor (después de la fase 12) y vuelve a subir la función `meta-sync`
+(Edge Functions → meta-sync → pega `supabase/functions/meta-sync/index.ts` → Deploy). Con eso:
+- meta-sync trae también los clics en el enlace, las reproducciones de 3 s (gancho) y los ThruPlay (retención);
+- 11 · Métricas → Por anuncio muestra CPM, gancho, retención, CTR, CPC, leads ÷ visitas, costo por lead y frecuencia, cada uno con su semáforo (bien / en medio / alerta) y una «i» que explica qué es y cuál es el ideal;
+- el botón «¿Qué significa cada métrica?» abre el glosario; el admin cambia ahí los rangos (se guardan en `app_settings` id `metas`).
+Después de desplegar, dale a «Actualizar ahora» para que se vuelvan a traer los 30 días con los datos nuevos.

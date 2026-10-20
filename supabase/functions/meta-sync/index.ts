@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
         let next: string | null = `${GRAPH}/${acc.ad_account_id}/insights?` + new URLSearchParams({
           level: 'ad', time_increment: '1', limit: '500',
           time_range: JSON.stringify({ since: ymd(since), until: ymd(until) }),
-          fields: 'ad_id,ad_name,adset_name,campaign_id,campaign_name,spend,impressions,reach,clicks,actions,date_start',
+          fields: 'ad_id,ad_name,adset_name,campaign_id,campaign_name,spend,impressions,reach,clicks,inline_link_clicks,actions,video_thruplay_watched_actions,date_start',
           access_token: token,
         });
         while (next) {
@@ -133,6 +133,9 @@ Deno.serve(async (req) => {
               campaign_id: r.campaign_id, campaign_name: r.campaign_name,
               spend: Number(r.spend) || 0, impressions: Number(r.impressions) || 0, reach: Number(r.reach) || 0, clicks: Number(r.clicks) || 0,
               leads: count(r.actions, LEAD_TYPES), messages: count(r.actions, MSG_TYPES),
+              // fase 13: clics al enlace, reproducciones de 3 s (gancho) y ThruPlay (retención)
+              link_clicks: Number(r.inline_link_clicks) || count(r.actions, ['link_click']), video_3s: count(r.actions, ['video_view']),
+              thruplay: count(r.video_thruplay_watched_actions, ['video_view']),
             });
           }
           next = data.paging?.next ?? null;
@@ -148,7 +151,11 @@ Deno.serve(async (req) => {
         if (got.denied) throw new Error(await diagnose(candidates[candidates.length - 1], acc.ad_account_id));
         const rows = got.rows;
         for (let i = 0; i < rows.length; i += 500) {
-          const { error: e } = await admin.from('meta_insights').upsert(rows.slice(i, i + 500));
+          let { error: e } = await admin.from('meta_insights').upsert(rows.slice(i, i + 500));
+          // antes de correr la fase 13 no existen esas columnas: se guarda sin ellas
+          if (e && /link_clicks|video_3s|thruplay/.test(e.message)) {
+            ({ error: e } = await admin.from('meta_insights').upsert(rows.slice(i, i + 500).map(({ link_clicks: _a, video_3s: _b, thruplay: _c, ...r }) => r)));
+          }
           if (e) throw new Error(e.message);
         }
         await admin.from('meta_accounts').update({ last_sync: new Date().toISOString(), last_error: null }).eq('id', acc.id);
