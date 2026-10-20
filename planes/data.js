@@ -32,6 +32,10 @@ export const REDES = {
     {
       key: 'contenido', name: 'Solo contenido', color: 'var(--yellow)',
       desc: 'Para los que solo necesitan el contenido. Tú pones la idea; nosotros lo grabamos y lo editamos.',
+      // «qué incluye» debajo de las pestañas (lo que no incluye remite a Gestión completa)
+      lead: 'Tú pones la idea y publicas. Nosotros editamos (y grabamos, si lo eliges).',
+      inc: ['Edición', 'Grabación (opcional)'],
+      exc: ['Estrategia', 'Guiones', 'Publicación', 'Pauta'],
       plans: [
         { name: 'Ritmo', ideal: 'Para creadores que necesitan publicar seguido y rápido.', ed: 509000, rec: 1190000,
           recText: '1 sesión de hasta 3 h', levels: ['agil'],
@@ -47,6 +51,9 @@ export const REDES = {
     {
       key: 'gestion', name: 'Gestión completa', color: 'var(--pink)',
       desc: 'Para los que necesitan todo. Pensamos, escribimos, grabamos, editamos, publicamos y movemos tu pauta.',
+      lead: 'Nos encargamos de todo. Pensamos, escribimos, grabamos, editamos, publicamos y movemos tu pauta.',
+      inc: ['Estrategia y parrilla', 'Guiones', 'Grabación (opcional)', 'Edición', 'Publicación', 'Pauta'],
+      exc: [],
       plans: [
         { name: 'Ritmo', ideal: 'Para creadores que quieren crecer con estrategia sin pensar qué publicar.', ed: 2490000, rec: 3090000,
           recText: '1 sesión de hasta 3 h', levels: ['agil'], ads: 500000,

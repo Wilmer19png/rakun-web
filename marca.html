@@ -131,7 +131,7 @@
         <h1 class="pl-hero__title" id="mk-title">Hecho para<br>ser <span class="tag-label">visto.</span></h1>
         <p class="pl-hero__aside mk-hero__aside">Para quienes viven de su imagen: creadores, médicos y mentores. Contenido con estrategia, grabación, edición y pauta, con planes mensuales y sin letra pequeña.</p>
         <div class="mk-actions">
-          <a class="mk-btn" href="#planes" data-eye-target>Ir a los planes <span aria-hidden="true">↓</span></a>
+          <a class="mk-btn" href="#planes" data-eye-target data-plans-open>Ver los planes <span aria-hidden="true">→</span></a>
           <a class="link" href="#ser-visto">Mira lo que puedes lograr <svg class="ico" aria-hidden="true"><use href="#i-se"/></svg></a>
         </div>
         <p class="mono mk-hero__scroll"><span aria-hidden="true"></span>Baja: la historia sigue</p>
@@ -234,6 +234,7 @@
       </div>
 
       <p class="mono fx-fine">* Simulación ilustrativa. No es un resultado garantizado: depende de tu nicho, tu constancia y la pauta.</p>
+      <div class="mk-go"><p class="mk-go__text">Así se ve un perfil con estrategia. <b>Mira cuánto cuesta el tuyo.</b></p><a class="mk-btn mk-go__btn" href="#planes">Ver los planes <span aria-hidden="true">↓</span></a></div>
     </div>
   </section>
 
@@ -359,6 +360,7 @@
           </div>
         </li>
       </ol>
+      <div class="mk-go mk-go--dark"><p class="mk-go__text">Tu estrategia, lista en <b>un plan.</b></p><a class="mk-btn mk-go__btn" href="#planes">Ver los planes <span aria-hidden="true">↓</span></a></div>
     </div>
   </section>
 
@@ -450,36 +452,7 @@
         </div>
       </div>
 
-      <!-- 2 · la librería: todos los formatos viven en una página aparte (libreria.html) -->
-      <section class="fx-lib" aria-labelledby="lib-title">
-        <div class="fx-lib__copy">
-          <p class="mono fx-lib__k">La librería · 24 formatos</p>
-          <h3 class="fx-lib__title" id="lib-title">¿Buscas otro <em>formato?</em></h3>
-          <p class="fx-lib__text">Reacciones, POV, podcasts, carruseles, VSL… Todo lo que podemos hacer por tu marca, ordenado por perfil y con ejemplos.</p>
-          <a class="fx-lib__go" href="libreria.html" data-eye-target>Abrir la librería <span aria-hidden="true">→</span></a>
-        </div>
-        <!-- el fichero: una ficha por perfil, se asoman por encima del bloque -->
-        <ul class="fx-lib__cards" aria-label="Formatos por perfil">
-          <li><a class="fx-lib__card" href="libreria.html#creador" style="--t: var(--yellow); --r: -7deg; --x: 0px; --y: -40px">
-            <span class="fx-lib__tab mono"><span>Influencers · creadores</span><span>8 formatos</span></span>
-            <span class="fx-lib__name">Creadores</span>
-            <span class="fx-lib__item">Reacción comentada</span><span class="fx-lib__item">Formato POV</span><span class="fx-lib__item">Tú vs. tú</span>
-            <span class="fx-lib__more mono">+ 5 más</span>
-          </a></li>
-          <li><a class="fx-lib__card" href="libreria.html#medico" style="--t: var(--blue); --r: 2deg; --x: 180px; --y: -64px">
-            <span class="fx-lib__tab mono"><span>Médicos · odontólogos · estética</span><span>8 formatos</span></span>
-            <span class="fx-lib__name">Salud y estética</span>
-            <span class="fx-lib__item">Preguntas y respuestas</span><span class="fx-lib__item">POV de consulta</span><span class="fx-lib__item">Carrusel educativo</span>
-            <span class="fx-lib__more mono">+ 5 más</span>
-          </a></li>
-          <li><a class="fx-lib__card" href="libreria.html#mentor" style="--t: var(--pink); --r: 8deg; --x: 350px; --y: -28px">
-            <span class="fx-lib__tab mono"><span>Mentores · empresas</span><span>8 formatos</span></span>
-            <span class="fx-lib__name">Mentores</span>
-            <span class="fx-lib__item">Video de ventas (VSL)</span><span class="fx-lib__item">Podcast en video</span><span class="fx-lib__item">Webinar recortado</span>
-            <span class="fx-lib__more mono">+ 5 más</span>
-          </a></li>
-        </ul>
-      </section>
+      <div class="mk-go"><p class="mk-go__text">Ya viste cómo se arma cada video. <b>Ahora elige cuántos quieres al mes.</b></p><a class="mk-btn mk-go__btn" href="#planes">Ya sé, ver los planes <span aria-hidden="true">↓</span></a></div>
     </div>
   </section>
 
@@ -502,6 +475,8 @@
           <p class="pl-fine__row"><span class="pl-fine__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></span><span><b>Sin permanencia:</b> cancelas avisando antes del siguiente ciclo de pago.</span></p>
         </aside>
       </div>
+      <!-- lo que se abre encima de la página con «Ver los planes» (planes.js lo mueve a la ventana y lo devuelve) -->
+      <div class="pl-pick" data-pick>
       <p class="mono pl-who pl-who--dark" id="who-label">¿Qué necesitas?</p>
       <div class="pl-profiles pl-profiles--2" role="tablist" aria-labelledby="who-label" data-tabs>
         <button class="ptk" type="button" role="tab" id="tab-contenido" aria-controls="panel" aria-selected="true" data-cat="contenido" style="--t: var(--yellow)">
@@ -511,10 +486,10 @@
           <span class="mono ptk__n">Categoría 02</span><span class="ptk__name" data-cat-name>Gestión completa</span><span class="ptk__line" data-cat-desc>Para los que necesitan todo. Pensamos, escribimos, grabamos, editamos, publicamos y movemos tu pauta.</span>
         </button>
       </div>
+      <div class="pl-inc" data-cat-inc aria-live="polite"></div>
     <div class="mk-panel" id="panel" role="tabpanel" aria-labelledby="tab-contenido" data-panel>
       <div class="pl-head pl-head--slim">
         <p class="mono pl-head__kicker">Planes mensuales · Instagram, TikTok y Facebook</p>
-        <p class="p-head__aside" data-head-lede>Todos los videos verticales duran de 20 a 35 s; si son más largos, se cotizan aparte. La inversión en pauta va aparte: la pagas directo a Meta.</p>
       </div>
 
       <div class="pl-switches" data-switches>
@@ -550,15 +525,55 @@
         </div>
       </div>
     </div>
+      </div>
     </div>
   </section>
 
   <!-- ==============================================================
-       005 · LA CARTA DEL CLUB
+       007 · LA LIBRERÍA DE FORMATOS (justo después de los planes)
+       ============================================================== -->
+  <section class="sec sec--cream pl-lib" id="libreria" aria-labelledby="lib-title">
+    <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Librería</span></div>
+    <div class="sec__body">
+      <!-- la librería: todos los formatos viven en una página aparte (libreria.html) -->
+      <div class="fx-lib">
+        <div class="fx-lib__copy">
+          <p class="mono fx-lib__k">La librería · 24 formatos</p>
+          <h2 class="fx-lib__title" id="lib-title">¿Tu plan necesita <em>otro formato?</em></h2>
+          <p class="fx-lib__text">Reacciones, POV, podcasts, carruseles, VSL… Cualquiera entra en tu plan. Míralos ordenados por perfil y con ejemplos.</p>
+          <a class="fx-lib__go" href="libreria.html" data-eye-target>Abrir la librería <span aria-hidden="true">→</span></a>
+        </div>
+        <!-- el fichero: una ficha por perfil, se asoman por encima del bloque -->
+        <ul class="fx-lib__cards" aria-label="Formatos por perfil">
+          <li><a class="fx-lib__card" href="libreria.html#creador" style="--t: var(--yellow); --r: -7deg; --x: 0px; --y: -40px">
+            <span class="fx-lib__tab mono"><span>Influencers · creadores</span><span>8 formatos</span></span>
+            <span class="fx-lib__name">Creadores</span>
+            <span class="fx-lib__item">Reacción comentada</span><span class="fx-lib__item">Formato POV</span><span class="fx-lib__item">Tú vs. tú</span>
+            <span class="fx-lib__more mono">+ 5 más</span>
+          </a></li>
+          <li><a class="fx-lib__card" href="libreria.html#medico" style="--t: var(--blue); --r: 2deg; --x: 180px; --y: -64px">
+            <span class="fx-lib__tab mono"><span>Médicos · odontólogos · estética</span><span>8 formatos</span></span>
+            <span class="fx-lib__name">Salud y estética</span>
+            <span class="fx-lib__item">Preguntas y respuestas</span><span class="fx-lib__item">POV de consulta</span><span class="fx-lib__item">Carrusel educativo</span>
+            <span class="fx-lib__more mono">+ 5 más</span>
+          </a></li>
+          <li><a class="fx-lib__card" href="libreria.html#mentor" style="--t: var(--pink); --r: 8deg; --x: 350px; --y: -28px">
+            <span class="fx-lib__tab mono"><span>Mentores · empresas</span><span>8 formatos</span></span>
+            <span class="fx-lib__name">Mentores</span>
+            <span class="fx-lib__item">Video de ventas (VSL)</span><span class="fx-lib__item">Podcast en video</span><span class="fx-lib__item">Webinar recortado</span>
+            <span class="fx-lib__more mono">+ 5 más</span>
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================
+       008 · LA CARTA DEL CLUB
        ============================================================== -->
   <section class="sec pl-carta" id="extras" aria-labelledby="carta-title">
     <span class="lip" aria-hidden="true" style="--lip: #14132B"></span>
-    <div class="rail" aria-hidden="true"><span class="rail__num">007</span><span class="rail__label">Extras</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">008</span><span class="rail__label">Extras</span></div>
     <div class="sec__body">
       <div class="pl-head">
         <div>
@@ -576,7 +591,7 @@
        ============================================================== -->
   <section class="sec sec--pink pl-rules" id="reglas" aria-labelledby="rules-title">
     <span class="lip" aria-hidden="true" style="--lip: var(--pink)"></span>
-    <div class="rail" aria-hidden="true"><span class="rail__num">008</span><span class="rail__label">Reglas</span></div>
+    <div class="rail" aria-hidden="true"><span class="rail__num">009</span><span class="rail__label">Reglas</span></div>
     <div class="sec__body">
       <h2 class="pl-rules__title" id="rules-title">Las reglas de la casa.</h2>
       <ol class="rules">
@@ -591,8 +606,20 @@
   </section>
 </main>
 
-<footer class="sec sec--navy p-ftr" id="contacto">
-  <div class="rail" aria-hidden="true"><span class="rail__num">009</span><span class="rail__label">Contacto</span></div>
+<div class="pov" data-pov hidden>
+    <div class="pov__veil" data-pov-close></div>
+    <div class="pov__box" role="dialog" aria-modal="true" aria-labelledby="pov-title" data-lenis-prevent tabindex="-1">
+      <div class="pov__top">
+        <div><p class="mono pov__k">Planes · Redes · COP al mes · antes de IVA · sin permanencia</p><p class="pov__title" id="pov-title">Elige tu plan</p></div>
+        <button class="pov__x" type="button" data-pov-close aria-label="Cerrar los planes">✕</button>
+      </div>
+      <div data-pov-slot></div>
+    </div>
+  </div>
+  <a class="mk-fixgo" href="#planes" data-plans-open data-fixgo>Ver los planes <span aria-hidden="true">→</span></a>
+
+  <footer class="sec sec--navy p-ftr" id="contacto">
+  <div class="rail" aria-hidden="true"><span class="rail__num">010</span><span class="rail__label">Contacto</span></div>
   <div class="sec__body">
     <div class="p-ftr__cols">
       <div class="ftr__col">

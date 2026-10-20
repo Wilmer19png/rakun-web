@@ -59,8 +59,8 @@ function cardHTML(p, cat) {
     price: `${cop(pr.price)} / mes`,
   };
   return `
-    <li class="plc${p.hot ? ' plc--hot' : ''}${small && p.hot ? ' is-open' : ''}" style="--c: ${cat.color}">
-      <button class="plc__fold" type="button" aria-expanded="${small && p.hot}" aria-label="Ver qué incluye ${esc(cat.name)} ${esc(p.name)}"></button>
+    <li class="plc${p.hot ? ' plc--hot' : ''}" style="--c: ${cat.color}">
+      <button class="plc__fold" type="button" aria-expanded="false" aria-label="Ver qué incluye ${esc(cat.name)} ${esc(p.name)}"></button>
       ${p.hot ? '<span class="plc__badge mono">★ Recomendado</span>' : ''}
       <p class="mono plc__tag">${esc(cat.name)}</p>
       <h3 class="plc__name">${esc(p.name)}</h3>
@@ -80,6 +80,22 @@ function cardHTML(p, cat) {
       ${p.ads ? `<p class="plc__ads mono">Pauta sugerida aparte: desde ${cop(p.ads)} / mes · la pagas directo a Meta</p>` : ''}
       <a class="plc__cta" href="mailto:rakundesigns@gmail.com?subject=${encodeURIComponent(subject)}" data-lead="${esc(JSON.stringify(lead))}">Quiero este plan <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
     </li>`;
+}
+
+/* ---------- qué incluye cada categoría (debajo de las pestañas) ---------- */
+const CHECK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5 5 9l5-6"/></svg>';
+function incHTML(cat) {
+  // lo publicado desde el gestor puede no traer estos textos: se toman de data.js
+  const base = REDES.cats.find((c) => c.key === cat.key) || {};
+  const lead = cat.lead || base.lead || cat.desc;
+  const inc = cat.inc || base.inc || [];
+  const exc = cat.exc || base.exc || [];
+  const other = D.cats.find((c) => c.key !== cat.key);
+  return `
+    <p class="pl-inc__lead">${esc(lead)}</p>
+    <ul class="pl-inc__list" aria-label="Incluye">${[...inc, `Videos de ${D.duration}`].map((x) => `<li>${CHECK}${esc(x)}</li>`).join('')}</ul>
+    ${exc.length ? `<p class="mono pl-inc__k">No incluye</p><ul class="pl-inc__list pl-inc__list--no" aria-label="No incluye">${exc.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    ${other ? `<button class="pl-inc__go" type="button" data-cat-go="${other.key}">Todo eso está en ${esc(other.name)} <span aria-hidden="true">→</span></button>` : ''}` : `<p class="pl-inc__note">${esc(D.note)}</p>`}`;
 }
 
 /* ---------- la carta del club: categorías que se despliegan ---------- */
@@ -129,7 +145,8 @@ function render(animate = true) {
     $('[data-cat-desc]', t).textContent = c.desc;
     t.style.setProperty('--t', c.color);
   });
-  $('[data-head-lede]').textContent = `Todos los videos verticales duran de ${D.duration}; si son más largos, se cotizan aparte. ${D.note}`;
+  const inc = $('[data-cat-inc]');
+  if (inc) { inc.innerHTML = incHTML(cat); inc.style.setProperty('--t', cat.color); }
   $('[data-quarterly-pct]').textContent = `−${D.quarterlyPct}%`;
   $$('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
   $('[data-quarterly]').setAttribute('aria-checked', String(state.quarterly));
@@ -168,6 +185,7 @@ function initPlans() {
       setCat(next.dataset.cat, true);
     });
   });
+  $('[data-cat-inc]')?.addEventListener('click', (e) => { const b = e.target.closest('[data-cat-go]'); if (b) setCat(b.dataset.catGo, true); });
   $$('[data-mode]').forEach((b) => b.addEventListener('click', () => { state.mode = b.dataset.mode; render(false); }));
   $('[data-quarterly]').addEventListener('click', () => { state.quarterly = !state.quarterly; render(false); });
   $('[data-carta]')?.addEventListener('click', (e) => {
@@ -283,8 +301,80 @@ function initLenis() {
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
 }
+/* ==========================================================================
+   «Ver los planes»: los planes se abren encima de la página, sin bajar
+   (lienzo «Redes · el primer botón abre los planes encima»). Se mueve el mismo
+   bloque de la sección (pestañas, qué incluye, grabación, trimestral, planes y
+   «¿Ningún plan te cuadra?») a la ventana y al cerrar vuelve a su lugar.
+   ========================================================================== */
+function initPlansOverlay() {
+  const pov = $('[data-pov]');
+  const pick = $('[data-pick]');
+  const slot = $('[data-pov-slot]');
+  if (!pov || !pick || !slot) return;
+  const box = $('.pov__box', pov);
+  const home = document.createComment(' aquí vuelven los planes ');
+  let back = null;
+
+  const open = (e) => {
+    e?.preventDefault();
+    if (!pov.hidden) return;
+    back = document.activeElement;
+    pick.before(home);
+    slot.append(pick);
+    pov.hidden = false;
+    document.documentElement.classList.add('pov-open');
+    lenis?.stop();
+    box.scrollTop = 0;
+    void pov.offsetWidth;                                  // que la entrada se anime desde el estado oculto
+    pov.classList.add('is-in');
+    box.focus({ preventScroll: true });
+    window.rkEvent?.('click', 'Planes_Ventana');
+    window.rkTrack?.('ViewContent', { content_name: 'Planes Redes (ventana)' });
+  };
+  const close = () => {
+    if (pov.hidden) return;
+    pov.classList.remove('is-in');
+    home.replaceWith(pick);
+    pov.hidden = true;
+    document.documentElement.classList.remove('pov-open');
+    lenis?.start();
+    back?.focus?.({ preventScroll: true });
+  };
+
+  $$('[data-plans-open]').forEach((a) => a.addEventListener('click', open));
+  $$('[data-pov-close]', pov).forEach((b) => b.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => {
+    if (pov.hidden || document.documentElement.classList.contains('lf-open')) return;   // el formulario cierra lo suyo
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    // el foco no sale de la ventana
+    const f = $$('a[href], button:not([disabled]), [tabindex="0"]', box).filter((el) => el.offsetParent !== null);
+    if (!f.length) return;
+    if (e.shiftKey && (document.activeElement === f[0] || document.activeElement === box)) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+  });
+
+  // celular: la barra fija «Ver los planes» aparece al pasar el inicio y se esconde en los planes
+  const bar = $('[data-fixgo]');
+  const hero = $('#inicio');
+  const plans = $('#planes');
+  if (!bar || !hero || !plans) return;
+  const sync = () => {
+    const h = hero.getBoundingClientRect();
+    const p = plans.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const inPlans = p.top < vh * 0.7 && p.bottom > 0;
+    bar.classList.toggle('is-on', h.bottom < 0 && !inPlans);
+  };
+  window.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync, { passive: true });
+  sync();
+}
+
 function initAnchors() {
   document.addEventListener('click', (e) => {
+    if (e.defaultPrevented) return;
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
     const id = a.getAttribute('href').slice(1);
@@ -351,6 +441,7 @@ initCursor();
 initAnchors();
 initFormats();
 initPlans();
+initPlansOverlay();
 initSos();
 initPillars();
 
