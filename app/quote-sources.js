@@ -117,6 +117,7 @@ export const TEMPLATES = {
   marca: [
     ['Estrategia y parrilla del mes', 'estrategia', 5],
     ['Guiones del mes', 'guion', 9],
+    ['Carruseles del mes', 'diseno', 12],
     ['Sesión de grabación', 'grabacion', 13],
     ['Ediciones del mes', 'edicion', 22],
     ['Publicación y reporte del mes', 'otro', 30],

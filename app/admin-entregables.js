@@ -238,6 +238,12 @@ function wireTasks(ctx, items, reload) {
   $$('[data-return]', main).forEach((b) => b.addEventListener('click', async () => {
     const why = prompt('¿Qué hay que cambiar? (le llega como nota)');
     if (why === null) return;
+    // desde la segunda vez que se pide cambiar, cuenta como ronda extra (se le paga a quien la hizo)
+    const d = find(b.dataset.return);
+    if (Number(d?.round_pay) > 0 && confirm(`¿Esta devolución es una ronda extra (ya no es la primera ronda de cambios)?\n\nSi aceptas, se le suman ${cop(d.round_pay)} a ${first(person(ctx.staff, d.assignee_id)?.full_name) || 'quien la hizo'}.`)) {
+      const r = await sb.rpc('extra_round', { d: d.id });
+      if (r.error) alert(/extra_round/.test(r.error.message || '') ? 'Falta correr supabase/fase15.sql en Supabase.' : errorText(r.error));
+    }
     const { error } = await sb.from('deliverables').update({ status: 'en_curso', delivery_note: why.trim() ? `Devuelto: ${why.trim()}` : 'Devuelto para ajustes' }).eq('id', b.dataset.return);
     if (error) alert(errorText(error)); else reload();
   }));

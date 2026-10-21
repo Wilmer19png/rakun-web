@@ -7,8 +7,8 @@
 import { $, $$, esc, initials } from './util.js';
 import { errorText } from './supa.js';
 import { totals, blockTotal } from './quote-calc.js';
-import { ROLES, pctFor } from './pagos.js';
-import { loadRules, keyForLine, recordCommissions } from './comisiones.js';
+import { planTeam, partsForPlan, planOfLine, oneTimeManager } from './pagos.js';
+import { loadRules, planCommission, recordCommissions } from './comisiones.js';
 import { KINDS } from './quote-sources.js';
 
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
@@ -41,21 +41,32 @@ export async function moneyPanel(ctx, p, box) {
   const comNow = (coms || []).filter((c) => (monthly ? c.kind === 'mensual' && c.period === ms : true)).reduce((s, c) => s + Number(c.amount), 0);
   const margin = charge - teamPay - comNow;
   const paidSum = (pays || []).reduce((s, x) => s + Number(x.amount), 0);
-  // presupuesto sugerido por rol (según los % de Tarifas y pagos)
+  // lo sugerido para cada quien (09 → Tarifas y pagos): en Redes sale de las piezas del plan
   const planLine = block?.lines?.find((l) => l.source === 'plan');
-  const key = planLine ? keyForLine(block, planLine, rules.redes) : p.world === 'web' ? 'web' : p.world === 'produccion' ? 'produccion' : null;
-  const pct = key ? pctFor(rules.pagos, key) : {};
+  const pl = planLine && planOfLine(rules.redes, planLine);
+  const mgr = planLine ? planCommission(rules, planLine) : null;
+  const team = pl ? planTeam(rules.pagos, rules.piezas, planLine.pz?.parts || partsForPlan(rules.piezas, rules.redes, pl.catKey, pl.planName, pl.withRec), planLine.pz?.adds || []) : null;
+  const oneTime = !monthly && charge ? oneTimeManager(rules.pagos, '', charge) : null;
+  const sugg = team ? [['Manager', mgr?.total || 0], ['Edición', team.editor], ['Grabación', team.camara], ['Diseño', team.diseno]].filter(([, v]) => v) : [];
+  const suggTotal = sugg.reduce((s, [, v]) => s + v, 0);
+  // qué tarea se lleva qué (las de la plantilla del proyecto)
+  const FOR_KIND = team ? { edicion: team.editor, grabacion: team.camara, guion: team.guiones, estrategia: team.parrilla, diseno: team.carruseles } : {};
   const person = (id) => staff.find((s) => s.id === id);
 
   box.innerHTML = `
     <div class="mx__kpis dn__kpis">
       <div class="mx__kpi"><span class="mono">${monthly ? 'Cobra el cliente · cada mes' : 'Cobra el cliente'}</span><b>${big(charge)}</b><small>${q ? `pagado ${cop(paidSum)} · cotización ${esc(q.number)}` : 'proyecto sin cotización'}</small></div>
       <div class="mx__kpi"><span class="mono">Pagos al equipo${monthly ? ' · este mes' : ''}</span><b>${big(teamPay)}</b><small>${charge ? `${Math.round(teamPay / charge * 100)} % · ` : ''}${new Set((tasks || []).filter((t) => t.pay_amount).map((t) => t.assignee_id)).size} personas</small></div>
-      <div class="mx__kpi"><span class="mono">Comisión manager${monthly ? ' · este mes' : ''}</span><b>${big(comNow)}</b><small>${pct.manager ? `${pct.manager} % ${monthly ? 'mensual' : 'una vez'}` : 'sin comisión'}</small></div>
+      <div class="mx__kpi"><span class="mono">Comisión manager${monthly ? ' · este mes' : ''}</span><b>${big(comNow)}</b><small>${mgr ? `venta ${cop(mgr.venta + mgr.grabacion)}${mgr.operacion ? ` · operación ${cop(mgr.operacion)}` : ''} al mes` : oneTime ? `${oneTime.pv} % una vez` : 'sin comisión'}</small></div>
       <div class="mx__kpi mx__kpi--dark"><span class="mono">Queda RAKÜN</span><b>${big(margin)}</b><small>${charge ? `${Math.round(margin / charge * 100)} %` : '—'}</small></div>
     </div>
 
-    ${key && charge ? `<p class="mono qx__dim dn__budget">Presupuesto sugerido por rol (09 → Tarifas y pagos): ${ROLES.filter(([r]) => r !== 'manager' && pct[r]).map(([r, n]) => `${esc(n)} ${pct[r]} % = <b>${cop(charge * pct[r] / 100)}</b>`).join(' · ') || '—'}</p>` : ''}
+    ${sugg.length ? `<div class="dn__budget">
+      <p class="mono">Lo sugerido al mes (09 → Tarifas y pagos)</p>
+      <p>${sugg.map(([n, v]) => `${esc(n)} <b>${cop(v)}</b>`).join(' · ')} · <span class="qx__dim">queda para la agencia</span> <b>${cop(charge - suggTotal)}</b></p>
+      ${team.ronda ? `<p class="qx__dim">Cada ronda extra de edición: +${cop(team.ronda)} · videos: ${team.vids.map((k) => `${team.count[k]} ${esc(rules.piezas.items[k]?.name || k).toLowerCase()}`).join(', ')}</p>` : ''}
+      ${(tasks || []).some((t) => t.pay_amount == null && FOR_KIND[t.kind]) ? '<button class="gx__btn" type="button" data-fill-pay>Llenar los pagos vacíos con lo sugerido</button>' : ''}
+    </div>` : ''}
 
     <section class="mx__card dn__tasks">
       <h2 class="mono">Lo que gana cada quien por tarea${monthly ? ' · este mes' : ''}</h2>
@@ -90,6 +101,21 @@ export async function moneyPanel(ctx, p, box) {
     msg.textContent = e ? missing(e) : '✓ Guardado';
     if (!e && el.dataset.pf === 'pay_amount') moneyPanel(ctx, p, box);
   }));
+
+  // llena el pago de las tareas que aún no lo tienen (y lo que vale una ronda extra de edición)
+  $('[data-fill-pay]', box)?.addEventListener('click', async (e) => {
+    e.target.disabled = true;
+    msg.textContent = 'Llenando…';
+    const todo = (tasks || []).filter((t) => t.pay_amount == null && FOR_KIND[t.kind]);
+    for (const t of todo) {
+      const fields = { pay_amount: FOR_KIND[t.kind], pay_note: t.pay_note || 'Según 09 → Tarifas y pagos' };
+      if (t.kind === 'edicion' && team.ronda) fields.round_pay = team.ronda;
+      let { error: er } = await sb.from('deliverables').update(fields).eq('id', t.id);
+      if (er && /round_pay/.test(er.message || '')) ({ error: er } = await sb.from('deliverables').update({ pay_amount: fields.pay_amount, pay_note: fields.pay_note }).eq('id', t.id));
+      if (er) { msg.textContent = missing(er); e.target.disabled = false; return; }
+    }
+    moneyPanel(ctx, p, box);
+  });
 
   // el pago de un mes de Redes (desde el mes 2): anota el pago y la comisión mensual
   $('[data-month-pay]', box)?.addEventListener('click', () => {

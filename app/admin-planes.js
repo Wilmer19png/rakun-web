@@ -10,14 +10,15 @@ import { $, $$, esc } from './util.js';
 import { errorText } from './supa.js';
 import { REDES as BASE_MARCA, WEB as BASE_WEB, LEVELS, PIECES, priceInCarta, isRedes } from '../planes/data.js';
 import { BASE_RATES, BASE_RECIBO } from './quote-sources.js';
-import { ROLES, pctFor, leftFor, loadProducts, pctRows } from './pagos.js';
+import { loadProducts, mergePagos, PAGOS_BASE } from './pagos.js';
+import { pagosEditHTML } from './admin-pagos.js';
 import { PIEZAS, mergePiezas } from '../planes/piezas.js';
 import { piezasEditHTML } from './admin-piezas.js';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 // lo que se puede prender y apagar en el Inicio (index.html lo lee de plan_catalog id 'sitio')
 const BASE_SITIO = { testimonios: true };
-const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO, pagos: { rows: {}, cover: {} }, piezas: PIEZAS };
+const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO, pagos: PAGOS_BASE, piezas: PIEZAS };
 const PRIVATE = ['pagos', 'piezas'];                  // se guardan en app_settings (no se ven en la página)
 const st = { world: 'marca', tab: 'planes', cat: 0, carta: 0, lib: 0, draft: {}, saved: {}, info: {} };
 const REC_OPTIONS = ['1 sesión de hasta 3 h', '1 jornada de hasta 6 h', '1 jornada de hasta 6 h con asistente'];
@@ -71,8 +72,8 @@ export async function viewPlans(ctx) {
       loadProducts(),
     ]);
     st.products = groups;
-    st.draft.pagos = { rows: {}, cover: {}, ...clone(data?.content || {}) };
-    st.saved.pagos = JSON.stringify(st.draft.pagos);
+    st.draft.pagos = mergePagos(data?.content);
+    st.saved.pagos = data?.content?.v === 2 ? JSON.stringify(st.draft.pagos) : '';   // la versión anterior (% por rol) se reemplaza
     st.info.pagos = error ? 'Falta correr supabase/fase9.sql en Supabase para guardar los %' : data?.updated_at ? `Guardado el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Aún no se ha guardado: estos son % de ejemplo';
   }
   // Piezas de cada plan: privado (app_settings), solo el admin · lo usan la cotización y el Tarifario
@@ -96,7 +97,7 @@ function render(ctx) {
       <div class="gx__pubbar" data-pubbar>
         <span class="mono" data-pubstate></span>
         <span class="gx__btns">
-          <button class="gx__btn" type="button" data-reset>${w === 'pagos' ? 'Volver a los % de ejemplo' : 'Volver a los precios base'}</button>
+          <button class="gx__btn" type="button" data-reset>${w === 'pagos' ? 'Volver a los % base' : 'Volver a los precios base'}</button>
           <button class="gx__btn" type="button" data-discard>Descartar cambios</button>
           <button class="gx__btn gx__btn--dark" type="button" data-publish>${PRIVATE.includes(w) ? 'Guardar →' : 'Publicar en la página →'}</button>
         </span>
@@ -120,6 +121,7 @@ function render(ctx) {
     if (el.type === 'checkbox') v = el.checked;
     else if (el.dataset.kind === 'price') v = toPrice(el.value);
     else if (el.dataset.kind === 'int') v = Math.max(0, parseInt(el.value, 10) || 0);
+    else if (el.dataset.kind === 'pct') v = Math.max(0, Math.min(100, Number(String(el.value).replace(',', '.')) || 0));
     else if (el.dataset.kind === 'lines') v = el.value.split('\n').map((s) => s.trim()).filter(Boolean);
     else v = el.value;
     setPath(d, el.dataset.path, v);
@@ -127,19 +129,9 @@ function render(ctx) {
     if (fmt) fmt.textContent = typeof v === 'number' ? cop(v) : '';
     if (el.dataset.rerender) rerender(); else syncBar();
   }));
-  // Tarifas y pagos: cada % y quién cubre cada rol
-  $$('[data-pct]', main).forEach((el) => el.addEventListener('input', () => {
-    const [key, role] = el.dataset.pct.split('|');
-    const v = Math.max(0, Math.min(100, Number(el.value.replace(',', '.')) || 0));
-    d.rows[key] = { ...pctFor(d, key), [role]: v };
-    const left = $(`[data-left="${CSS.escape(key)}"]`, main);
-    if (left) { const l = leftFor(d.rows[key]); left.textContent = `${l} %`; left.classList.toggle('is-bad', l < 0); }
-    syncBar();
-  }));
-  $$('[data-cover]', main).forEach((el) => el.addEventListener('change', () => { d.cover[el.dataset.cover] = el.value || null; syncBar(); }));
-  $('[data-sim]', main)?.addEventListener('change', (e) => { st.sim = e.target.value; rerender(); });
-  // el simulador se actualiza al salir de un % (sin perder el cursor mientras escriben)
-  $$('[data-pct]', main).forEach((el) => el.addEventListener('change', rerender));
+  // Tarifas y pagos: quién cubre cada rol y las pestañas
+  $$('[data-cover]', main).forEach((el) => el.addEventListener('change', () => { d.cover = { ...(d.cover || {}), [el.dataset.cover]: el.value || null }; syncBar(); }));
+  $$('[data-ptab]', main).forEach((b) => b.addEventListener('click', () => { st.ptab = b.dataset.ptab; rerender(); }));
   // ★ Recomendado: uno solo por categoría
   $$('[data-hot]', main).forEach((el) => el.addEventListener('change', () => {
     const plans = d.cats[st.cat].plans;
@@ -200,7 +192,7 @@ function syncBar() {
   if (!bar) return;
   const dirty = isDirty(st.world);
   bar.classList.toggle('is-dirty', dirty);
-  $('[data-pubstate]', bar).textContent = dirty ? '● Hay cambios sin publicar · la página todavía muestra la versión anterior' : `✓ ${st.info[st.world]}`;
+  $('[data-pubstate]', bar).textContent = dirty ? (PRIVATE.includes(st.world) ? '● Hay cambios sin guardar' : '● Hay cambios sin publicar · la página todavía muestra la versión anterior') : `✓ ${st.info[st.world]}`;
   $('[data-publish]', bar).disabled = !dirty;
   $('[data-discard]', bar).disabled = !dirty;
 }
@@ -422,61 +414,9 @@ function prodHTML() {
 }
 
 /* ---------- Recibo: los datos que salen en cada cotización ---------- */
-/* ---------- Tarifas y pagos (solo admin): % de cada rol por producto ---------- */
+/* ---------- Tarifas y pagos (solo admin): comisión del manager y pagos por pieza ---------- */
 function pagosHTML(ctx) {
-  const d = st.draft.pagos;
-  const rows = pctRows(st.products || []);
-  // simulador: cualquier producto con precio
-  const sellable = (st.products || []).flatMap((g) => g.items.flatMap((it) => (g.kind === 'plan'
-    ? [{ id: `${it.key}|ed`, key: it.key, label: `${g.title.replace('Redes · ', '')} · ${it.name} · solo edición`, price: it.ed, monthly: true },
-      { id: `${it.key}|rec`, key: it.key, label: `${g.title.replace('Redes · ', '')} · ${it.name} · con grabación`, price: it.rec, monthly: true, rec: true }]
-    : it.price ? [{ id: `${it.key}|${it.name}`, key: it.key, label: `${it.name} (${g.title.replace('Carta del club · ', '')})`, price: it.price, monthly: false }] : [])));
-  const sim = sellable.find((x) => x.id === st.sim) || sellable.find((x) => /gestion:Equilibrio\|rec/.test(x.id)) || sellable[0];
-  let simHTML = '';
-  if (sim) {
-    const pct = pctFor(d, sim.key);
-    const parts = ROLES.filter(([r]) => pct[r] && (r !== 'camara' || !sim.key.startsWith('plan:') || sim.rec)).map(([r, n]) => [n, pct[r], sim.price * pct[r] / 100]);
-    const rakun = sim.price - parts.reduce((s, p) => s + p[2], 0);
-    simHTML = `
-      <div class="pg__sim">
-        <p class="mono pg__sim-k">Simulador · si se vende</p>
-        <select data-sim aria-label="Producto a simular">${sellable.map((x) => `<option value="${esc(x.id)}"${x.id === sim.id ? ' selected' : ''}>${esc(x.label)}</option>`).join('')}</select>
-        <p class="pg__sim-p"><span class="cur">$</span>${cop(sim.price).slice(1)}${sim.monthly ? ' / mes' : ''}</p>
-        ${parts.map(([n, p, v]) => `<p class="pg__sim-r"><span>${esc(n)} · ${p} %${n === 'Manager' ? (sim.monthly ? ' cada mes' : ' una vez') : ''}</span><span class="mono">${cop(Math.round(v))}</span></p>`).join('')}
-        <p class="pg__sim-r pg__sim-r--total"><span>Queda RAKÜN · ${Math.round(rakun / (sim.price || 1) * 100)} %</span><span class="mono">${cop(Math.round(rakun))}</span></p>
-      </div>`;
-  }
-  let section = '';
-  const body = rows.map((r) => {
-    const pct = pctFor(d, r.key);
-    const head = r.section !== section ? `<p class="mono pg__sec">${esc((section = r.section))}</p>` : '';
-    const left = leftFor(pct);
-    return `${head}
-      <div class="pg__row">
-        <span class="pg__name">${esc(r.label)}</span>
-        ${ROLES.map(([role]) => (r.key === 'produccion' && role !== 'manager'
-          ? '<span class="pg__na" title="Se arma en cada cotización">·</span>'
-          : `<label class="pg__cell"><input data-pct="${esc(r.key)}|${role}" inputmode="decimal" value="${esc(pct[role] ?? '')}" placeholder="—" aria-label="% ${role} · ${esc(r.label)}"><span>%</span>${role === 'manager' ? `<small class="mono">${r.key.startsWith('plan:') ? 'cada mes' : 'una vez'}</small>` : ''}</label>`)).join('')}
-        <b class="pg__left${left < 0 ? ' is-bad' : ''}" data-left="${esc(r.key)}">${r.key === 'produccion' ? 'según cotización' : `${left} %`}</b>
-      </div>`;
-  }).join('');
-  return `
-    <p class="gx__p">Solo tú ves esta pestaña. Por cada producto pones qué % del precio se lleva cada rol; lo que sobra queda para RAKÜN. El manager cobra <b>cada mes</b> en los planes de Redes (mientras el cliente siga) y <b>una sola vez</b> en todo lo demás. Los precios salen de las otras pestañas.</p>
-    <div class="pg">
-      <div class="pg__table">
-        <div class="pg__row pg__row--h"><span>Producto</span>${ROLES.map(([, n]) => `<span>${esc(n)}</span>`).join('')}<span>Queda RAKÜN</span></div>
-        ${body}
-        <p class="mono qx__dim" style="margin-top:12px">Cámara solo cuenta cuando el plan es «con grabación» · en Producción el reparto del equipo se arma en cada cotización</p>
-      </div>
-      <aside class="pg__side">
-        ${simHTML}
-        <div class="pg__cover">
-          <p class="mono pg__sim-k" style="color:var(--navy)">Quién cubre cada rol</p>
-          ${ROLES.map(([role, n]) => `<label class="pg__cov"><span>${esc(n)}</span><select data-cover="${role}"><option value="">Nadie aún</option>${ctx.staff.map((s) => `<option value="${s.id}"${d.cover?.[role] === s.id ? ' selected' : ''}>${esc(s.full_name || s.email)}</option>`).join('')}</select></label>`).join('')}
-          <p class="mono qx__dim" style="margin-top:8px">Esa persona ve en el tarifario cuánto gana por cada producto</p>
-        </div>
-      </aside>
-    </div>`;
+  return pagosEditHTML({ d: st.draft.pagos, redes: st.draft.marca || BASE_MARCA, piezas: st.draft.piezas || PIEZAS, staff: ctx.staff, tab: st.ptab || 'manager' });
 }
 
 /* ---------- Inicio: secciones que se prenden y se apagan ---------- */

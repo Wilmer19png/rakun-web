@@ -74,6 +74,7 @@ export const REDES = {
       ['Pauta Clientes · 1 campaña', 'Mensual', 890000, 'Una campaña pensada para que te escriban y te compren. Inversión sugerida aparte: desde $1.000.000 al mes.'],
       ['Pauta Clientes Pro', 'Mensual', 1887000, '3 campañas y conexión con WhatsApp para atender a los interesados. Inversión sugerida aparte: desde $2.000.000 al mes.'],
       ['Campaña extra', 'Por campaña', 300000, 'Una campaña más para tu plan (otro objetivo, otro público o un lanzamiento). La inversión en pauta va aparte.'],
+      ['Retargeting extra', 'Por campaña', 200000, 'Una campaña para volver a mostrarle tus anuncios a quienes ya te vieron o visitaron tu página. La inversión en pauta va aparte.'],
       ['Configuración inicial de cuentas', 'Una sola vez', 990000, 'Cuentas de Meta, píxel y WhatsApp Business listos para pautar.'],
     ] },
     { name: 'Videos y piezas', items: [

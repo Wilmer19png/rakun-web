@@ -6,8 +6,10 @@
    está mirando, según los % de 09 → Tarifas y pagos (app/pagos.js).
    ========================================================================== */
 import { $, $$, esc } from './util.js';
-import { ROLES, ROLE_NAME, pctFor, isMonthly, loadProducts } from './pagos.js';
+import { ROLES, mergePagos, loadProducts, planManager, planTeam, partsForPlan, oneTimeManager, r100 } from './pagos.js';
 import { loadPiezas, piezasViewHTML } from './admin-piezas.js';
+
+const VIDEO_KEY = { 'Video ágil': 'agil', 'Video Pro': 'pro', 'Video Premium': 'premium', 'Video horizontal Pro': 'horizontal', 'Recorte vertical': 'recorte' };
 
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 const st = { tab: 'todo', q: '', open: null };
@@ -17,21 +19,43 @@ export async function viewTarifario(ctx) {
   const { sb, me, main, head, loading } = ctx;
   loading();
   const [groups, { data }, piezas] = await Promise.all([loadProducts(), sb.from('app_settings').select('content').eq('id', 'pagos').maybeSingle(), loadPiezas(sb)]);
-  const pagos = data?.content || { rows: {}, cover: {} };
-  // qué roles cubre quien mira (el admin ve la del manager para saber cuánto se paga)
+  const pagos = mergePagos(data?.content);
+  // qué partes cubre quien mira (el admin ve la del manager: venta + operación)
   let mine = ROLES.map(([r]) => r).filter((r) => pagos.cover?.[r] === me.id);
-  if (!mine.length && me.role === 'admin') mine = ['manager'];
-  const payLabel = me.role === 'admin' && !ROLES.some(([r]) => pagos.cover?.[r] === me.id) ? 'Paga al manager' : 'Tu pago';
+  const admin = !mine.length && me.role === 'admin';
+  if (admin) mine = ['venta', 'operacion'];
+  const payLabel = admin ? 'Paga al manager' : 'Tu pago';
+  const has = (r) => mine.includes(r);
 
-  const pay = (key, ...prices) => {
+  // lo que se lleva quien mira: en un plan, al mes (solo edición / con grabación); en lo demás, una vez
+  const planPay = (catKey, name, withRec) => {
+    const m = planManager(pagos, piezas.redes, catKey, name, withRec);
+    const t = planTeam(pagos, piezas.piezas, partsForPlan(piezas.piezas, piezas.redes, catKey, name, withRec));
+    const parts = [];
+    if (m && has('venta') && m.venta + m.grabacion) parts.push(['Venta', m.venta + m.grabacion]);
+    if (m && has('operacion') && m.operacion) parts.push(['Operación', m.operacion]);
+    if (has('edicion') && t.editor) parts.push(['Edición', t.editor]);
+    if (has('camara') && t.camara) parts.push(['Grabación', t.camara]);
+    if (has('diseno') && t.diseno) parts.push(['Diseño', t.diseno]);
+    return parts;
+  };
+  const pay = (g, it) => {
     if (!mine.length) return '';
-    const pct = pctFor(pagos, key);
-    const total = mine.reduce((s, r) => s + (Number(pct[r]) || 0), 0);
-    if (!total) return '<span class="tf2__pay tf2__pay--none">—</span>';
-    const roles = mine.filter((r) => pct[r]).map((r) => ROLE_NAME[r]).join(' + ');
-    const when = mine.includes('manager') && pct.manager ? (isMonthly(key) ? 'cada mes' : 'una vez') : 'por venta';
-    const amounts = prices.filter(Boolean).map((p) => cop(p * total / 100)).join(' – ');
-    return `<span class="tf2__pay"><b>${total} % ${when}</b>${amounts ? `<small>${amounts}${isMonthly(key) ? ' / mes' : ''}</small>` : ''}${mine.length > 1 ? `<small>${esc(roles)}</small>` : ''}</span>`;
+    if (g.kind === 'plan') {
+      const a = planPay(it.catKey, it.name, false); const b = planPay(it.catKey, it.name, true);
+      const sa = a.reduce((s, [, v]) => s + v, 0); const sb2 = b.reduce((s, [, v]) => s + v, 0);
+      if (!sa && !sb2) return '<span class="tf2__pay tf2__pay--none">—</span>';
+      return `<span class="tf2__pay"><b>${cop(sa)} – ${cop(sb2)} / mes</b><small>Con grabación: ${b.map(([k, v]) => `${k} ${cop(v)}`).join(' · ')}</small></span>`;
+    }
+    const price = Number(it.price) || 0;
+    if (!price) return '<span class="tf2__pay tf2__pay--none">—</span>';
+    const m = oneTimeManager(pagos, it.name, price);
+    const parts = [];
+    if (has('venta') && m.venta) parts.push(['Venta', m.venta, m.pv]);
+    if (has('operacion') && m.operacion) parts.push(['Operación', m.operacion, m.po]);
+    if (has('edicion') && VIDEO_KEY[it.name]) parts.push(['Edición', r100(price * (Number(pagos.editor.pct) || 0) / 100), Number(pagos.editor.pct) || 0]);
+    if (!parts.length) return '<span class="tf2__pay tf2__pay--none">—</span>';
+    return `<span class="tf2__pay"><b>${cop(parts.reduce((s, [, v]) => s + v, 0))} una vez</b><small>${parts.map(([k, , p]) => `${k} ${p} %`).join(' · ')}</small></span>`;
   };
 
   const draw = () => {
@@ -52,21 +76,21 @@ export async function viewTarifario(ctx) {
             ${g.items.map((it, i) => `
             <button type="button" class="tf2__r" data-open="${esc(g.title)}|${i}">
               <span><b>${esc(it.name)}${it.hot ? ' ★' : ''}</b>${it.detail ? `<small>${esc(it.detail)}</small>` : ''}${it.ads ? `<small>Pauta aparte desde ${cop(it.ads)}</small>` : ''}</span>
-              <span class="tf2__m">${cop(it.ed)}</span><span class="tf2__m">${cop(it.rec)}</span>${pay(it.key, it.ed, it.rec)}
+              <span class="tf2__m">${cop(it.ed)}</span><span class="tf2__m">${cop(it.rec)}</span>${pay(g, it)}
             </button>`).join('')}` : `
             <div class="tf2__r tf2__r--h"><span>${g.kind === 'produccion' ? 'Tarifa' : 'Servicio'}</span><span>Cobro</span><span>Precio</span>${mine.length ? `<span>${payLabel}</span>` : ''}</div>
             ${g.items.map((it, i) => `
             <button type="button" class="tf2__r" data-open="${esc(g.title)}|${i}">
               <span><b>${esc(it.name)}</b></span><span class="mono tf2__u">${esc(String(it.unit || '').toLowerCase())}</span>
-              <span class="tf2__m">${it.price ? cop(it.price) : '<span class="qx__dim">a cotizar</span>'}</span>${pay(it.key, it.price)}
+              <span class="tf2__m">${it.price ? cop(it.price) : '<span class="qx__dim">a cotizar</span>'}</span>${pay(g, it)}
             </button>`).join('')}`}
           </section>`).join('') || '<p class="gx__empty">Nada con ese nombre.</p>'}
         </div>
         <aside class="tf2__side">
           <div class="tf2__how">
             <p class="mono">Cómo se paga</p>
-            <p><b>Planes de Redes → la comisión del manager es mensual</b>, cada mes que el cliente siga pagando. Entre mejor el plan, más alto el %.</p>
-            <p><b>Ventas sueltas</b> (carta del club, web y producción) → <b>una sola vez</b>, cuando el cliente paga.</p>
+            <p><b>Planes de Redes → el manager cobra cada mes</b> mientras el cliente siga pagando: <b>venta</b> (% del plan), <b>operación</b> (% de la gestión: campañas, publicación, reporte) y una parte de la <b>grabación</b>.</p>
+            <p><b>Ventas sueltas</b> → <b>una sola vez</b>: video 8 %, campañas extra 15 % + 32 %, lo demás 5 %. El editor, quien graba y la diseñadora cobran por pieza (09 → Tarifas y pagos).</p>
           </div>
           <div class="tf2__pick" data-pick>${pickHTML()}</div>
         </aside>

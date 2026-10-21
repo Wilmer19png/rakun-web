@@ -272,3 +272,7 @@ Envía con el **WhatsApp oficial de Meta** (Cloud API). Si algún día se usa Ca
 7. **Sube la función:** Edge Functions → Deploy a new function → nombre `aviso-lead` → pega `supabase/functions/aviso-lead/index.ts` → Deploy.
 8. **El webhook:** Database → Webhooks → Create a new hook → nombre `aviso-lead` · tabla `leads` · evento **Insert** · tipo **Supabase Edge Functions** → `aviso-lead` · POST · activa «Add auth header with service key» · encabezado `x-webhook-secret` con la clave de `WEBHOOK_SECRET`.
 9. Llena el formulario de la página para probar.
+
+## Fase 15 · Tarifas y pagos nuevos (ronda extra de edición)
+Corre `supabase/fase15.sql` en el SQL Editor (después de la fase 14). Agrega a cada tarea lo que vale una ronda extra (`round_pay`) y cuántas lleva (`extra_rounds`), y la función `extra_round`: quien revisa, al devolver una tarea, puede marcarla como ronda extra y se le suma ese valor a quien la hizo.
+Después, en el gestor: 09 · Planes y precios → **Tarifas y pagos 🔒** → revisa los % y los pagos y dale **Guardar** (la tabla vieja de % por rol queda reemplazada), y en **Quién cubre cada rol** elige a quien hace la venta y la operación.
