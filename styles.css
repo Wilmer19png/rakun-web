@@ -1593,7 +1593,7 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
 @media (max-width: 960px) {
   .menu-open .hdr__nav { display: none; }                  /* el menú viejo apilado ya no se usa */
   .menu-open .mnav {
-    position: fixed; inset: 0; z-index: 120;
+    position: fixed; inset: 0; z-index: 120; height: 100dvh;
     display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain;
     background: var(--cream); color: var(--navy);
   }
@@ -1771,3 +1771,21 @@ body :is(.block__aside, .focus__aside, .p-head__aside, .strategy__lede, .pl-cart
   .door__enter-ar { font-size: 1.3rem; }
 }
 @media (min-width: 701px) { .door__ask:has(.ticket.door__enter) { gap: 16px; } }
+
+/* ==========================================================================
+   WhatsApp flotante (lo pone common.js → initWaFab en las páginas públicas)
+   ========================================================================== */
+.wa-fab {
+  position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 70;
+  display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%;
+  background: #25D366; color: #fff; border: 2px solid var(--navy); box-shadow: 4px 4px 0 var(--navy);
+  transition: translate .15s steps(2), box-shadow .15s steps(2), bottom .25s var(--ease-out);
+}
+.wa-fab svg { width: 30px; height: 30px; }
+.wa-fab:hover, .wa-fab:focus-visible { translate: -2px -2px; box-shadow: 6px 6px 0 var(--navy); }
+.wa-fab:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+/* no tapa el menú, el formulario ni la ventana de planes; en Redes sube encima de la barra «Ver los planes» */
+.menu-open .wa-fab, .lf-open .wa-fab, .pov-open .wa-fab { display: none; }
+body:has(.mk-fixgo.is-on) .wa-fab { bottom: calc(74px + env(safe-area-inset-bottom)); }
+@media (max-width: 700px) { .wa-fab { right: 14px; width: 54px; height: 54px; } }
+@media print { .wa-fab { display: none; } }

@@ -29,6 +29,26 @@ export function initContact(scope = document) {
   $$('a[data-social]', scope).forEach((a) => { if (SOCIAL[a.dataset.social]) a.href = SOCIAL[a.dataset.social]; });
 }
 initContact();
+
+/* ---------- WhatsApp flotante (solo en la página, no en el gestor) ---------- */
+// lleva el mismo mensaje del pie de esa página («vi los planes de Redes…», «vi el proyecto…»)
+function initWaFab() {
+  if (!document.querySelector('[data-header]') || document.querySelector('.wa-fab')) return;
+  const foot = document.querySelector('a[data-wa-from="Pie de página"]') || document.querySelector('footer a[data-whatsapp]');
+  const a = document.createElement('a');
+  a.className = 'wa-fab';
+  a.dataset.whatsapp = foot?.dataset.whatsapp || 'Hola RAKÜN, vi su página y quiero más información.';
+  a.dataset.waFrom = 'Botón flotante';
+  if (foot?.hasAttribute('data-wa-project')) a.setAttribute('data-wa-project', '');
+  a.setAttribute('aria-label', 'Escríbenos por WhatsApp');
+  a.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 3.2A12.7 12.7 0 0 0 5.1 22.4L3.3 28.8l6.6-1.7A12.7 12.7 0 1 0 16 3.2Zm0 23.2c-2 0-3.9-.5-5.5-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.5 10.5 0 1 1 16 26.4Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.6-1.9-1.7-2.2-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.2 2.4 3.7 5.9 5.1 2.1.9 2.9 1 4 .8.6-.1 1.9-.8 2.2-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4Z"/></svg>';
+  a.href = waLink(a.dataset.whatsapp);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.append(a);
+}
+initWaFab();
+
 // píxel de Meta: cada vez que alguien abre WhatsApp desde la página (también enlaces creados después)
 // y nuestro contador (11 · Métricas → WhatsApp): desde qué página y qué botón
 document.addEventListener('click', (e) => {
@@ -181,6 +201,7 @@ function buildMobileNav() {
   nav.setAttribute('role', 'dialog');
   nav.setAttribute('aria-modal', 'true');
   nav.setAttribute('aria-label', 'Menú');
+  nav.setAttribute('data-lenis-prevent', '');             // el scroll suave no se queda con el dedo: el menú baja hasta el final
   nav.innerHTML = `
     <div class="mnav__top">
       <a class="mnav__logo" href="index.html" aria-label="RAKÜN, ir al inicio">RAK<span>Ü</span>N</a>
