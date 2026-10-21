@@ -15,7 +15,7 @@ import { METRICS, compute, cell, info } from './metas.js';
 const DAY = 86400000;
 const cop = (n) => `$${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 const num = (n) => Number(n || 0).toLocaleString('es-CO');
-const SUMS = ['visitors', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'link_clicks', 'video_3s', 'thruplay', 'meta_leads', 'messages'];
+const SUMS = ['visitors', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'link_clicks', 'video_3s', 'thruplay', 'meta_leads', 'messages', 'whatsapp'];
 const isId = (v) => /^\d{10,}$/.test(v || '');
 // los leads que llegaron antes de la fase 12 traen el nombre codificado (RAK%C3%9CN+%7C…)
 const plain = (v) => { let t = String(v ?? ''); try { if (/%[0-9a-f]{2}|\+/i.test(t)) t = decodeURIComponent(t.replace(/\+/g, ' ')); } catch { /* igual */ } return t.trim(); };
@@ -115,7 +115,7 @@ const cols = (t, x) => `
   <span class="mono">${cell('cpm', x.cpm)}</span>
   <span class="mono">${cell('hook', x.hook)}</span>
   <span class="mono">${cell('ctr', x.ctr)}</span>
-  <span class="mono">${num(t.leads)}<small>${t.visitors ? `${cell('conv', x.conv)} de ${num(t.visitors)}` : 'sin visitas'}</small></span>
+  <span class="mono">${num(t.leads)}<small>${t.visitors ? `${cell('conv', x.conv)} de ${num(t.visitors)}` : 'sin visitas'}</small>${t.whatsapp ? `<small class="cp__wa">+ ${num(t.whatsapp)} WhatsApp</small>` : ''}</span>
   <span class="mono">${cell('cpl', x.cpl)}</span>
   <span class="mono">${cell('freq', x.freq)}</span>
   <span class="mono cp__sold">${t.won ? `${num(t.won)}<small>${cop(t.sold)}</small>` : '0'}</span>`;

@@ -41,7 +41,7 @@ export async function loadAds(sb, m, days) {
     const prev = rows.get(k);
     if (!prev) { rows.set(k, { ...r, campaign: plain(r.campaign), ad: plain(r.ad), list: [] }); continue; }
     // antes de la fase 12 el mismo anuncio puede salir dos veces (codificado y no): se suman
-    ['visitors', 'views', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'link_clicks', 'video_3s', 'thruplay', 'meta_leads', 'messages'].forEach((f) => { prev[f] = (Number(prev[f]) || 0) + (Number(r[f]) || 0); });
+    ['visitors', 'views', 'leads', 'won', 'sold', 'impressions', 'reach', 'clicks', 'link_clicks', 'video_3s', 'thruplay', 'meta_leads', 'messages', 'whatsapp'].forEach((f) => { prev[f] = (Number(prev[f]) || 0) + (Number(r[f]) || 0); });
     if (r.spend != null) prev.spend = (Number(prev.spend) || 0) + Number(r.spend);
   }
   // anuncios que llegaron con el ID de Meta en vez del nombre ({{ad.id}}): se traducen con lo que trajo meta-sync
@@ -146,7 +146,7 @@ function adRowHTML(a) {
         <span class="mono">${cell('cpm', x.cpm)}</span>
         <span class="mono">${cell('hook', x.hook)}</span>
         <span class="mono">${cell('ctr', x.ctr)}</span>
-        <span class="mono ma__forms">${num(a.leads)}<small>${a.visitors ? `${cell('conv', x.conv)} de ${num(a.visitors)}` : 'sin visitas'}${a.meta_leads && a.meta_leads !== a.leads ? ` · ${num(a.meta_leads)} en Meta` : ''}</small></span>
+        <span class="mono ma__forms">${num(a.leads)}<small>${a.visitors ? `${cell('conv', x.conv)} de ${num(a.visitors)}` : 'sin visitas'}${a.meta_leads && a.meta_leads !== a.leads ? ` · ${num(a.meta_leads)} en Meta` : ''}</small>${a.whatsapp ? `<small class="cp__wa">+ ${num(a.whatsapp)} WhatsApp</small>` : ''}</span>
         <span class="mono">${cell('cpl', x.cpl)}</span>
         <span class="mono">${cell('freq', x.freq)}</span>
         <span class="mono ma__sold">${a.won ? `${num(a.won)}<small>${cop(a.sold)}</small>` : '0'}</span>

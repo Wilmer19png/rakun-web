@@ -175,6 +175,8 @@ function closing(w, works) {
     return;
   }
   document.title = `${w.title} — RAKÜN Visual Design`;
+  // el WhatsApp del pie dice qué proyecto vieron
+  document.querySelectorAll('a[data-wa-project]').forEach((a) => { a.dataset.whatsapp = `Hola RAKÜN, vi el proyecto «${w.title}» y quiero más información.`; a.href = `https://wa.me/573504461460?text=${encodeURIComponent(a.dataset.whatsapp)}`; });
   const parts = [head(w, works)];
   if (w.kind === 'identidad') {
     parts.push(story(w), manual(w, 1));

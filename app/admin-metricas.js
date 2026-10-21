@@ -20,13 +20,17 @@ const PAGE = {
   'libreria.html': 'Librería de formatos', 'trabajo.html': 'Todos los proyectos', 'cotizacion.html': 'Cotización (cliente)',
 };
 const PICK = { Redes: ['Redes', 'var(--yellow)'], Produccion: ['Producción', 'var(--blue)'], Web: ['Web y apps', 'var(--pink)'], SoloMirar: ['Solo mirar', 'var(--mist)'] };
+// el botón desde el que abrieron WhatsApp (data-wa-from o la sección)
+const BUTTON = { inicio: 'Portada', planes: 'Planes', extras: 'Carta del club', libreria: 'Librería', contacto: 'Contacto' };
+const plainName = (v) => { let t = String(v ?? ''); try { if (/%[0-9a-f]{2}|\+/i.test(t)) t = decodeURIComponent(t.replace(/\+/g, ' ')); } catch { /* igual */ } return t.trim(); };
 const pageName = (p) => PAGE[p] || (p?.startsWith('proyecto.html?p=') ? `Proyecto · ${p.slice(16).replace(/-/g, ' ')}` : p || '—');
 
 export async function viewMetrics(ctx) {
   const { sb, main, head, loading } = ctx;
   loading();
   const { data: m, error } = st.tab === 'rakun' ? await sb.rpc('metrics_summary', { days: st.days }) : { data: null, error: null };
-  const [ads] = m && !error ? await Promise.all([loadAds(sb, m, st.days), loadRanges(sb)]) : [undefined];
+  const [ads, , waRes] = m && !error ? await Promise.all([loadAds(sb, m, st.days), loadRanges(sb), sb.rpc('metrics_whatsapp', { days: st.days })]) : [undefined];
+  const wa = waRes && !waRes.error ? waRes.data : null;     // fase 16: clics en WhatsApp
   const tabs = `
     <div class="qx__tabs" role="tablist" aria-label="Métricas">
       <button type="button" role="tab" class="gx__chip${st.tab === 'rakun' ? ' is-on' : ''}" aria-selected="${st.tab === 'rakun'}" data-mtab="rakun">RAKÜN</button>
@@ -47,9 +51,10 @@ export async function viewMetrics(ctx) {
     const rate = m.views ? (m.leads / Math.max(1, m.visitors || m.views)) * 100 : 0;
     body = `
       <p class="mono qx__dim mx__src">Fuentes: <span class="mx__tag">Página</span> nuestro propio contador (sin cookies) · <span class="mx__tag">Gestor</span> solicitudes, cotizaciones y pagos</p>
-      <div class="mx__kpis">
+      <div class="mx__kpis mx__kpis--6">
         <div class="mx__kpi"><span class="mono">Visitas <span class="mx__tag">Página</span></span><b>${num(m.views)}</b><small>${num(m.visitors)} personas</small></div>
         <div class="mx__kpi"><span class="mono">Solicitudes <span class="mx__tag">Gestor</span></span><b>${num(m.leads)}</b><small>${rate.toLocaleString('es-CO', { maximumFractionDigits: 1 })} % de las personas</small></div>
+        <div class="mx__kpi"><span class="mono">WhatsApp <span class="mx__tag">Página</span></span><b>${wa ? num(wa.total) : '—'}</b><small>${wa ? `${num(wa.people)} personas · ${num(wa.from_ads)} de anuncios` : 'falta la fase 16'}</small></div>
         <div class="mx__kpi"><span class="mono">Cotizaciones enviadas</span><b>${num(m.quotes_sent)}</b><small>${num(m.quotes_won)} aceptadas${m.quotes_sent ? ` · ${Math.round(m.quotes_won / m.quotes_sent * 100)} %` : ''}</small></div>
         <div class="mx__kpi"><span class="mono">Vendido <span class="mx__tag">Gestor</span></span><b>${bigH(m.sold_total)}</b><small>cotizaciones con anticipo o pagadas</small></div>
         <div class="mx__kpi mx__kpi--dark"><span class="mono">Cobrado</span><b>${bigH(m.paid)}</b><small>pagos registrados</small></div>
@@ -75,6 +80,17 @@ export async function viewMetrics(ctx) {
           ${(m.refs || []).length ? `<h2 class="mono mx__h2b">De dónde llegan</h2>${m.refs.map((r) => `<p class="mx__ref"><span>${esc(r.ref)}</span><b class="mono">${num(r.n)}</b></p>`).join('')}` : ''}
         </section>
       </div>
+
+      <section class="mx__card mx__card--wide mw">
+        <h2 class="mono">WhatsApp · quién nos escribe y desde dónde <span class="mx__tag">Página</span></h2>
+        ${wa ? (wa.total ? `<div class="mw__grid">
+          <div><p class="mono qx__dim">Desde qué página</p>${(wa.pages || []).map((x) => `<p class="mx__ref"><span>${esc(pageName(x.path))}</span><b class="mono">${num(x.n)}</b></p>`).join('')}</div>
+          <div><p class="mono qx__dim">Desde qué botón</p>${(wa.buttons || []).map((x) => `<p class="mx__ref"><span>${esc(BUTTON[x.label] || x.label)}</span><b class="mono">${num(x.n)}</b></p>`).join('')}</div>
+          <div><p class="mono qx__dim">Desde qué anuncio</p>${(wa.ads || []).map((x) => `<p class="mx__ref"><span>${esc(plainName(x.ad) || '—')} <small class="mono qx__dim">${esc(plainName(x.campaign))}</small></span><b class="mono">${num(x.n)}</b></p>`).join('') || '<p class="gx__empty">Ninguno desde anuncios.</p>'}</div>
+          <div><p class="mono qx__dim">Los últimos</p>${(wa.recent || []).map((x) => `<p class="mx__ref"><span>${esc(pageName(x.path))} · ${esc(BUTTON[x.label] || x.label || '')}${x.ad ? ` <small class="mono qx__dim">▸ ${esc(plainName(x.ad))}</small>` : ''}</span><b class="mono">${new Date(x.created_at).toLocaleString('es-CO', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })}</b></p>`).join('')}</div>
+        </div>
+        <p class="mono qx__dim">Cada botón manda un mensaje distinto («vi los planes de Redes…», «vi el proyecto…»), así también lo sabes al leer el WhatsApp. Es el clic en el botón: si la persona no envía el mensaje, igual cuenta.</p>` : '<p class="gx__empty">Nadie ha abierto WhatsApp desde la página en este periodo.</p>') : '<p class="gx__error">Falta correr supabase/fase16.sql en Supabase para contar los clics en WhatsApp.</p>'}
+      </section>
 
       <section class="mx__card mx__card--wide">
         <h2 class="mono">Planes más pedidos y más vendidos <span class="mx__tag">Gestor</span></h2>

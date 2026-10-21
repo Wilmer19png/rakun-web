@@ -276,3 +276,6 @@ Envía con el **WhatsApp oficial de Meta** (Cloud API). Si algún día se usa Ca
 ## Fase 15 · Tarifas y pagos nuevos (ronda extra de edición)
 Corre `supabase/fase15.sql` en el SQL Editor (después de la fase 14). Agrega a cada tarea lo que vale una ronda extra (`round_pay`) y cuántas lleva (`extra_rounds`), y la función `extra_round`: quien revisa, al devolver una tarea, puede marcarla como ronda extra y se le suma ese valor a quien la hizo.
 Después, en el gestor: 09 · Planes y precios → **Tarifas y pagos 🔒** → revisa los % y los pagos y dale **Guardar** (la tabla vieja de % por rol queda reemplazada), y en **Quién cubre cada rol** elige a quien hace la venta y la operación.
+
+## Fase 16 · Clics en WhatsApp
+Corre `supabase/fase16.sql` en el SQL Editor (después de la fase 15). El contador de la página anota cada vez que alguien abre WhatsApp (desde qué página, qué botón y qué anuncio) y 11 · Métricas lo muestra; en cada campaña y anuncio sale «+ N WhatsApp». También habilita contar los clics en «Ver los planes».

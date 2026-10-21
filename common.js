@@ -30,8 +30,15 @@ export function initContact(scope = document) {
 }
 initContact();
 // píxel de Meta: cada vez que alguien abre WhatsApp desde la página (también enlaces creados después)
+// y nuestro contador (11 · Métricas → WhatsApp): desde qué página y qué botón
 document.addEventListener('click', (e) => {
-  if (e.target.closest?.('a[href^="https://wa.me/"]')) window.rkTrack?.('Contact', { content_name: 'WhatsApp' });
+  const a = e.target.closest?.('a[href^="https://wa.me/"]');
+  if (!a) return;
+  window.rkTrack?.('Contact', { content_name: 'WhatsApp' });
+  const from = a.dataset.waFrom || (a.closest('footer') ? 'Pie de página' : a.closest('[data-sos]') ? '¿Ningún plan te cuadra?' : a.closest('section[id]')?.id || 'Botón');
+  const slug = new URLSearchParams(location.search).get('p');
+  const page = location.pathname.split('/').pop() || 'index.html';
+  window.rkEvent?.('whatsapp', from, slug ? `${page}?p=${slug}` : page);
 });
 
 /* ---------- Reloj (hora de Colombia) ---------- */
