@@ -163,7 +163,7 @@ function renderEditor(ctx, st) {
         <label class="gx__f qx__note-f"><span>Nota para el cliente</span><textarea data-path="note" rows="3" maxlength="2000" placeholder="Incluye una revisión de la estrategia al mes 3.">${esc(q.note || '')}</textarea></label>
         <p class="mono gx__saved" data-msg aria-live="polite">${esc(st.msg)}</p>
         <div class="qx__sum-btns">
-          ${q.id ? `<a class="gx__btn" href="${esc(quoteUrl(q.token))}" target="_blank" rel="noopener">Ver el recibo ↗</a>` : ''}
+          ${q.id ? `<a class="gx__btn" href="${esc(quoteUrl(q.token))}" target="_blank" rel="noopener">Ver el recibo ↗</a><a class="gx__btn" href="${esc(quoteUrl(q.token))}&amp;pdf=1" target="_blank" rel="noopener" title="Con los métodos de pago, para mandarlo tú">Descargar PDF ↓</a>` : ''}
           ${q.id && !locked ? `<button class="gx__btn gx__btn--hot" type="button" data-send>${q.status === 'borrador' ? 'Enviar al cliente →' : 'Reenviar el enlace →'}</button>` : ''}
           ${q.id && ['enviada', 'aceptada', 'anticipo'].includes(q.status) ? '<button class="gx__btn gx__btn--dark" type="button" data-pay>Registrar pago</button>' : ''}
           ${q.id && ['enviada', 'aceptada'].includes(q.status) ? '<button class="gx__danger mono" type="button" data-reject>Marcar como rechazada</button>' : ''}

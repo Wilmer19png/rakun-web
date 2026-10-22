@@ -11,12 +11,14 @@ import { BASE_RECIBO } from './quote-sources.js';
 
 const box = $('[data-quote]');
 const token = new URLSearchParams(location.search).get('c') || '';
+// ?pdf=1 (botón «Descargar PDF» del gestor): la versión para mandar a mano, con los métodos de pago y sin botones
+const PDF = new URLSearchParams(location.search).has('pdf');
 const date = (d, opts = { day: 'numeric', month: 'long', year: 'numeric' }) => new Date(d).toLocaleDateString('es-CO', opts);
 const money = (n) => `<span class="cq__cur">$</span>${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 // métodos de pago (09 → Recibo · llegan solo con el enlace de la cotización): llave Bre-B, Nequi, cuenta bancaria
 const hasMethods = (c) => Boolean(c && (c.llave || c.nequi || c.bancoNum));
-function payMethodsHTML(c, note, status, proof = '') {
-  if (!hasMethods(c) || ['borrador', 'rechazada', 'pagada'].includes(status)) return '';
+function payMethodsHTML(c, note, status, proof = '', waText = '') {
+  if (!hasMethods(c) || (!PDF && ['borrador', 'rechazada', 'pagada'].includes(status))) return '';
   const copy = (v) => `<button class="cq__copy mono" type="button" data-copy="${esc(String(v).replace(/\s+/g, ''))}">Copiar</button>`;
   const card = (title, value, sub, tag) => `
     <div class="cq__pm"><p class="mono cq__pm-k">${tag}</p><p class="cq__pm-t">${esc(title)}</p>
@@ -29,7 +31,8 @@ function payMethodsHTML(c, note, status, proof = '') {
         ${c.nequi ? card('Nequi', c.nequi, c.nequiName ? `A nombre de ${c.nequiName}` : '', 'Nequi') : ''}
         ${c.bancoNum ? card(`${c.banco || 'Banco'} · ${c.bancoTipo || 'Ahorros'}`, c.bancoNum, [c.bancoName, c.bancoDoc && `NIT / CC ${c.bancoDoc}`].filter(Boolean).join(' · '), 'Transferencia') : ''}
       </div>
-      ${proof ? `<div class="cq__proof"><p><b>Después de pagar, envíanos el comprobante por WhatsApp.</b> Así lo anexamos y registramos tu pago.</p><a class="cq__btn cq__btn--hot" href="${proof}" target="_blank" rel="noopener">Enviar el comprobante por WhatsApp →</a></div>` : ''}
+      ${PDF && waText ? `<div class="cq__proof"><p><b>Después de pagar, envía el comprobante por WhatsApp al ${esc(waText)}.</b> Así lo anexamos y registramos tu pago.</p></div>` : ''}
+      ${proof && !PDF ? `<div class="cq__proof"><p><b>Después de pagar, envíanos el comprobante por WhatsApp.</b> Así lo anexamos y registramos tu pago.</p><a class="cq__btn cq__btn--hot" href="${proof}" target="_blank" rel="noopener">Enviar el comprobante por WhatsApp →</a></div>` : ''}
       ${note ? `<p class="cq__small">${esc(note)}</p>` : ''}
     </section>`;
 }
@@ -96,6 +99,7 @@ function render(sb, q, rc) {
     action = '<div class="cq__go cq__go--muted"><div><p class="mono cq__go-k">Esta cotización ya no está activa</p></div></div>';
   }
 
+  if (PDF) action = '';                                  // en el PDF no van los recuadros de estado (aceptar, borrador…)
   box.innerHTML = `
   <div class="cq__tools"><span class="mono">Cotización ${esc(q.number)}</span><button class="cq__btn cq__btn--line" type="button" data-print>Descargar PDF</button></div>
   <article class="cq__sheet">
@@ -129,12 +133,13 @@ function render(sb, q, rc) {
         <p class="cq__total"><span class="mono">Total</span><b>${money(t.total)}</b></p>
       </div>
     </div>
-    ${payMethodsHTML(q.cobro, rc.payInfo, q.status, wa && ['aceptada', 'anticipo'].includes(q.status) ? `https://wa.me/${wa}?text=${encodeURIComponent(`Hola, les envío el comprobante del pago de la cotización ${q.number} (${cop(Math.max(0, (q.status === 'anticipo' ? t.total : t.parts[0].amount) - paid))}). Adjunto la imagen.`)}` : '')}
+    ${payMethodsHTML(q.cobro, rc.payInfo, q.status, wa && ['aceptada', 'anticipo'].includes(q.status) ? `https://wa.me/${wa}?text=${encodeURIComponent(`Hola, les envío el comprobante del pago de la cotización ${q.number} (${cop(Math.max(0, (q.status === 'anticipo' ? t.total : t.parts[0].amount) - paid))}). Adjunto la imagen.`)}` : '', wa ? `+${wa.slice(0, 2)} ${wa.slice(2, 5)} ${wa.slice(5, 8)} ${wa.slice(8)}` : '')}
     ${rc.terms ? `<p class="cq__terms">${esc(rc.terms)}</p>` : ''}
     <footer class="cq__foot"><span class="mono">¿Dudas? Escríbenos antes de aceptar.</span>${wa ? `<a class="mono" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp ↗</a>` : ''}</footer>
   </article>`;
 
   $('[data-print]', box).addEventListener('click', () => window.print());
+  if (PDF) { document.documentElement.classList.add('cq-pdf'); (document.fonts?.ready || Promise.resolve()).then(() => setTimeout(() => window.print(), 400)); }
   // copiar un dato de pago (llave, número de Nequi o de cuenta)
   box.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = '✓ Copiado'; setTimeout(() => { b.textContent = 'Copiar'; }, 1800); } catch { /* sin permiso: queda a la vista */ }
