@@ -114,3 +114,16 @@ body.cq { margin: 0; min-height: 100vh; background: var(--ink-0); color: var(--n
 .cq__chg { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; padding-left: 10px; border-left: 3px solid var(--yellow, #FFF02B); }
 .cq__chg small { display: block; }
 .cq__chg b { font-weight: 500; white-space: nowrap; }
+
+/* métodos de pago (llave Bre-B, Nequi, cuenta) */
+.cq__pay-box { margin: 22px 40px 0; padding: 18px 0 0; border-top: 2px solid var(--navy, #1B1A35); }
+@media (max-width: 700px) { .cq__pay-box { margin-left: 20px; margin-right: 20px; } }
+.cq__pms { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 10px 0 10px; }
+.cq__pm { padding: 14px 16px; border: 2px solid var(--navy, #1B1A35); background: #fff; }
+.cq__pm-k { margin: 0 0 4px; font-size: .56rem; color: #5C5A7A; }
+.cq__pm-t { margin: 0 0 8px; font-weight: 500; }
+.cq__pm-v { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0; }
+.cq__pm-v b { font-weight: 500; font-size: 1.02rem; letter-spacing: .02em; overflow-wrap: anywhere; }
+.cq__pm-s { margin: 8px 0 0; font-size: .82rem; color: #5C5A7A; }
+.cq__copy { flex: none; min-height: 34px; padding: 0 10px; border: 1px solid var(--navy, #1B1A35); background: #FFF02B; color: #1B1A35; font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+@media print { .cq__copy { display: none; } .cq__pm { break-inside: avoid; } }

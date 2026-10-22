@@ -19,7 +19,8 @@ const clone = (o) => JSON.parse(JSON.stringify(o));
 // lo que se puede prender y apagar en el Inicio (index.html lo lee de plan_catalog id 'sitio')
 const BASE_SITIO = { testimonios: true };
 const BASE = { marca: BASE_MARCA, web: BASE_WEB, produccion: BASE_RATES, recibo: BASE_RECIBO, sitio: BASE_SITIO, pagos: PAGOS_BASE, piezas: PIEZAS };
-const PRIVATE = ['pagos', 'piezas'];                  // se guardan en app_settings (no se ven en la página)
+const PRIVATE = ['pagos', 'piezas'];
+const COBRO_BASE = { llave: '', nequi: '', nequiName: '', banco: 'Bancolombia', bancoTipo: 'Ahorros', bancoNum: '', bancoName: '', bancoDoc: '' };                  // se guardan en app_settings (no se ven en la página)
 const st = { world: 'marca', tab: 'planes', cat: 0, carta: 0, lib: 0, draft: {}, saved: {}, info: {} };
 const REC_OPTIONS = ['1 sesión de hasta 3 h', '1 jornada de hasta 6 h', '1 jornada de hasta 6 h con asistente'];
 const COLORS = [['var(--yellow)', 'Amarillo'], ['var(--blue)', 'Azul'], ['var(--pink)', 'Rosado']];
@@ -75,6 +76,13 @@ export async function viewPlans(ctx) {
     st.draft.pagos = mergePagos(data?.content);
     st.saved.pagos = data?.content?.v === 2 ? JSON.stringify(st.draft.pagos) : '';   // la versión anterior (% por rol) se reemplaza
     st.info.pagos = error ? 'Falta correr supabase/fase9.sql en Supabase para guardar los %' : data?.updated_at ? `Guardado el ${new Date(data.updated_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Aún no se ha guardado: estos son % de ejemplo';
+  }
+  // Métodos de pago: privados (app_settings 'cobro'); solo salen en cada cotización (con su enlace), no en el catálogo público
+  if (ctx.me.role === 'admin' && st.draft.recibo && st.draft.recibo.cobro === undefined) {
+    const { data } = await ctx.sb.from('app_settings').select('content').eq('id', 'cobro').maybeSingle();
+    const hadSaved = Boolean(st.saved.recibo);
+    st.draft.recibo.cobro = { ...COBRO_BASE, ...(data?.content || {}) };
+    if (hadSaved) st.saved.recibo = JSON.stringify(st.draft.recibo);
   }
   // Piezas de cada plan: privado (app_settings), solo el admin · lo usan la cotización y el Tarifario
   if (ctx.me.role === 'admin' && !st.draft.piezas) {
@@ -204,7 +212,12 @@ async function publish(ctx) {
   btn.disabled = true;
   $('[data-pubstate]').textContent = 'Publicando…';
   const table = PRIVATE.includes(w) ? 'app_settings' : 'plan_catalog';
-  const { error } = await sb.from(table).upsert({ id: w, content: st.draft[w], updated_by: me.id, updated_at: new Date().toISOString() });
+  const { cobro, ...pub } = st.draft[w];
+  const { error } = await sb.from(table).upsert({ id: w, content: w === 'recibo' ? pub : st.draft[w], updated_by: me.id, updated_at: new Date().toISOString() });
+  if (!error && w === 'recibo' && cobro) {
+    const c = await sb.from('app_settings').upsert({ id: 'cobro', content: cobro, updated_by: me.id, updated_at: new Date().toISOString() });
+    if (c.error) { $('[data-pubstate]').textContent = `El recibo se publicó, pero los métodos de pago no: ${errorText(c.error)}`; btn.disabled = false; return; }
+  }
   if (error && PRIVATE.includes(w)) { $('[data-pubstate]').textContent = /app_settings/.test(error.message || '') ? 'Falta correr supabase/fase9.sql en Supabase.' : errorText(error); btn.disabled = false; return; }
   if (error) { $('[data-pubstate]').textContent = /plan_catalog_id_check/.test(error.message || '') ? 'Falta correr supabase/fase8.sql en Supabase para guardar esto.' : errorText(error); btn.disabled = false; return; }
   st.saved[w] = JSON.stringify(st.draft[w]);
@@ -437,7 +450,17 @@ function reciboHTML() {
     <div class="gx__recibo">
       <div class="gx__row2">${field('Razón social o nombre', 'legal', r.legal)}${field('NIT o cédula', 'nit', r.nit)}</div>
       <div class="gx__row2">${field('Ciudad', 'city', r.city)}${field('WhatsApp de contacto (para el botón del recibo)', 'whatsapp', r.whatsapp)}</div>
-      ${area('Cómo pagar (sale al aceptar la cotización: cuenta, Nequi, llave…)', 'payInfo', r.payInfo, 4)}
+      ${r.cobro ? `
+      <fieldset class="gx__cobro">
+        <legend class="mono">Métodos de pago · salen en cada cotización con un botón para copiar <span class="qx__dim">(solo los ve quien tiene el enlace de una cotización)</span></legend>
+        <div class="gx__row2">${field('Llave Bre-B (celular, correo, documento o @llave)', 'cobro.llave', r.cobro.llave)}</div>
+        <div class="gx__row2">${field('Nequi · número', 'cobro.nequi', r.cobro.nequi)}${field('Nequi · a nombre de', 'cobro.nequiName', r.cobro.nequiName)}</div>
+        <div class="gx__row2">${field('Banco', 'cobro.banco', r.cobro.banco)}${field('Tipo de cuenta (Ahorros o Corriente)', 'cobro.bancoTipo', r.cobro.bancoTipo)}</div>
+        <div class="gx__row2">${field('Número de cuenta', 'cobro.bancoNum', r.cobro.bancoNum)}${field('A nombre de', 'cobro.bancoName', r.cobro.bancoName)}</div>
+        <div class="gx__row2">${field('NIT o cédula del titular', 'cobro.bancoDoc', r.cobro.bancoDoc)}</div>
+        <p class="mono qx__dim">Deja vacío lo que no uses: solo salen los métodos que tengan datos.</p>
+      </fieldset>` : ''}
+      ${area('Nota de pago (sale debajo de los métodos: «envíanos el comprobante por WhatsApp…»)', 'payInfo', r.payInfo, 3)}
       ${area('Condiciones (sale al final del recibo)', 'terms', r.terms, 3)}
     </div>`;
 }

@@ -13,6 +13,26 @@ const box = $('[data-quote]');
 const token = new URLSearchParams(location.search).get('c') || '';
 const date = (d, opts = { day: 'numeric', month: 'long', year: 'numeric' }) => new Date(d).toLocaleDateString('es-CO', opts);
 const money = (n) => `<span class="cq__cur">$</span>${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
+// métodos de pago (09 → Recibo · llegan solo con el enlace de la cotización): llave Bre-B, Nequi, cuenta bancaria
+const hasMethods = (c) => Boolean(c && (c.llave || c.nequi || c.bancoNum));
+function payMethodsHTML(c, note, status) {
+  if (!hasMethods(c) || ['borrador', 'rechazada', 'pagada'].includes(status)) return '';
+  const copy = (v) => `<button class="cq__copy mono" type="button" data-copy="${esc(String(v).replace(/\s+/g, ''))}">Copiar</button>`;
+  const card = (title, value, sub, tag) => `
+    <div class="cq__pm"><p class="mono cq__pm-k">${tag}</p><p class="cq__pm-t">${esc(title)}</p>
+      <p class="cq__pm-v"><b class="mono">${esc(value)}</b>${copy(value)}</p>${sub ? `<p class="cq__pm-s">${esc(sub)}</p>` : ''}</div>`;
+  return `
+    <section class="cq__pay-box" aria-label="Métodos de pago">
+      <p class="mono cq__soft">Métodos de pago</p>
+      <div class="cq__pms">
+        ${c.llave ? card('Llave Bre-B', c.llave, 'Desde la app de tu banco: «Enviar con llave».', 'Llave') : ''}
+        ${c.nequi ? card('Nequi', c.nequi, c.nequiName ? `A nombre de ${c.nequiName}` : '', 'Nequi') : ''}
+        ${c.bancoNum ? card(`${c.banco || 'Banco'} · ${c.bancoTipo || 'Ahorros'}`, c.bancoNum, [c.bancoName, c.bancoDoc && `NIT / CC ${c.bancoDoc}`].filter(Boolean).join(' · '), 'Transferencia') : ''}
+      </div>
+      ${note ? `<p class="cq__small">${esc(note)}</p>` : ''}
+    </section>`;
+}
+
 // un plan con cambios: el precio del plan y debajo solo lo que cambió o se agregó
 const changesHTML = (l) => (l.changes?.length ? `<span class="cq__chg">
   <small>Precio del plan: ${cop(l.pz?.base)}</small>
@@ -65,7 +85,7 @@ function render(sb, q, rc) {
     action = `<div class="cq__go cq__go--muted"><div><p class="mono cq__go-k">Esta cotización venció el ${date(until)}</p><p class="cq__go-p">Escríbenos y te la actualizamos.</p></div>${wa ? `<a class="cq__btn cq__btn--hot" href="https://wa.me/${wa}?text=${encodeURIComponent(`Hola, quiero actualizar la cotización ${q.number}.`)}" target="_blank" rel="noopener">Escribir por WhatsApp</a>` : ''}</div>`;
   } else if (q.status === 'aceptada') {
     action = `<div class="cq__go"><div><p class="mono cq__go-k">✓ Aceptada · ${partLabel(0, t.parts.length).split(' · ')[0].toLowerCase()} ${t.parts[0].pct} %</p><p class="cq__go-n">${money(Math.max(0, t.parts[0].amount - paid))}</p>
-      <p class="cq__go-p cq__pay">${esc(rc.payInfo)}</p></div>
+      <p class="cq__go-p cq__pay">${hasMethods(q.cobro) ? 'Paga con cualquiera de los métodos de abajo y envíanos el comprobante.' : esc(rc.payInfo)}</p></div>
       ${wa ? `<div class="cq__go-btns"><a class="cq__btn cq__btn--hot" href="https://wa.me/${wa}?text=${encodeURIComponent(`Hola, ya acepté la cotización ${q.number}. Les envío el comprobante del pago.`)}" target="_blank" rel="noopener">Enviar el comprobante →</a></div>` : ''}</div>`;
   } else if (q.status === 'anticipo' || q.status === 'pagada') {
     action = `<div class="cq__go cq__go--ok"><div><p class="mono cq__go-k">${q.status === 'pagada' ? '✓ Pagada por completo' : '✓ Anticipo recibido'}</p><p class="cq__go-p">Pagado ${cop(paid)} de ${cop(t.total)}. ${q.status === 'pagada' ? 'Gracias por confiar en RAKÜN.' : 'Ya empezamos a trabajar en tu proyecto.'}</p></div><a class="cq__btn cq__btn--line" href="portal.html">Entrar a mi portal →</a></div>`;
@@ -108,11 +128,16 @@ function render(sb, q, rc) {
         <p class="cq__total"><span class="mono">Total</span><b>${money(t.total)}</b></p>
       </div>
     </div>
+    ${payMethodsHTML(q.cobro, rc.payInfo, q.status)}
     ${rc.terms ? `<p class="cq__terms">${esc(rc.terms)}</p>` : ''}
     <footer class="cq__foot"><span class="mono">¿Dudas? Escríbenos antes de aceptar.</span>${wa ? `<a class="mono" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp ↗</a>` : ''}</footer>
   </article>`;
 
   $('[data-print]', box).addEventListener('click', () => window.print());
+  // copiar un dato de pago (llave, número de Nequi o de cuenta)
+  box.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = '✓ Copiado'; setTimeout(() => { b.textContent = 'Copiar'; }, 1800); } catch { /* sin permiso: queda a la vista */ }
+  }));
   $('[data-accept]', box)?.addEventListener('click', async (e) => {
     const btn = e.currentTarget;
     const msg = $('[data-msg]', box);

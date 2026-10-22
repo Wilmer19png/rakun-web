@@ -279,3 +279,6 @@ Después, en el gestor: 09 · Planes y precios → **Tarifas y pagos 🔒** → 
 
 ## Fase 16 · Clics en WhatsApp
 Corre `supabase/fase16.sql` en el SQL Editor (después de la fase 15). El contador de la página anota cada vez que alguien abre WhatsApp (desde qué página, qué botón y qué anuncio) y 11 · Métricas lo muestra; en cada campaña y anuncio sale «+ N WhatsApp». También habilita contar los clics en «Ver los planes».
+
+## Fase 17 · Métodos de pago en la cotización
+Corre `supabase/fase17.sql` en el SQL Editor (después de la fase 16). Luego, en el gestor: 09 · Planes y precios → **Recibo** → llena «Métodos de pago» (llave Bre-B, Nequi, cuenta de Bancolombia) y dale **Publicar**. Esos datos se guardan aparte (privados) y solo salen en cada cotización, para quien tiene su enlace, con un botón para copiar cada uno.
