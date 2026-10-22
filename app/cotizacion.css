@@ -127,3 +127,7 @@ body.cq { margin: 0; min-height: 100vh; background: var(--ink-0); color: var(--n
 .cq__pm-s { margin: 8px 0 0; font-size: .82rem; color: #5C5A7A; }
 .cq__copy { flex: none; min-height: 34px; padding: 0 10px; border: 1px solid var(--navy, #1B1A35); background: #FFF02B; color: #1B1A35; font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
 @media print { .cq__copy { display: none; } .cq__pm { break-inside: avoid; } }
+.cq__proof { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin: 4px 0 12px; padding: 14px 16px; background: #DFF7E7; border-left: 6px solid #1F8A5B; }
+.cq__proof p { margin: 0; max-width: 52ch; line-height: 1.45; }
+.cq__proof b { font-weight: 500; }
+@media print { .cq__proof .cq__btn { display: none; } }

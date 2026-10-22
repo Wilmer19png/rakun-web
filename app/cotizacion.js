@@ -15,7 +15,7 @@ const date = (d, opts = { day: 'numeric', month: 'long', year: 'numeric' }) => n
 const money = (n) => `<span class="cq__cur">$</span>${Math.round(Number(n) || 0).toLocaleString('es-CO')}`;
 // métodos de pago (09 → Recibo · llegan solo con el enlace de la cotización): llave Bre-B, Nequi, cuenta bancaria
 const hasMethods = (c) => Boolean(c && (c.llave || c.nequi || c.bancoNum));
-function payMethodsHTML(c, note, status) {
+function payMethodsHTML(c, note, status, proof = '') {
   if (!hasMethods(c) || ['borrador', 'rechazada', 'pagada'].includes(status)) return '';
   const copy = (v) => `<button class="cq__copy mono" type="button" data-copy="${esc(String(v).replace(/\s+/g, ''))}">Copiar</button>`;
   const card = (title, value, sub, tag) => `
@@ -29,6 +29,7 @@ function payMethodsHTML(c, note, status) {
         ${c.nequi ? card('Nequi', c.nequi, c.nequiName ? `A nombre de ${c.nequiName}` : '', 'Nequi') : ''}
         ${c.bancoNum ? card(`${c.banco || 'Banco'} · ${c.bancoTipo || 'Ahorros'}`, c.bancoNum, [c.bancoName, c.bancoDoc && `NIT / CC ${c.bancoDoc}`].filter(Boolean).join(' · '), 'Transferencia') : ''}
       </div>
+      ${proof ? `<div class="cq__proof"><p><b>Después de pagar, envíanos el comprobante por WhatsApp.</b> Así lo anexamos y registramos tu pago.</p><a class="cq__btn cq__btn--hot" href="${proof}" target="_blank" rel="noopener">Enviar el comprobante por WhatsApp →</a></div>` : ''}
       ${note ? `<p class="cq__small">${esc(note)}</p>` : ''}
     </section>`;
 }
@@ -128,7 +129,7 @@ function render(sb, q, rc) {
         <p class="cq__total"><span class="mono">Total</span><b>${money(t.total)}</b></p>
       </div>
     </div>
-    ${payMethodsHTML(q.cobro, rc.payInfo, q.status)}
+    ${payMethodsHTML(q.cobro, rc.payInfo, q.status, wa && ['aceptada', 'anticipo'].includes(q.status) ? `https://wa.me/${wa}?text=${encodeURIComponent(`Hola, les envío el comprobante del pago de la cotización ${q.number} (${cop(Math.max(0, (q.status === 'anticipo' ? t.total : t.parts[0].amount) - paid))}). Adjunto la imagen.`)}` : '')}
     ${rc.terms ? `<p class="cq__terms">${esc(rc.terms)}</p>` : ''}
     <footer class="cq__foot"><span class="mono">¿Dudas? Escríbenos antes de aceptar.</span>${wa ? `<a class="mono" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp ↗</a>` : ''}</footer>
   </article>`;
