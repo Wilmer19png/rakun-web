@@ -356,7 +356,15 @@
 /* ---------- Documentos (gestor y portal) ---------- */
 .gx__count { margin-left: 4px; opacity: .6; }
 .gx__tag--type { min-width: 44px; text-align: center; background: var(--cream); color: var(--navy); border: 1px solid rgba(27, 26, 53, .25); }
-.gx__tr--doc { grid-template-columns: 64px minmax(0, 2fr) 1fr 150px 140px 150px; }
+.gx__tr--doc { grid-template-columns: 64px minmax(0, 2fr) 130px 1fr 150px 140px 150px; }
+.gx__docdate b { display: block; font-weight: 500; font-size: .9rem; }
+.gx__docdate small { font-size: .62rem; color: var(--ink-soft); }
+.gx__docbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 20px; margin: 4px 0 14px; }
+.gx__docbar .gx__f--inline { min-width: 220px; }
+.gx__docsort { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.gx__docsort > .mono { margin-right: 4px; font-size: .56rem; color: var(--ink-soft); }
+.gx__month { margin: 18px 0 6px; padding: 0 18px 6px; border-bottom: 2px solid var(--navy); font-size: .62rem; letter-spacing: .12em; }
+.gx__month span { color: var(--ink-soft); margin-left: 6px; }
 .gx__tr--doc select { min-height: 38px; font-size: .85rem; }
 .gx__row-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 .gx__row-actions .gx__btn { padding: 10px 12px; }
@@ -589,14 +597,14 @@ button.px__link { padding: 0; border: 0; background: none; cursor: pointer; }
   .gx__tr, .gx__tr--pj { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .gx__tr select { width: 100%; }
   .gx__tr--pj > :nth-child(2)::before, .gx__tr--pj > :nth-child(3)::before, .gx__tr--pj > :nth-child(4)::before,
-  .gx__tr--doc > :nth-child(4)::before, .gx__tr--doc > :nth-child(5)::before { display: block; margin-bottom: 4px; font-family: var(--f-mono); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+  .gx__tr--doc > :nth-child(5)::before, .gx__tr--doc > :nth-child(6)::before { display: block; margin-bottom: 4px; font-family: var(--f-mono); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
   .gx__tr--pj > :nth-child(2)::before { content: "Etapa (la ve el cliente)"; }
   .gx__tr--pj > :nth-child(3)::before { content: "Estado"; }
   .gx__tr--pj > :nth-child(4)::before { content: "A cargo"; }
   .gx__tr--doc { grid-template-columns: 52px minmax(0, 1fr); align-items: start; }
   .gx__tr--doc > :nth-child(n + 3) { grid-column: 2; }
-  .gx__tr--doc > :nth-child(4)::before { content: "Estado"; }
-  .gx__tr--doc > :nth-child(5)::before { content: "Lo ve el cliente"; }
+  .gx__tr--doc > :nth-child(5)::before { content: "Estado"; }
+  .gx__tr--doc > :nth-child(6)::before { content: "Lo ve el cliente"; }
 
   /* parrilla del gestor: solo los días con piezas, en lista y con el título entero */
   .gx__cal { display: block; border: 0; box-shadow: none; }

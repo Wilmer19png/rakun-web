@@ -7,7 +7,13 @@ import { $, $$, esc, safeUrl } from './util.js';
 import { errorText } from './supa.js';
 import { DOC_CATS, DOC_STATUS, MAX_FILE, safeFileName, fileSize, openDocument } from './content.js';
 
-const st = { client: '', cat: '' };
+const st = { client: '', cat: '', month: '', sort: 'recientes' };
+// fechas: la del día (con año) y la hora; el mes para agrupar y filtrar
+const day = (d) => new Date(d).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
+const hour = (d) => new Date(d).toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
+const monthKey = (d) => String(d).slice(0, 7);
+const monthName = (k) => { const t = new Date(`${k}-15T12:00:00`).toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }); return t.charAt(0).toUpperCase() + t.slice(1); };
+const SORTS = [['recientes', 'Más recientes'], ['antiguos', 'Más antiguos'], ['nombre', 'Nombre A–Z']];
 
 export async function viewDocuments(ctx) {
   const { sb, main, head, loading, fail, staff } = ctx;
@@ -21,7 +27,12 @@ export async function viewDocuments(ctx) {
   const clientName = Object.fromEntries((clients || []).map((c) => [c.id, c.name]));
   const projectName = Object.fromEntries((projects || []).map((p) => [p.id, p.name]));
   const who = Object.fromEntries(staff.map((s) => [s.id, s]));
-  const list = docs.filter((d) => (!st.client || d.client_id === st.client) && (!st.cat || d.category === st.cat));
+  const base = docs.filter((d) => (!st.client || d.client_id === st.client) && (!st.cat || d.category === st.cat));
+  const months = [...new Set(base.map((d) => monthKey(d.created_at)))].sort().reverse();
+  if (st.month && !months.includes(st.month)) st.month = '';
+  const list = base.filter((d) => !st.month || monthKey(d.created_at) === st.month).sort((a, b) => (st.sort === 'nombre'
+    ? a.title.localeCompare(b.title, 'es') : st.sort === 'antiguos' ? a.created_at.localeCompare(b.created_at) : b.created_at.localeCompare(a.created_at)));
+  const byMonth = st.sort !== 'nombre';                    // por fecha: un título por cada mes
 
   main.innerHTML = head('07', 'Todo lo que se entrega queda registrado', 'Documentos', `
     <select class="gx__pick" data-client aria-label="Cliente"><option value="">Todos los clientes</option>${(clients || []).map((c) => `<option value="${c.id}"${st.client === c.id ? ' selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
@@ -29,14 +40,19 @@ export async function viewDocuments(ctx) {
     <div class="gx__subtabs">
       ${[['', 'Todo'], ...Object.entries(DOC_CATS)].map(([k, n]) => `<button type="button" class="gx__chip gx__chip--sm${st.cat === k ? ' is-on' : ''}" data-cat="${k}">${n} <span class="gx__count">${docs.filter((d) => (!st.client || d.client_id === st.client) && (!k || d.category === k)).length}</span></button>`).join('')}
     </div>
+    <div class="gx__docbar">
+      <label class="gx__f gx__f--inline"><span>Mes</span><select data-month><option value="">Todos los meses</option>${months.map((k) => `<option value="${k}"${st.month === k ? ' selected' : ''}>${monthName(k)} · ${base.filter((d) => monthKey(d.created_at) === k).length}</option>`).join('')}</select></label>
+      <span class="gx__docsort" role="group" aria-label="Ordenar"><span class="mono">Ordenar</span>${SORTS.map(([k, n]) => `<button type="button" class="gx__chip gx__chip--sm${st.sort === k ? ' is-on' : ''}" aria-pressed="${st.sort === k}" data-sort="${k}">${n}</button>`).join('')}</span>
+    </div>
     <div class="gx__table">
-      <div class="gx__tr gx__tr--h gx__tr--doc"><span>Tipo</span><span>Documento</span><span>Carpeta</span><span>Estado</span><span>Lo ve el cliente</span><span></span></div>
-      ${list.map((d) => {
-
+      <div class="gx__tr gx__tr--h gx__tr--doc"><span>Tipo</span><span>Documento</span><span>Subido</span><span>Carpeta</span><span>Estado</span><span>Lo ve el cliente</span><span></span></div>
+      ${list.map((d, i) => {
         const by = who[d.uploaded_by];
-        return `<div class="gx__tr gx__tr--doc" data-id="${d.id}">
+        const head = byMonth && (i === 0 || monthKey(list[i - 1].created_at) !== monthKey(d.created_at)) ? `<p class="mono gx__month">${monthName(monthKey(d.created_at))} <span>${list.filter((x) => monthKey(x.created_at) === monthKey(d.created_at)).length}</span></p>` : '';
+        return `${head}<div class="gx__tr gx__tr--doc" data-id="${d.id}">
           <span><span class="mono gx__tag gx__tag--type">${d.kind === 'file' ? esc((d.file_name || '').split('.').pop().toUpperCase().slice(0, 4) || 'ARCH') : 'LINK'}</span></span>
-          <span><b>${esc(d.title)}</b><br><small>${esc(clientName[d.client_id] || '—')}${d.project_id ? ` · ${esc(projectName[d.project_id] || '')}` : ''} · ${new Date(d.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}${d.file_size ? ` · ${fileSize(d.file_size)}` : ''}${by ? ` · subió ${esc(by.full_name.split(' ')[0])}` : d.category === 'material' ? ' · subió el cliente' : ''}</small></span>
+          <span><b>${esc(d.title)}</b><br><small>${esc(clientName[d.client_id] || '—')}${d.project_id ? ` · ${esc(projectName[d.project_id] || '')}` : ''}${d.file_size ? ` · ${fileSize(d.file_size)}` : ''}${by ? ` · subió ${esc(by.full_name.split(' ')[0])}` : d.category === 'material' ? ' · subió el cliente' : ''}</small></span>
+          <span class="gx__docdate"><b>${day(d.created_at)}</b><small class="mono">${hour(d.created_at)}</small></span>
           <span>${esc(DOC_CATS[d.category])}</span>
           <span><select data-status aria-label="Estado"><option value="">—</option>${DOC_STATUS.map(([k, n]) => `<option value="${k}"${d.status === k ? ' selected' : ''}>${n}</option>`).join('')}</select></span>
           <span><label class="gx__check"><input type="checkbox" data-visible${d.visible ? ' checked' : ''}><span>${d.visible ? 'Sí' : 'Solo equipo'}</span></label></span>
@@ -50,6 +66,8 @@ export async function viewDocuments(ctx) {
   const rerender = () => viewDocuments(ctx);
   $('[data-client]', main).addEventListener('change', (e) => { st.client = e.target.value; rerender(); });
   $$('[data-cat]', main).forEach((b) => b.addEventListener('click', () => { st.cat = b.dataset.cat; rerender(); }));
+  $('[data-month]', main).addEventListener('change', (e) => { st.month = e.target.value; rerender(); });
+  $$('[data-sort]', main).forEach((b) => b.addEventListener('click', () => { st.sort = b.dataset.sort; rerender(); }));
   $('[data-new]', main).addEventListener('click', () => uploadForm(ctx, clients || [], projects || []));
 
   $$('[data-id]', main).forEach((row) => {
